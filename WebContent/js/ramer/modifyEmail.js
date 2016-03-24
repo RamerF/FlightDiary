@@ -1,0 +1,15 @@
+$(function() {
+	$("#sendMail").click(function() {
+		var href = $("#sendMailForm").attr("action");
+		var email = $("#newEmail").val();
+		var args = {
+			"newEmail" : email
+		}
+		$.post(href, args, function(data) {
+			layer.msg(data, {
+				time : 1500
+			});
+		});
+		return false;
+	});
+})

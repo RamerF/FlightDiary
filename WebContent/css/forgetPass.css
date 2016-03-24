@@ -1,0 +1,29 @@
+@CHARSET "UTF-8";
+
+.return_link {
+	position: fixed;
+	background: none;
+	margin: 40px auto -10px 30px;
+}
+
+.container {
+	margin: 130px auto 0 auto;
+	width: 30%;
+}
+
+div {
+	text-align: center;
+}
+
+div.form {
+	text-align: right;
+}
+
+.title {
+	font-size: 30px;
+	margin-bottom: 10px;
+}
+
+.form {
+	margin-right: 40px;
+}

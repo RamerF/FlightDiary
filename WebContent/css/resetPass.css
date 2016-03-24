@@ -1,0 +1,7 @@
+@CHARSET "UTF-8";
+
+.return_link {
+	position: fixed;
+	background: none;
+	margin: 40px auto -10px 30px;
+}

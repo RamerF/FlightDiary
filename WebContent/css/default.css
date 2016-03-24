@@ -1,0 +1,182 @@
+@CHARSET "UTF-8";
+
+*, *:after, *:before {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.clearfix:before, .clearfix:after {
+	content: "	";
+	display: table;
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre,
+	code, form, fieldset, legend, input, textarea, p, blockquote, th, td {
+	margin: 0px;
+	padding: 0px;
+	font-family: Helvetica, Tahoma, Arial, "Hiragino	Sans	GB",
+		"Hiragino	Sans	GB	W3", "Microsoft	YaHei", STXihei, STHeiti, Heiti,
+		SimSun, sans-serif;
+	font-size: 100%;
+	color: rgba(61, 80, 76, 0.63);
+}
+
+body {
+	background: #FFFFFF;
+}
+
+div {
+	background: #FFFFFF;
+	/*		text-transform:	capitalize;	*/
+}
+
+a:VISITED {
+	text-decoration: none;
+	color: rgba(61, 80, 76, 0.63);
+}
+
+a:hover {
+	color: #DDDEDD;
+}
+
+a {
+	color: rgba(61, 80, 76, 0.63);
+	text-decoration: none;
+}
+
+span {
+	color: rgba(61, 80, 76, 0.63);
+}
+
+input {
+	width: 270px;
+	height: 42px;
+	margin: 10px 0px;
+	padding: 0px 15px;
+	background: rgba(117, 86, 39, 0.83);
+	outline: none;
+	-moz-border-radius: 21px;
+	-webkit-border-radius: 21px;
+	border-radius: 21px;
+	border: 1px solid #3d3d3d; /*	browsers	that	don't	support	rgba	*/
+	border: 1px solid rgba(255, 255, 255, .15);
+	-moz-box-shadow: 0 2px 3px 0 rgba(0, 0, 0, .1) inset;
+	-webkit-box-shadow: 0 2px 3px 0 rgba(0, 0, 0, .1) inset;
+	box-shadow: 0 2px 3px 0 rgba(0, 0, 0, .1) inset;
+	font-family: 'PT	Sans', Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	color: #DAEFEB;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+	-o-transition: all .2s;
+	-moz-transition: all .2s;
+	-webkit-transition: all .2s;
+	-ms-transition: all .2s;
+}
+
+input[type="submit"], input[type="reset"] {
+	cursor: pointer;
+	width: 100px;
+}
+
+input::-webkit-input-placeholder {
+	color: #DAEFEB;
+}
+/*	清除表单自动填充样式:针对chrome	*/
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0px 1000px rgba(117, 86, 39, 0.80) inset;
+	border-radius: 21px;
+	/*		border:	1px	solid	rgba(255,	255,	255,	.15)	!important;	*/
+}
+/*	导入bootstrap图标	*/
+[class^="icon-"], [class*="	icon-"] {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-top: 1px;
+	*margin-right: .3em;
+	line-height: 14px;
+	vertical-align: text-top;
+	background-image: url("../img/icons-halflings.png");
+	background-position: 14px 14px;
+	background-repeat: no-repeat;
+}
+
+.icon-white {
+	background-image: url("../img/icons-white.png")
+}
+/*	拇指向上图标空心	*/
+.icon-thumbs-up {
+	background-position: -96px -144px;
+}
+/* 拇指向上实心 */
+.icon-thumbs-up-ramer {
+	background-position: -120px -144px;
+}
+/*	编辑图标	*/
+.icon-edit {
+	background-position: -96px -72px;
+}
+/*	垃圾箱图标	*/
+.icon-trash {
+	background-position: -456px 0;
+}
+/*	空心五星图标	*/
+.icon-star-empty {
+	background-position: -144px 0;
+}
+/* 实心五星图标 */
+.icon-star {
+	background-position: -120px 0
+}
+/*	加号图标	*/
+.icon-plus {
+	background-position: -408px -96px
+}
+
+/* 减号图标 */
+.icon-minus {
+	background-position: -433px -96px
+}
+/*	箭头朝上图标	*/
+.icon-arrow-up {
+	opacity: .5;
+	background-position: -289px -96px;
+}
+
+/*	箭头超下图标	*/
+.icon-arrow-down {
+	opacity: .5;
+	background-position: -312px -96px;
+}
+/*	消息通知图标	*/
+.icon-envelope {
+	background-position: -72px 0
+}
+
+/*	修改浏览器滚动条样式*/
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+::-webkit-scrollbar-track {
+	background-color: #EDEDEF;
+} /*	滚动条的滑轨背景颜色	*/
+::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: rgba(255, 0, 0, 0.5);
+} /*	滑块颜色	*/
+::-webkit-scrollbar-button {
+	display: none;
+	background-color: rgba(61, 80, 76, 0.63);
+} /*	滑轨两头的监听按钮颜色	*/
+::-webkit-scrollbar-corner {
+	background-color: rgba(61, 80, 76, 0.63);
+} /*	横向滚动条和纵向滚动条相交处尖角的颜色	*/
+::-webkit-input-placeholder {
+	opacity: .5;
+} /*	输入框placeholder默认样式	*/
