@@ -123,6 +123,10 @@ public class UserHandler {
     map.remove("other");
     map.remove("topic");
     session.removeAttribute("details");
+    //  标识为显示分享分类
+    session.setAttribute("showTopic", "true");
+    //  取消标识为达人分类
+    session.setAttribute("showTopPeople", "false");
     return HOME;
   }
 
@@ -172,6 +176,10 @@ public class UserHandler {
     map.remove("other");
     map.remove("topic");
     session.removeAttribute("details");
+    //    标识为显示分享分类
+    session.setAttribute("showTopic", "true");
+    //  取消标识为达人分类
+    session.setAttribute("showTopPeople", "false");
     return HOME;
   }
 
@@ -183,6 +191,7 @@ public class UserHandler {
   public String homeTopPeople(
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
       Map<String, Object> map, HttpSession session) {
+    System.out.println("达人主页");
     int page = 1;
     try {
       page = Integer.parseInt(pageNum);
@@ -190,6 +199,7 @@ public class UserHandler {
         page = 1;
       }
     } catch (Exception e) {
+      System.out.println("数据格式异常");
       happenError(session, WRONGFORMAT);
       return ERROR;
     }
@@ -211,6 +221,10 @@ public class UserHandler {
     map.remove("other");
     map.remove("topic");
     session.removeAttribute("details");
+    //    标识为达人分类
+    session.setAttribute("showTopPeople", "true");
+    //    取消标识为分享分类
+    session.setAttribute("showTopic", "false");
     return HOME;
   }
 

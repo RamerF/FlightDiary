@@ -99,7 +99,7 @@ public class FlightDiaryTest {
   public void testGetTopPeople() {
     Pagination<User> pageUser = userService.getTopPeople(-1, 1);
     List<User> users = pageUser.getContent();
-    System.out.println("当前第 " + pageUser.getPageNum() + "页");
+    System.out.println("当前第 " + pageUser.getNumber() + "页");
     for (User user : users) {
       System.out.println("name : " + user.getName());
     }

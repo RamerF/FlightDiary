@@ -35,10 +35,14 @@
       <a href="${pageContext.request.contextPath}/home">默认</a>
     </span> / 
     <span>
-      <a href="${pageContext.request.contextPath}/home/orderbyUpCounts">热门</a>
+        <a href="${pageContext.request.contextPath}/home/orderbyUpCounts">热门</a>
     </span> / 
-    <span><a href="#">达人</a></span> / 
-    <span><a href="#">热门城市</a></span>
+    <span>
+        <a href="${pageContext.request.contextPath}/home/topPeople">达人</a>
+    </span> / 
+    <span>
+        <a href="#">热门城市</a>
+    </span>
   </div>
   <c:if test="${user.id gt 0}">
     <div class="user_panel">
@@ -99,7 +103,8 @@
         <input type="reset" value="收起" class = "hiddenTopic">
     </form>
 </div>
-<!-- 显示推文 -->
+<!-- 显示分享 -->
+<c:if test="${showTopic eq 'true' }">
 <div class="container">
     <ul class="grid effect-2" id="grid"">
         <c:forEach items="${topics.content}" var="t">
@@ -123,7 +128,7 @@
 </div>
 <!-- 存储记录的总页数 -->
 <input id="totalPages" type="hidden" value="${topics.totalPages }">
-<!-- 存储记录的总数量 -->
+<!-- 存储当前页号 -->
 <input id="number" type="hidden" value="${topics.number}">
 <!-- 页码面板 -->
 <div class="page_panel">
@@ -134,6 +139,30 @@
       <a href="?pageNum=${topics.number + 1 + 1}" id="nextPage">下一页</a>
     </div>
 </div>
+</c:if>
+<!-- 显示达人 -->
+<c:if test="${showTopPeople eq 'true' }">
+    <div class="container">
+        <ul class="grid effect-2" id="grid"">
+            <c:forEach items="${topPeoples.content}" var="u">
+                <li>
+                    <div class="user_mess">
+                      <a href="${pageContext.request.contextPath}/user/topic/${u.id}">
+                        <img src="${pageContext.request.contextPath}/${u.head}" alt="error" />
+                      </a>
+                      <div class="name_panel">
+                        <a href="${pageContext.request.contextPath}/user/personal/${u.id}">
+                            <img src="${pageContext.request.contextPath}/${u.head}" class="head">
+                            <br>
+                            <span class="name">${u.name }</span>
+                        </a>
+                      </div>
+                    </div>
+                </li>
+            </c:forEach>
+        </ul>
+    </div>
+</c:if>
 <script src="${pageContext.request.contextPath}/js/masonry.pkgd.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/imagesloaded.js"></script>
 <script src="${pageContext.request.contextPath}/js/classie.js"></script>
