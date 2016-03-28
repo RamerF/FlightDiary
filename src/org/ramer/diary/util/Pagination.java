@@ -39,7 +39,7 @@ public class Pagination<T> {
    */
   private boolean hasLast;
   /**
-   * 当前页号
+   * 当前页号: 从1开始
    */
   private int number;
   /**
@@ -132,6 +132,10 @@ public class Pagination<T> {
 
   public int getPageSize() {
     return pageSize > totalPages ? totalPages : pageSize < 1 ? 1 : pageSize;
+  }
+
+  public int getTotalPages() {
+    return totalPages;
   }
 
   /**

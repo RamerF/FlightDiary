@@ -154,9 +154,13 @@ input:-webkit-autofill {
  opacity: .5;
  background-position: -312px -96px;
 }
-/*	消息通知图标	*/
+/*	信封图标	*/
 .icon-envelope {
  background-position: -72px 0
+}
+/*  信封图标空  */
+.icon-envelope-empty {
+ background-position: 0 0
 }
 
 /*	修改浏览器滚动条样式*/

@@ -68,9 +68,9 @@
 								</span> <span> <a id="showFollowPanel" href="#"> 他/她关注的<i
 												class="icon-arrow-down"></i>
 								</a>
-								</span> <span> <a href="javascript:void(0)" id="notifying">
-												<i class="icon-envelope"></i>
-								</a>
+								</span>
+                                <span>
+                                    <a href="javascript:void(0)" id="notifying"><i class="icon-envelope"></i></a>
 								</span>
 						</div>
 				</div>

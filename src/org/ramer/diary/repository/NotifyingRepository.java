@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.ramer.diary.repository;
 
@@ -38,6 +38,6 @@ public interface NotifyingRepository extends JpaRepository<Notifying, Integer> {
    * @param notifiedUser
    * @return 消息数
    */
-  @Query("select count(n.id) from Notifying n where n.notifiedUser= :notifiedUser")
+  @Query("select count(n.id) from Notifying n where n.notifiedUser= :notifiedUser and n.hasCheck='false'")
   int getCountByNotifiedUser(@Param("notifiedUser") User notifiedUser);
 }

@@ -74,9 +74,12 @@ public class UserHandler {
   private final String NOPICMESSAGE = MessageConstant.NOPICMESSAGE.toString();
   //	默认成功信息
   private final String SUCCESSMESSAGE = MessageConstant.SUCCESSMESSAGE.toString();
-  //页面大小
-  @Value("#{diaryProperties['page.size']}")
-  private int PAGESIZE;
+  //分享页面大小
+  @Value("#{diaryProperties['topic.page.size']}")
+  private int TOPICPAGESIZE;
+  //达人页面大小
+  @Value("#{diaryProperties['topPeople.page.size']}")
+  private int PEOPLEPAGESIZE;
 
   /**
    * 主页.
@@ -91,7 +94,7 @@ public class UserHandler {
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
       Map<String, Object> map, HttpSession session) {
     System.out.println("主页");
-    System.out.println("pagesize = " + PAGESIZE);
+    System.out.println("pagesize = " + TOPICPAGESIZE);
     int page = 1;
     inOtherPage = false;
     inTopicPage = false;
@@ -105,7 +108,7 @@ public class UserHandler {
       return ERROR;
     }
     //获取分页分享
-    Page<Topic> topics = userService.getTopicsPage(page, PAGESIZE);
+    Page<Topic> topics = userService.getTopicsPage(page, TOPICPAGESIZE);
     map.put("topics", topics);
     if (checkLogin(session)) {
       User user = (User) session.getAttribute("user");
@@ -157,7 +160,7 @@ public class UserHandler {
       return ERROR;
     }
     //获取分页分享
-    Page<Topic> topics = userService.getTopicsPageOrderByFavourite(page, PAGESIZE);
+    Page<Topic> topics = userService.getTopicsPageOrderByFavourite(page, TOPICPAGESIZE);
     map.put("topics", topics);
     if (checkLogin(session)) {
       User user = (User) session.getAttribute("user");
@@ -204,7 +207,7 @@ public class UserHandler {
       return ERROR;
     }
     //    获取达人的分页信息
-    Pagination<User> topPeoples = userService.getTopPeople(PAGESIZE, PAGESIZE);
+    Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLEPAGESIZE);
     map.put("topPeoples", topPeoples);
     if (checkLogin(session)) {
       User user = (User) session.getAttribute("user");
@@ -480,8 +483,9 @@ public class UserHandler {
     //    获取所有关注'我'的人
     List<User> followUsers = userService.getFollowUser(user);
     //通知关注用户消息
-    String message = "<a href='${pageContext.requet.contextPath}/user/topic/" + topic.getId()
-    + "'>您关注的 " + user.getName() + " 分享了一个新的旅行日记 </a>";
+    String message = "<a href='/" + session.getServletContext().getServletContextName()
+        + "/user/topic/" + topic.getId()
+        + "'>您关注的 " + user.getName() + " 分享了一个新的旅行日记 </a>";
     for (User followUser : followUsers) {
       System.out.println("通知用户: " + followUser.getId());
       userService.notifyFollowUser(user, followUser, message);

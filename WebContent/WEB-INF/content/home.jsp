@@ -142,26 +142,39 @@
 </c:if>
 <!-- 显示达人 -->
 <c:if test="${showTopPeople eq 'true' }">
-    <div class="container">
-        <ul class="grid effect-2" id="grid"">
-            <c:forEach items="${topPeoples.content}" var="u">
-                <li>
-                    <div class="user_mess">
-                      <a href="${pageContext.request.contextPath}/user/topic/${u.id}">
-                        <img src="${pageContext.request.contextPath}/${u.head}" alt="error" />
-                      </a>
-                      <div class="name_panel">
-                        <a href="${pageContext.request.contextPath}/user/personal/${u.id}">
-                            <img src="${pageContext.request.contextPath}/${u.head}" class="head">
-                            <br>
-                            <span class="name">${u.name }</span>
-                        </a>
-                      </div>
-                    </div>
-                </li>
-            </c:forEach>
-        </ul>
+<div class="container">
+    <ul class="grid effect-2" id="grid"">
+        <c:forEach items="${topPeoples.content}" var="u">
+            <li>
+                <div class="user_mess">
+                  <a href="${pageContext.request.contextPath}/user/topic/${u.id}">
+                    <img src="${pageContext.request.contextPath}/${u.head}" alt="error" />
+                  </a>
+                  <div class="name_panel">
+                    <a href="${pageContext.request.contextPath}/user/personal/${u.id}">
+                        <img src="${pageContext.request.contextPath}/${u.head}" class="head">
+                        <br>
+                        <span class="name">${u.name }</span>
+                    </a>
+                  </div>
+                </div>
+            </li>
+        </c:forEach>
+    </ul>
+</div>
+<!-- 存储记录的总页数 -->
+<input id="totalPages" type="hidden" value="${topPeoples.totalPages }">
+<!-- 存储当前页号 -->
+<input id="number" type="hidden" value="${topPeoples.number - 1}">
+<!-- 分页 -->
+<div class="page_panel">
+    <div class="lastPage">
+      <a href="?pageNum=${topPeoples.number - 1}" id="lastPage">上一页</a>&nbsp;&nbsp;
     </div>
+    <div class="nextPage">
+      <a href="?pageNum=${topPeoples.number  + 1}" id="nextPage">下一页</a>
+    </div>
+</div>
 </c:if>
 <script src="${pageContext.request.contextPath}/js/masonry.pkgd.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/imagesloaded.js"></script>

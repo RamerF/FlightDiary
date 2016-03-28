@@ -55,7 +55,7 @@
 												</a>
 										</c:if> <c:if test="${empty user.notifyings}">
 												<a href="javascript:void(0)" id="showPrivMessNo"> <i
-														class="icon-envelope"></i> <small class="notifyingCount">
+														class="icon-envelope-empty"></i> <small class="notifyingCount">
 																<sup>${notifyingCount}</sup>
 												</small>
 												</a>
