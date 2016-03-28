@@ -1,6 +1,3 @@
-/*
- *
- */
 package org.ramer.diary.handler;
 
 import java.io.File;
@@ -21,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.ramer.diary.Constant.MessageConstant;
+import org.ramer.diary.Constant.PageConstant;
 import org.ramer.diary.domain.Comment;
 import org.ramer.diary.domain.Notifying;
 import org.ramer.diary.domain.Reply;
@@ -40,6 +40,7 @@ import org.ramer.diary.exception.UserNotLoginException;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.MailUtils;
+import org.ramer.diary.util.Pagination;
 
 /**
  * The Class UserHandler.
@@ -53,18 +54,29 @@ public class UserHandler {
   private UserService userService;
   // 初始化在他人主页变量
   private boolean inOtherPage = false;
+  // 主页面
+  private final String HOME = PageConstant.HOME.toString();
   // 初始化在分享页面变量
   private boolean inTopicPage = false;
-  // 默认出错信息
-  private String errorMessage = "非法操作,请以消费者的身份使用本系统";
-  //	默认成功信息
-  private String succMessage = "操作成功";
   // 全局出错页面
-  private static final String ERROR = "redirect:/error";
+  private final String ERROR = PageConstant.ERROR.toString();
   // 全局成功页面
-  private static final String SUCCESS = "redirect:/success";
+  private final String SUCCESS = PageConstant.SUCCESS.toString();
+  //  用户表单
+  private final String USERINPUT = PageConstant.USERINPUT.toString();
+  //  数据格式错误信息
+  private final String WRONGFORMAT = MessageConstant.WRONGFORMAT.toString();
+  //  密码修改成功信息
+  private final String SUCCESSCHANGEPASS = MessageConstant.SUCCESSCHANGEPASS.toString();
+  // 默认出错信息
+  private final String ERRORMESSAGE = MessageConstant.ERRORMESSAGE.toString();
+  // 未选择图片出错信息
+  private final String NOPICMESSAGE = MessageConstant.NOPICMESSAGE.toString();
+  //	默认成功信息
+  private final String SUCCESSMESSAGE = MessageConstant.SUCCESSMESSAGE.toString();
   //页面大小
-  private static final int size = 12;
+  @Value("#{diaryProperties['page.size']}")
+  private int PAGESIZE;
 
   /**
    * 主页.
@@ -79,7 +91,7 @@ public class UserHandler {
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
       Map<String, Object> map, HttpSession session) {
     System.out.println("主页");
-
+    System.out.println("pagesize = " + PAGESIZE);
     int page = 1;
     inOtherPage = false;
     inTopicPage = false;
@@ -93,7 +105,7 @@ public class UserHandler {
       return ERROR;
     }
     //获取分页分享
-    Page<Topic> topics = userService.getTopicsPage(page, size);
+    Page<Topic> topics = userService.getTopicsPage(page, PAGESIZE);
     map.put("topics", topics);
     if (checkLogin(session)) {
       User user = (User) session.getAttribute("user");
@@ -111,7 +123,7 @@ public class UserHandler {
     map.remove("other");
     map.remove("topic");
     session.removeAttribute("details");
-    return "home";
+    return HOME;
   }
 
   /**
@@ -126,7 +138,7 @@ public class UserHandler {
   public String homeTopicOrderByUpcounts(
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
       Map<String, Object> map, HttpSession session) {
-    System.out.println("主页");
+    System.out.println("热门主页");
 
     int page = 1;
     inOtherPage = false;
@@ -141,7 +153,7 @@ public class UserHandler {
       return ERROR;
     }
     //获取分页分享
-    Page<Topic> topics = userService.getTopicsPageOrderByFavourite(page, size);
+    Page<Topic> topics = userService.getTopicsPageOrderByFavourite(page, PAGESIZE);
     map.put("topics", topics);
     if (checkLogin(session)) {
       User user = (User) session.getAttribute("user");
@@ -160,7 +172,46 @@ public class UserHandler {
     map.remove("other");
     map.remove("topic");
     session.removeAttribute("details");
-    return "home";
+    return HOME;
+  }
+
+  /**
+   * 达人
+   * @return
+   */
+  @RequestMapping("/home/topPeople")
+  public String homeTopPeople(
+      @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
+      Map<String, Object> map, HttpSession session) {
+    int page = 1;
+    try {
+      page = Integer.parseInt(pageNum);
+      if (page < 1) {
+        page = 1;
+      }
+    } catch (Exception e) {
+      happenError(session, WRONGFORMAT);
+      return ERROR;
+    }
+    //    获取达人的分页信息
+    Pagination<User> topPeoples = userService.getTopPeople(PAGESIZE, PAGESIZE);
+    map.put("topPeoples", topPeoples);
+    if (checkLogin(session)) {
+      User user = (User) session.getAttribute("user");
+      //获取用户统计数据
+      int notifiedNumber = userService.getNotifiedNumber(user);
+      int topicNumber = userService.getTopicNumber(user);
+      int followedNumber = userService.getFollowedNumber(user);
+      System.out.println(
+          "获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
+      map.put("notifiedNumber", notifiedNumber);
+      map.put("topicNumber", topicNumber);
+      map.put("followedNumber", followedNumber);
+    }
+    map.remove("other");
+    map.remove("topic");
+    session.removeAttribute("details");
+    return HOME;
   }
 
   /**
@@ -173,7 +224,7 @@ public class UserHandler {
   public String input(HttpSession session, Map<String, Object> map) {
     System.out.println("表单回显,空白用户");
     map.put("user", new User());
-    return "userInput";
+    return USERINPUT;
   }
 
   /**
@@ -194,7 +245,7 @@ public class UserHandler {
       return ERROR;
     }
     map.put("user", userService.getById(user.getId()));
-    return "userInput";
+    return USERINPUT;
   }
 
   /**
@@ -398,17 +449,29 @@ public class UserHandler {
     System.out.println("发表日记: \n\t用户名: " + user.getName());
     Topic topic = new Topic();
     //	当用户上传文件时保存文件
-    if (!file.isEmpty()) {
-      System.out.println("保存图片");
-      String pictureUrl = saveFile(file, session, false, hasChinese(user.getName()));
-      topic.setPicture(pictureUrl);
+    if (file.isEmpty()) {
+      System.out.println("未选择图片");
+      happenError(session, NOPICMESSAGE);
+      return ERROR;
     }
+    System.out.println("保存图片");
+    String pictureUrl = saveFile(file, session, false, hasChinese(user.getName()));
+    topic.setPicture(pictureUrl);
     topic.setContent(content);
     topic.setDate(new Date());
     topic.setUser(user);
     topic.setUpCounts(0);
     //保存用户经历
-    userService.publish(topic);
+    topic = userService.publish(topic);
+    //    获取所有关注'我'的人
+    List<User> followUsers = userService.getFollowUser(user);
+    //通知关注用户消息
+    String message = "<a href='${pageContext.requet.contextPath}/user/topic/" + topic.getId()
+    + "'>您关注的 " + user.getName() + " 分享了一个新的旅行日记 </a>";
+    for (User followUser : followUsers) {
+      System.out.println("通知用户: " + followUser.getId());
+      userService.notifyFollowUser(user, followUser, message);
+    }
     if (personal.equals("true")) {
       return "redirect:/user/personal";
     } else {
@@ -596,7 +659,7 @@ public class UserHandler {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   @RequestMapping("/user/topic/follow")
-  public void follow(Topic topic, Map<String, Object> map, HttpServletResponse response,
+  public void follow(User user, Topic topic, Map<String, Object> map, HttpServletResponse response,
       HttpSession session) throws IOException {
     System.out.println("添加关注");
     response.setCharacterEncoding("UTF-8");
@@ -605,9 +668,8 @@ public class UserHandler {
       response.getWriter().write("主人说没登录不能关注哒");
       return;
     }
-    User user = (User) session.getAttribute("user");
     User followedUser = new User();
-    followedUser = (topic == null) ? (User) session.getAttribute("other") : topic.getUser();
+    followedUser = (topic.getId() == null) ? (User) session.getAttribute("other") : topic.getUser();
     System.out.println("被关注用户: " + followedUser.getName());
     // 虽然在访问他人的主页时,topic没有显示写入到map中,但是在页面EL和foreach迭代输出的时候,产生了topic,
     //springmvc会将此topic封装,因此这里的topic是最后一个被迭代的topic对象
@@ -859,7 +921,7 @@ public class UserHandler {
       // 如果在分享页面,判断是否为本人的分享,非本人的分享将无法删除
       if (inTopicPage
           && !userService.getTopicByUserIdAndTopicId(topic.getId(), (User) map.get("user"))) {
-        happenError(session, errorMessage);
+        happenError(session, ERRORMESSAGE);
       }
     } catch (Exception e) {
       happenError(session);
@@ -944,8 +1006,7 @@ public class UserHandler {
       reply_id = Integer.parseInt(id);
     } catch (NumberFormatException e) {
       System.out.println("数据格式错误");
-      errorMessage = "数据格式错误";
-      happenError(session, errorMessage);
+      happenError(session, WRONGFORMAT);
       return ERROR;
     }
     if (reply_id != 0) {
@@ -999,7 +1060,7 @@ public class UserHandler {
       notifiedUser = (User) session.getAttribute("other");
       System.out.println("被通知用户 = " + notifiedUser);
     } catch (Exception e) {
-      happenError(session, errorMessage);
+      happenError(session, ERRORMESSAGE);
     }
     Notifying notifying = new Notifying();
     notifying.setUser(user);
@@ -1036,7 +1097,7 @@ public class UserHandler {
     try {
       notify_id = Integer.parseInt(notifyId);
     } catch (Exception e) {
-      happenError(session, errorMessage);
+      happenError(session, ERRORMESSAGE);
       return ERROR;
     }
     if (notify_id > 0) {
@@ -1045,11 +1106,11 @@ public class UserHandler {
       notifying.setHasCheck("true");
       boolean flag = userService.updateNotifying(notifying);
       if (!flag) {
-        happenError(session, errorMessage);
+        happenError(session, ERRORMESSAGE);
         return ERROR;
       }
     } else {
-      happenError(session, errorMessage);
+      happenError(session, ERRORMESSAGE);
       return ERROR;
     }
     return "redirect:/user/personal";
@@ -1195,18 +1256,16 @@ public class UserHandler {
       return ERROR;
     }
     if (!password.equals(repassword)) {
-      happenError(session, errorMessage);
+      happenError(session, ERRORMESSAGE);
       return ERROR;
     }
     user.setPassword(Encrypt.execEncrypt(password));
     if (userService.newOrUpdate(user) == null) {
-      happenError(session, errorMessage);
+      happenError(session, ERRORMESSAGE);
     } else {
-      succMessage = "密码修改成功";
-      execSuccess(session, errorMessage);
+      execSuccess(session, SUCCESSCHANGEPASS);
       return SUCCESS;
     }
-    succMessage = "密码修改成功";
     return SUCCESS;
   }
 
@@ -1429,7 +1488,7 @@ public class UserHandler {
       session.setAttribute("errorMessage", errorMess[0]);
       return;
     }
-    session.setAttribute("errorMessage", this.errorMessage);
+    session.setAttribute("errorMessage", ERRORMESSAGE);
   }
 
   /**
@@ -1443,7 +1502,7 @@ public class UserHandler {
       session.setAttribute("succMessage", succMessage[0]);
       return;
     }
-    session.setAttribute("succMessage", this.succMessage);
+    session.setAttribute("succMessage", SUCCESSMESSAGE);
   }
 
   /**

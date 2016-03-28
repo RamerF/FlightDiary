@@ -26,6 +26,7 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
     if (exception instanceof UserNotLoginException) {
       modelAndView.addObject("errorMessage", errorMessage);
     }
+    modelAndView.addObject("errorMessage", "系统发生错误了");
     modelAndView.setViewName("error");
     return modelAndView;
   }

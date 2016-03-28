@@ -3,6 +3,8 @@
  */
 package org.ramer.diary.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -41,4 +43,11 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
   @Query("delete from Follow f where f.user = :user and f.followedUser = :followedUser")
   void deleteByUserAndFollowedUser(@Param("user") User user,
       @Param("followedUser") User followedUser);
+
+  /**
+   * 获取所有关注了当前用户的follow
+   * @return 包含所有关注了当前用户的Follow
+   */
+  @Query(value = "select f.user from follow f where  f.followed_user= :user", nativeQuery = true)
+  List<Integer> getUserByFollowedUser(@Param("user") User user);
 }

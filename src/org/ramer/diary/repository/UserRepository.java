@@ -1,9 +1,13 @@
 /*
- * 
+ *
  */
 package org.ramer.diary.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import org.ramer.diary.domain.User;
 
@@ -11,7 +15,8 @@ import org.ramer.diary.domain.User;
  * @author ramer
  *
  */
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository
+extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
 
   /**
    * 根据用户名和密码获取用户
@@ -53,6 +58,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
    * @param email 邮箱
    * @return 用户
    */
-  User getByEmail(String email);
+  User getByEmail(String email);
 
+  /**
+   * 统计发表分享最多的用户,并联合user表查询相关信息
+   * @return
+   */
+  @Query(value = "select *from user join (select user,count(id) as n from topic group by user) as t on "
+      + "t.user=id order by t.n desc", nativeQuery = true)
+  List<User> getByIdJoinTopicUserId();
 }

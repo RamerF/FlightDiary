@@ -35,13 +35,13 @@ $(function() {
 								</c:if>
 								<span class="error"></span>
 								<span>用户名 : </span>
-								<form:input path="name" style="margin-right: -3px;"
+								<form:input path="name" class="userinfo"
 										placeholder="用户名 / 邮箱" />
 								<span id="message"></span>
 								<br>
 								<c:if test="${empty user.id}">
 										<span>密码 : </span>
-										<form:password path="password" />
+										<form:password path="password" class="userinfo"/>
 										<br>
 								</c:if>
 								<!--	用户注册面板 -->

@@ -23,4 +23,6 @@ public class EncryptTest {
     String encoded = Encrypt.execEncrypt(string);
     System.out.println(encoded);
   }
+
+
 }

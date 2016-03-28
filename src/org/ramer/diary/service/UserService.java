@@ -4,6 +4,7 @@
 package org.ramer.diary.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +35,7 @@ import org.ramer.diary.repository.ReplyRepository;
 import org.ramer.diary.repository.TopicRepository;
 import org.ramer.diary.repository.UserRepository;
 import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.Pagination;
 
 /**
  * @author ramer
@@ -57,6 +59,52 @@ public class UserService {
   private FavouriteRepository favouriteRepository;
   @Autowired
   private NotifyingRepository notifyingRepository;
+
+  /**
+   * 按时间顺序获取所有分享的分页数据
+   * @param page 当前页面
+   * @param size 每一页的记录数
+   * @return 返回分页数据
+   */
+  @Transactional(readOnly = true)
+  public Page<Topic> getTopicsPage(int page, int size) {
+    //页号从零开始
+    page = page - 1;
+    //按时间排序
+    Order orders = new Order(Direction.ASC, "date");
+    Sort sort = new Sort(orders);
+    Pageable pageable = new PageRequest(page, size, sort);
+    return topicRepository.findAll(pageable);
+  }
+
+  /**
+   * 按热度获取所有分享的分页数据
+   * @param page 当前页面
+   * @param size 每一页的记录数
+   * @return 返回分页数据
+   */
+  @Transactional(readOnly = true)
+  public Page<Topic> getTopicsPageOrderByFavourite(int page, int size) {
+    //页号从零开始
+    page = page - 1;
+    //按热度排序
+    Order order = new Order(Direction.DESC, "upCounts");
+    Sort sort = new Sort(order);
+    Pageable pageable = new PageRequest(page, size, sort);
+    return topicRepository.findAll(pageable);
+  }
+
+  /**
+   * 获取用户,按分享的数量排序
+   * @param page 当前页号
+   * @param 每页记录数
+   * @return 用户的分页记录
+   */
+  public Pagination<User> getTopPeople(int page, int size) {
+    List<User> users = userRepository.getByIdJoinTopicUserId();
+    Pagination<User> pageUser = new Pagination<>(users, page, size);
+    return pageUser;
+  }
 
   /**
    * 用户登录
@@ -93,9 +141,43 @@ public class UserService {
    * @return 发表分享成功返回true
    */
   @Transactional
-  public boolean publish(Topic topic) {
-    topicRepository.save(topic);
+  public Topic publish(Topic topic) {
+    Topic t = topicRepository.save(topic);
+    return t;
+  }
+
+  /**
+   * 获取所有关注'我'的用户
+   * @param user
+   * @return
+   */
+  @Transactional(readOnly = true)
+  public List<User> getFollowUser(User user) {
+    List<Integer> userids = followRepository.getUserByFollowedUser(user);
+    List<User> users = new ArrayList<>();
+    for (Integer userid : userids) {
+      User u = new User();
+      u.setId(userid);
+      users.add(u);
+    }
+    return users;
+  }
+
+  /**
+   * @param user
+   * @return
+   */
+  @Transactional
+  public boolean notifyFollowUser(User user, User followUser, String message) {
+    Notifying notifying = new Notifying();
+    notifying.setContent(message);
+    notifying.setDate(new Date());
+    notifying.setHasCheck("false");
+    notifying.setNotifiedUser(followUser);
+    notifying.setUser(user);
+    notifyingRepository.saveAndFlush(notifying);
     return true;
+
   }
 
   /**
@@ -109,40 +191,6 @@ public class UserService {
     praiseRepository.deleteByTopic(topic);
     System.out.println("删除topic");
     topicRepository.delete(topic.getId());
-  }
-
-  /**
-   * 按时间顺序获取所有分享的分页数据
-   * @param page 当前页面
-   * @param size 每一页的记录数
-   * @return 返回分页数据
-   */
-  @Transactional(readOnly = true)
-  public Page<Topic> getTopicsPage(int page, int size) {
-    //页号从零开始
-    page = page - 1;
-    //按时间排序
-    Order orders = new Order(Direction.ASC, "date");
-    Sort sort = new Sort(orders);
-    Pageable pageable = new PageRequest(page, size, sort);
-    return topicRepository.findAll(pageable);
-  }
-
-  /**
-   * 按热度获取所有分享的分页数据
-   * @param page 当前页面
-   * @param size 每一页的记录数
-   * @return 返回分页数据
-   */
-  @Transactional(readOnly = true)
-  public Page<Topic> getTopicsPageOrderByFavourite(int page, int size) {
-    //页号从零开始
-    page = page - 1;
-    //按热度排序
-    Order orders = new Order(Direction.DESC, "upCounts");
-    Sort sort = new Sort(orders);
-    Pageable pageable = new PageRequest(page, size, sort);
-    return topicRepository.findAll(pageable);
   }
 
   /**
