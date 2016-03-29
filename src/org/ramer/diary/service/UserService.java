@@ -107,6 +107,19 @@ public class UserService {
   }
 
   /**
+   * 通过城市名称获取分享
+   * @param city 城市名称
+   * @param page 当前页号
+   * @param size 每页大小
+   * @return 分享的分页数据
+   */
+  public Pagination<Topic> getTopicsPageByCity(String city, int page, int size) {
+    List<Topic> topics = topicRepository.getByCity(city);
+    Pagination<Topic> pageTopic = new Pagination<>(topics, page, size);
+    return pageTopic;
+  }
+
+  /**
    * 用户登录
    * @param user 用户
    * @return 返回登录用户信息

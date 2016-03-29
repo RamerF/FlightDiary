@@ -48,6 +48,9 @@ public class Topic {
   /** 图片. */
   @Column
   private String picture;
+  //  城市
+  @Column
+  private String city;
 
   /** 点赞次数. */
   @Column
@@ -65,130 +68,68 @@ public class Topic {
   @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "topic")
   private Set<Comment> comments = new HashSet<>();
 
-  /**
-   * Gets the up counts.
-   *
-   * @return the up counts
-   */
   public Integer getUpCounts() {
     return upCounts;
   }
 
-  /**
-   * Sets the up counts.
-   *
-   * @param upCounts the new up counts
-   */
   public void setUpCounts(Integer upCounts) {
     this.upCounts = upCounts;
   }
 
-  /**
-   * Gets the comments.
-   *
-   * @return the comments
-   */
   public Set<Comment> getComments() {
     return comments;
   }
 
-  /**
-   * Sets the comments.
-   *
-   * @param comments the new comments
-   */
   public void setComments(Set<Comment> comments) {
     this.comments = comments;
   }
 
-  /**
-   * Gets the content.
-   *
-   * @return the content
-   */
   public String getContent() {
     return content;
   }
 
-  /**
-   * Sets the content.
-   *
-   * @param content the new content
-   */
   public void setContent(String content) {
     this.content = content;
   }
 
-  /**
-   * Gets the date.
-   *
-   * @return the date
-   */
   public Date getDate() {
     return date;
   }
 
-  /**
-   * Sets the date.
-   *
-   * @param date the new date
-   */
   public void setDate(Date date) {
     this.date = date;
   }
 
-  /**
-   * Gets the picture.
-   *
-   * @return the picture
-   */
   public String getPicture() {
     return picture;
   }
 
-  /**
-   * Sets the picture.
-   *
-   * @param picture the new picture
-   */
   public void setPicture(String picture) {
     this.picture = picture;
   }
 
-  /**
-   * Gets the id.
-   *
-   * @return the id
-   */
   public Integer getId() {
     return id;
   }
 
-  /**
-   * Sets the id.
-   *
-   * @param id the new id
-   */
   public void setId(Integer id) {
     this.id = id;
   }
 
-  /**
-   * Gets the user.
-   *
-   * @return the user
-   */
   public User getUser() {
     return user;
   }
 
-  /**
-   * Sets the user.
-   *
-   * @param user the new user
-   */
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
+  }
+
+  public String getCity() {
+    return city;
   }
 
   /**
@@ -214,9 +155,6 @@ public class Topic {
     this.comments = comments;
   }
 
-  /**
-   * Instantiates a new topic.
-   */
   public Topic() {
   }
 

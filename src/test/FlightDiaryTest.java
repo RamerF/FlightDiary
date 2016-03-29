@@ -18,7 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.ramer.diary.Constant.PageConstant;
+import org.ramer.diary.constant.PageConstant;
+import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
@@ -97,11 +98,21 @@ public class FlightDiaryTest {
    */
   @Test
   public void testGetTopPeople() {
-    Pagination<User> pageUser = userService.getTopPeople(-1, 1);
+    Pagination<User> pageUser = userService.getTopPeople(1, 3);
     List<User> users = pageUser.getContent();
     System.out.println("当前第 " + pageUser.getNumber() + "页");
     for (User user : users) {
       System.out.println("name : " + user.getName());
     }
   }
+
+  @Test
+  public void testGetTopicPageByCity() {
+    Pagination<Topic> pageTopic = userService.getTopicsPageByCity("重庆", 2, 4);
+    List<Topic> topics = pageTopic.getContent();
+    for (Topic topic : topics) {
+      System.out.println("name : " + topic.getContent());
+    }
+  }
+
 }

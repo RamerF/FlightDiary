@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<location>
+    <country name="中国">
+        <city name="香港"></city>
+        <city name="澳门"></city>
+        <city name="深圳"></city>
+        <city name="苏州"></city>
+        <city name="广州"></city>
+        <city name="上海"></city>
+        <city name="无锡"></city>
+        <city name="常州"></city>
+        <city name="杭州"></city>
+        <city name="成都"></city>
+        <city name="南京"></city>
+        <city name="宁波"></city>
+        <city name="武汉"></city>
+        <city name="北京"></city>
+        <city name="青岛"></city>
+        <city name="扬州"></city>
+        <city name="重庆"></city>
+        <city name="临沂"></city>
+        <city name="金华"></city>
+        <city name="秦皇岛"></city>
+        <city name="天津"></city>
+        <city name="佛山"></city>
+        <city name="济南"></city>
+        <city name="哈尔滨"></city>
+        <city name="清远"></city>
+        <city name="秦安"></city>
+        <city name="南昌"></city>
+        <city name="连云港"></city>
+        <city name="台州"></city>
+        <city name="西安"></city>
+        <city name="桂林"></city>
+        <city name="保定"></city>
+        <city name="徐州"></city>
+        <city name="珠海"></city>
+        <city name="秦安"></city>
+        <city name="长沙"></city>
+        <city name="威海"></city>
+        <city name="洛阳"></city>
+        <city name="秦州"></city>
+        <city name="南通"></city>
+        <city name="东莞"></city>
+        <city name="石家庄"></city>
+    </country>
+    <country name="美国">
+        <city name="纽约"></city>
+    </country>
+    <country name="英国">
+        <city name="伦敦市"></city>
+    </country>
+    <country name="法国">
+        <city name="巴黎"></city>
+    </country>
+    <country name="巴西">
+        <city name="里约热内卢"></city>
+    </country>
+    <country name="泰国">
+        <city name="曼谷"></city>
+    </country>
+    <country name="新加坡">
+        <city name="新加坡"></city>
+    </country>
+    <country name="土耳其">
+        <city name="伊斯坦布尔"></city>
+    </country>
+    <country name="马来西亚">
+        <city name="吉隆坡"></city>
+    </country>
+</location>

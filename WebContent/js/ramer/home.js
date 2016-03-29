@@ -1,4 +1,36 @@
 $(function() {
+	// 获取城市列表
+	var optionNodeCountry = document.getElementById("optionNodeCountry");
+	var optionNodeCity = document.getElementById("optionNodeCity");
+	$.get(requestUrl, function(xml) {
+		var country = $(xml).find("country");
+		country.each(function(index, content) {
+			optionNodeCountry += "<option value='" + $(content).attr('name')
+					+ "'>" + $(content).attr('name') + "</option>";
+		})
+		$("#country").append(optionNodeCountry);
+	});
+	$("#country").change(
+			function() {
+				$("#city").empty();
+				optionNodeCity = "";
+				var countryName = $(this).val();
+				$.get(requestUrl,
+						function(xml) {
+							var city = $(xml).find(
+									"country[name='" + countryName + "']")
+									.find("city");
+							city
+									.each(function(index, content) {
+										optionNodeCity += "<option value='"
+												+ $(content).attr('name')
+												+ "'>"
+												+ $(content).attr('name')
+												+ "</option>";
+									});
+							$("#city").append(optionNodeCity);
+						});
+			})
 
 	// 上一页
 	$("#lastPage").click(function() {

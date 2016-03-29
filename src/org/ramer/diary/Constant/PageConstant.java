@@ -1,4 +1,4 @@
-package org.ramer.diary.Constant;
+package org.ramer.diary.constant;
 
 /**
  * @author ramer

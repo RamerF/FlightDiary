@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.ramer.diary.Constant.MessageConstant;
-import org.ramer.diary.Constant.PageConstant;
+import org.ramer.diary.constant.MessageConstant;
+import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Comment;
 import org.ramer.diary.domain.Notifying;
 import org.ramer.diary.domain.Reply;
@@ -46,6 +46,10 @@ import org.ramer.diary.util.Pagination;
  * The Class UserHandler.
  *
  * @author ramer.
+ */
+/**
+ * @author ramer
+ *
  */
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
@@ -228,6 +232,27 @@ public class UserHandler {
     session.setAttribute("showTopPeople", "true");
     //    取消标识为分享分类
     session.setAttribute("showTopic", "false");
+    return HOME;
+  }
+
+  @RequestMapping("/home/orderByCity")
+  public String homeTopicOrderByCity(
+      @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
+      HttpSession session, Map<String, Object> map) {
+    System.out.println("热门城市主页");
+    int page = 1;
+    inOtherPage = false;
+    inTopicPage = false;
+    try {
+      page = Integer.parseInt(pageNum);
+      if (page < 1) {
+        page = 1;
+      }
+    } catch (Exception e) {
+      happenError(session, "非法参数");
+      return ERROR;
+    }
+    Page<Topic> topics = userService.getTopicsPageByCity(city, page, TOPICPAGESIZE);
     return HOME;
   }
 
@@ -459,7 +484,7 @@ public class UserHandler {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   @RequestMapping("/publish")
-  public String publish(@RequestParam("content") String content,
+  public String publish(@RequestParam("content") String content, @RequestParam("city") String city,
       @RequestParam(value = "personal", required = false, defaultValue = "") String personal,
       @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {
     User user = (User) session.getAttribute("user");
@@ -478,14 +503,14 @@ public class UserHandler {
     topic.setDate(new Date());
     topic.setUser(user);
     topic.setUpCounts(0);
+    topic.setCity(city);
     //保存用户经历
     topic = userService.publish(topic);
     //    获取所有关注'我'的人
     List<User> followUsers = userService.getFollowUser(user);
     //通知关注用户消息
     String message = "<a href='/" + session.getServletContext().getServletContextName()
-        + "/user/topic/" + topic.getId()
-        + "'>您关注的 " + user.getName() + " 分享了一个新的旅行日记 </a>";
+        + "/user/topic/" + topic.getId() + "'>您关注的 " + user.getName() + " 分享了一个新的旅行日记 </a>";
     for (User followUser : followUsers) {
       System.out.println("通知用户: " + followUser.getId());
       userService.notifyFollowUser(user, followUser, message);

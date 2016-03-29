@@ -37,14 +37,15 @@
         <div class="contact">
           <span id="followSpan">
             <c:if test="${isFollowed eq true}">
-              <a href="${pageContext.request.contextPath}/user/topic/notFollow" class="notFollow">
+             <a href="${pageContext.request.contextPath}/user/topic/notFollow" class="notFollow">
                 <i class="icon-minus" id="icon"></i><i id="text" style="font-style: normal;">取消关注</i>
-              </c:if>
-              <c:if test="${isFollowed ne true}">
-                <a href="${pageContext.request.contextPath}/user/topic/follow" class="follow">
-                  <i class="icon-plus" id="icon"></i><i id="text" style="font-style: normal;">关注</i>
-                </a>
-              </c:if>
+            </a>
+          </c:if>
+          <c:if test="${isFollowed ne true}">
+            <a href="${pageContext.request.contextPath}/user/topic/follow" class="follow">
+              <i class="icon-plus" id="icon"></i><i id="text" style="font-style: normal;">关注</i>
+            </a>
+          </c:if>
             </span>
             <span>
               QQ: ${!empty other.qqNum ? other.qqNum : "无"}

@@ -1,4 +1,4 @@
-package org.ramer.diary.Constant;
+package org.ramer.diary.constant;
 
 public enum MessageConstant {
   ERRORMESSAGE("非法操作,请以消费者的身份使用本系统"), SUCCESSMESSAGE("操作成功"), WRONGFORMAT(

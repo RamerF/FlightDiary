@@ -16,49 +16,58 @@
 <!-- 瀑布流导入 -->
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/home.css" >
 <script src="${pageContext.request.contextPath}/js/TextAreaExpander.js"></script>
+<script type="text/javascript">
+$(function() {
+    requestUrl = "${pageContext.request.contextPath}/xml/city.xml";
+})
+</script>
 <script src="${pageContext.request.contextPath}/js/ramer/home.js"></script>
 <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
 </head>
 <body>
 <!-- 标题面板 -->
-<div class="top">
-  <div  class="title">旅行日记</div>
+<div class="top"> 
+  <div  class="title textshadow" >旅行日记</div>
   <div class="about">
-      <span><a href="#">关于</a></span> / 
-      <span><a href="#">反馈</a></span>
+      <span><a href="#" class="textshadow">关于</a></span> / 
+      <span><a href="#" class="textshadow">反馈</a></span>
   </div>
 </div>
 <!-- 分类面板 -->
 <div class="category_panel">
   <div class="category">
     <span>
-      <a href="${pageContext.request.contextPath}/home">默认</a>
+      <a href="${pageContext.request.contextPath}/home" class="textshadow">默认</a>
     </span> / 
     <span>
-        <a href="${pageContext.request.contextPath}/home/orderbyUpCounts">热门</a>
+        <a href="${pageContext.request.contextPath}/home/orderbyUpCounts" class="textshadow">热门</a>
     </span> / 
     <span>
-        <a href="${pageContext.request.contextPath}/home/topPeople">达人</a>
+        <a href="${pageContext.request.contextPath}/home/topPeople" class="textshadow">达人</a>
     </span> / 
     <span>
-        <a href="#">热门城市</a>
+        <a href="#" class="textshadow">热门城市</a>
     </span>
+  </div>
+  <div class="query">
+    <input type="text" name="city" placeholder="输入旅游城市" class="querycity">
+    <i class="icon-search search"></i>
   </div>
   <c:if test="${user.id gt 0}">
     <div class="user_panel">
       <span>
-        <a href="javascript:void(0);" id="saySomething" class="share_link">给我一个分享平台</a>
+        <a href="javascript:void(0);" id="saySomething" class="share_link textshadow">给我一个分享平台</a>
       </span>
      <span class="username" id="showProfile">${user.name}</span>
       <span class="logoff">
-       <a href="${pageContext.request.contextPath}/logOff" id="logOff">注销</a>
+       <a href="${pageContext.request.contextPath}/logOff" id="logOff" class="textshadow">注销</a>
       </span>
     </div>
   </c:if>
   <c:if test="${empty user.id || user.id le 0}">
     <div class="signup">
       <span>
-        <a href="${pageContext.request.contextPath}/user">登录/注册</a>
+        <a href="${pageContext.request.contextPath}/user" class="textshadow">登录/注册</a>
       </span>
     </div>
 </c:if>
@@ -99,6 +108,15 @@
         <input class="upbtn2" placeholder="点击添加一张图片">
         <br>
         <div id="preview" class="preview"></div>
+        <div>
+            <span>请选择旅行的城市:</span>
+            <select id="country">
+                <option value="no" id="optionNodeCountry" class="textshdow">请选择国家</option>
+            </select>
+            <select id="city" name="city">
+                <option value="no" id="optionNodeCity" class="textshdow">请选择城市</option>
+            </select>
+            </div>
         <input type="submit" value="分享">
         <input type="reset" value="收起" class = "hiddenTopic">
     </form>
@@ -106,10 +124,10 @@
 <!-- 显示分享 -->
 <c:if test="${showTopic eq 'true' }">
 <div class="container">
-    <ul class="grid effect-2" id="grid"">
+    <ul class="grid effect-2" id="grid">
         <c:forEach items="${topics.content}" var="t">
             <li>
-                <div class="user_mess">
+                <div class="user_mess textshadow">
                   <a href="${pageContext.request.contextPath}/user/topic/${t.id}">
                     <img src="${pageContext.request.contextPath}/${t.picture}" alt="error" />
                   </a>
@@ -143,7 +161,7 @@
 <!-- 显示达人 -->
 <c:if test="${showTopPeople eq 'true' }">
 <div class="container">
-    <ul class="grid effect-2" id="grid"">
+    <ul class="grid effect-2" id="grid">
         <c:forEach items="${topPeoples.content}" var="u">
             <li>
                 <div class="user_mess">

@@ -26,6 +26,11 @@ html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form
 }
 
 body {
+ text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px
+ 1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px, rgba(133, 145, 143, .1) 3px 3px
+ 0px, rgba(133, 145, 143, .1) 4px 4px 0px, rgba(133, 145, 143, .1) 5px 5px 0px,
+ rgba(133, 145, 143, .1) 6px 6px 0px, rgba(133, 145, 143, .1) 7px 7px 0px,
+ rgba(133, 145, 143, .1) 8px 8px 0px;
  background: #FFFFFF;
 }
 
@@ -77,6 +82,14 @@ input {
  -moz-transition: all .2s;
  -webkit-transition: all .2s;
  -ms-transition: all .2s;
+}
+
+.textshadow {
+ text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px
+  1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px, rgba(133, 145, 143, .1) 3px 3px
+  0px, rgba(133, 145, 143, .1) 4px 4px 0px, rgba(133, 145, 143, .1) 5px 5px 0px,
+  rgba(133, 145, 143, .1) 6px 6px 0px, rgba(133, 145, 143, .1) 7px 7px 0px,
+  rgba(133, 145, 143, .1) 8px 8px 0px;
 }
 
 input[type="submit"], input[type="reset"] {
@@ -161,6 +174,10 @@ input:-webkit-autofill {
 /*  信封图标空  */
 .icon-envelope-empty {
  background-position: 0 0
+}
+/* 搜索图标 */
+.icon-search {
+ background-position: -48px 0
 }
 
 /*	修改浏览器滚动条样式*/

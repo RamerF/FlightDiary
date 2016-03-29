@@ -150,7 +150,9 @@ public class Pagination<T> {
     @SuppressWarnings("unchecked")
     T[] tArray = (T[]) ts.toArray();
     page = page - 1;
-    int n = totalNumber % pageSize == 0 ? (page + 1) * size : page * size + totalNumber % pageSize;
+    int remainder = totalNumber % pageSize;
+    int result = (int) Math.floor(totalNumber * 1.0 / pageSize);
+    int n = remainder == 0 || page < result ? (page + 1) * size : tArray.length;
     for (int i = page * size; i < n; i++) {
       tempList.add(tArray[i]);
     }
