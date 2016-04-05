@@ -33,68 +33,50 @@ $(function() {
           <form:hidden path="id" id="userId" />
           <input type="hidden" name="_method" value="put">
         </c:if>
-        <span class="label">用户名 : </span>
-        <form:input path="name" class="username" id ="username" placeholder="用户名 / 邮箱" />
+        <span class="error"></span>
+        <span>用户名 : </span>
+        <form:input path="name" class="userinfo"
+          placeholder="用户名 / 邮箱" />
         <span id="message"></span>
         <br>
         <c:if test="${empty user.id}">
-          <span class="label">密码 : </span>
-          <form:password path="password" id="password" class="password"/>
+          <span>密码 : </span>
+          <form:password path="password" class="userinfo"/>
           <br>
         </c:if>
         <!-- 用户注册面板 -->
         <div class="reg_panel" id="regPanel">
-            <!-- 注册导航 -->
-             <div class="nav_vertical"></div>
-             <div class="nav_color"></div>
-             <span class="label">邮箱 : </span>
-             <form:input path="email" class="email" id="email" placeholder="安全邮箱"/>
-             <span id="message2"></span>
-         </div>
-        <div class="update_panel">
-          <span class="label">电话号码 : </span>
+          <span>电话号码 : </span>
           <form:input path="telephone" />
-         
           <br> 
-          <span class="label">年龄 : </span>
+          <span>年龄 : </span>
           <form:input path="age" />
-          
           <br> 
-          <span class="label">
-              <img id="preview" class="preview" alt="error" onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/noPic.png'"
-                src="${pageContext.request.contextPath}/${user.head}">
-          </span>
+          <img id="preview" class="preview" alt="error"
+            src="${pageContext.request.contextPath}/${user.head}">
           <input type="text" class="picName" placeholder="请选择一张图片">
-          <input type="file" class="userHead" id="userHead" name="picture" /> 
-          
-          <br>
-          <span class="label">QQ : </span>
+          <input type="file" class="userHead" id="userHead"
+            name="picture" /> <br> <span>QQ : </span>
           <form:input path="qqNum" />
-          
-          <br>
-          <span class="label">微博 : </span>
+          <br> <span>微博 : </span>
           <form:input path="weiboNum" />
-          
-          <br>
-          <span class="label adjustment">性别 : </span>
+          <br> <span>性别 : </span>
           <form:radiobutton path="sex" label="男" value="M" class="radio"></form:radiobutton>
           <form:radiobutton path="sex" label="女" value="F" class="radio"></form:radiobutton>
+          <br>
         </div>
-        
         <div class="forget_pass" id="forgetPass">
-          <a  href="${pageContext.request.contextPath}/user/forwardForgetPassword">
+          <a
+            href="${pageContext.request.contextPath}/user/forwardForgetPassword">
             <span>忘记密码</span>
           </a>
         </div>
-        <div id="message3"></div>
-        <div class="toggle">
-            <input type="reset" value="重置" />
-            <input type="submit" value="登录" />
-            <a href="javascript:void(0);" id="reg">没有账户,去注册</a>
-        </div>
+        <input type="submit" value="登录" />
+        <input type="reset" value="重置" />
+        <a href="javascript:void(0);" id="reg">没有账户,去注册</a>
       </form:form>
     </div>
   </div>
-  
+
 </body>
 </html>

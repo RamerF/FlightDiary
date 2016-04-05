@@ -323,131 +323,58 @@ public class User {
   public void setName(String name) {
     this.name = name;
   }
-
-  /**
-   * Gets the password.
-   *
-   * @return the password
-   */
   public String getPassword() {
     return password;
   }
 
-  /**
-   * Sets the password.
-   *
-   * @param password the new password
-   */
   public void setPassword(String password) {
     this.password = password;
   }
 
-  /**
-   * Gets the sex.
-   *
-   * @return the sex
-   */
   public String getSex() {
     return sex;
   }
 
-  /**
-   * Sets the sex.
-   *
-   * @param sex the new sex
-   */
   public void setSex(String sex) {
     this.sex = sex;
   }
 
-  /**
-   * Gets the age.
-   *
-   * @return the age
-   */
   public Integer getAge() {
     return age;
   }
 
-  /**
-   * Sets the age.
-   *
-   * @param age the new age
-   */
   public void setAge(Integer age) {
     this.age = age;
   }
 
-  /**
-   * Gets the address.
-   *
-   * @return the address
-   */
   public String getAddress() {
     return address;
   }
 
-  /**
-   * Sets the address.
-   *
-   * @param address the new address
-   */
   public void setAddress(String address) {
     this.address = address;
   }
-
-  /**
-   * Gets the telephone.
-   *
-   * @return the telephone
-   */
   public String getTelephone() {
     return telephone;
   }
 
-  /**
-   * Sets the telephone.
-   *
-   * @param telephone the new telephone
-   */
   public void setTelephone(String telephone) {
     this.telephone = telephone;
   }
-
-  /**
-   * Gets the topics.
-   *
-   * @return the topics
-   */
   public Set<Topic> getTopics() {
     return topics;
   }
 
-  /**
-   * Sets the topics.
-   *
-   * @param topics the new topics
-   */
   public void setTopics(Set<Topic> topics) {
     this.topics = topics;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "User [id=" + id + ", name=" + name + ", topics=" + topics + ", follows=" + follows
         + ", favourites=" + favourites + ", notifyings=" + notifyings + "]";
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -471,11 +398,6 @@ public class User {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {

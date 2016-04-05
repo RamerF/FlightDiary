@@ -69,10 +69,11 @@ public interface TopicRepository extends PagingAndSortingRepository<Topic, Integ
   Topic getByIdAndUser(Integer topic_id, User user);
 
   /**
-   * 获取热门城市,并排序
-   * @return
+   * 获取热门城市,并按照出现的次数排序
+   * @return 非空城市的集合
    */
-  @Query(value = "select city,count(city) as n from topic where city!='' group by city", nativeQuery = true)
+  @Query(value = "select city from (select city,count(city) as n from topic where city!='' group by"
+      + " city) as t", nativeQuery = true)
   List<String> getOrderedCity();
 
   /**

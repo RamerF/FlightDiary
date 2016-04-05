@@ -100,10 +100,16 @@ public class UserService {
    * @param 每页记录数
    * @return 用户的分页记录
    */
+  @Transactional(readOnly = true)
   public Pagination<User> getTopPeople(int page, int size) {
     List<User> users = userRepository.getByIdJoinTopicUserId();
     Pagination<User> pageUser = new Pagination<>(users, page, size);
     return pageUser;
+  }
+
+  public List<String> getAllCities() {
+    List<String> cities = topicRepository.getOrderedCity();
+    return cities;
   }
 
   /**
@@ -113,6 +119,8 @@ public class UserService {
    * @param size 每页大小
    * @return 分享的分页数据
    */
+
+  @Transactional(readOnly = true)
   public Pagination<Topic> getTopicsPageByCity(String city, int page, int size) {
     List<Topic> topics = topicRepository.getByCity(city);
     Pagination<Topic> pageTopic = new Pagination<>(topics, page, size);

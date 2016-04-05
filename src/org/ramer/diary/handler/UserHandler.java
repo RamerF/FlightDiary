@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +37,15 @@ import org.ramer.diary.domain.Notifying;
 import org.ramer.diary.domain.Reply;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.exception.IllegalAccessException;
+import org.ramer.diary.exception.LinkInvalidException;
+import org.ramer.diary.exception.NoPictureException;
+import org.ramer.diary.exception.PasswordNotMatchException;
+import org.ramer.diary.exception.SystemWrongException;
+import org.ramer.diary.exception.UserExistException;
+import org.ramer.diary.exception.UserNotExistException;
 import org.ramer.diary.exception.UserNotLoginException;
+import org.ramer.diary.exception.UsernameOrPasswordNotMatchException;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.MailUtils;
@@ -47,6 +56,7 @@ import org.ramer.diary.util.Pagination;
  *
  * @author ramer.
  */
+
 /**
  * @author ramer
  *
@@ -72,10 +82,6 @@ public class UserHandler {
   private final String WRONGFORMAT = MessageConstant.WRONGFORMAT.toString();
   //  密码修改成功信息
   private final String SUCCESSCHANGEPASS = MessageConstant.SUCCESSCHANGEPASS.toString();
-  // 默认出错信息
-  private final String ERRORMESSAGE = MessageConstant.ERRORMESSAGE.toString();
-  // 未选择图片出错信息
-  private final String NOPICMESSAGE = MessageConstant.NOPICMESSAGE.toString();
   //	默认成功信息
   private final String SUCCESSMESSAGE = MessageConstant.SUCCESSMESSAGE.toString();
   //分享页面大小
@@ -108,8 +114,7 @@ public class UserHandler {
         page = 1;
       }
     } catch (Exception e) {
-      happenError(session, "非法参数");
-      return ERROR;
+      throw new IllegalAccessException("非法参数");
     }
     //获取分页分享
     Page<Topic> topics = userService.getTopicsPage(page, TOPICPAGESIZE);
@@ -134,6 +139,8 @@ public class UserHandler {
     session.setAttribute("showTopic", "true");
     //  取消标识为达人分类
     session.setAttribute("showTopPeople", "false");
+    //  取消标识为热门城市分类
+    session.setAttribute("showPopularCity", "false");
     return HOME;
   }
 
@@ -160,8 +167,7 @@ public class UserHandler {
         page = 1;
       }
     } catch (Exception e) {
-      happenError(session, "非法参数");
-      return ERROR;
+      throw new IllegalAccessException("非法参数");
     }
     //获取分页分享
     Page<Topic> topics = userService.getTopicsPageOrderByFavourite(page, TOPICPAGESIZE);
@@ -187,6 +193,8 @@ public class UserHandler {
     session.setAttribute("showTopic", "true");
     //  取消标识为达人分类
     session.setAttribute("showTopPeople", "false");
+    //    取消标识为热门城市分类
+    session.setAttribute("showPopularCity", "false");
     return HOME;
   }
 
@@ -206,9 +214,7 @@ public class UserHandler {
         page = 1;
       }
     } catch (Exception e) {
-      System.out.println("数据格式异常");
-      happenError(session, WRONGFORMAT);
-      return ERROR;
+      throw new IllegalAccessException(WRONGFORMAT);
     }
     //    获取达人的分页信息
     Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLEPAGESIZE);
@@ -232,11 +238,22 @@ public class UserHandler {
     session.setAttribute("showTopPeople", "true");
     //    取消标识为分享分类
     session.setAttribute("showTopic", "false");
+    //    取消标识为热门城市分类
+    session.setAttribute("showPopularCity", "false");
     return HOME;
   }
 
-  @RequestMapping("/home/orderByCity")
-  public String homeTopicOrderByCity(
+  /**
+   * 热门城市:
+   *  先获取所有城市按统计的次数排序,
+   *  取得第一个城市名,并获取对应的分享
+   * @param pageNum 页号
+   * @param session
+   * @param map
+   * @return
+   */
+  @RequestMapping("/home/groupByCity")
+  public String homeTopicGroupByCity(
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
       HttpSession session, Map<String, Object> map) {
     System.out.println("热门城市主页");
@@ -249,11 +266,90 @@ public class UserHandler {
         page = 1;
       }
     } catch (Exception e) {
-      happenError(session, "非法参数");
-      return ERROR;
+      throw new IllegalAccessException("数据格式有误");
     }
-    Page<Topic> topics = userService.getTopicsPageByCity(city, page, TOPICPAGESIZE);
+    if (checkLogin(session)) {
+      User user = (User) session.getAttribute("user");
+      //获取用户统计数据
+      int notifiedNumber = userService.getNotifiedNumber(user);
+      int topicNumber = userService.getTopicNumber(user);
+      int followedNumber = userService.getFollowedNumber(user);
+      System.out.println(
+          "获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
+      map.put("notifiedNumber", notifiedNumber);
+      map.put("topicNumber", topicNumber);
+      map.put("followedNumber", followedNumber);
+    }
+    List<String> cities = userService.getAllCities();
+    String city = cities.iterator().next();
+    Pagination<Topic> cityTopics = userService.getTopicsPageByCity(city, page, TOPICPAGESIZE);
+    //   将所有城市写入session
+    session.setAttribute("cities", cities);
+    //    将第一个城市对应的分页分享写入session
+    session.setAttribute("cityTopics", cityTopics);
+    //    取消标识为达人分类
+    session.setAttribute("showTopPeople", "false");
+    //    取消标识为分享分类
+    session.setAttribute("showTopic", "false");
+    //    标识为热门城市分类
+    session.setAttribute("showPopularCity", "true");
     return HOME;
+  }
+
+  /**
+   * 通过城市获取分享
+   * @param pageNum 页号
+   * @param city 城市名
+   * @param session
+   * @param map
+   * @return
+   */
+  @RequestMapping("/home/groupByCity/{city}")
+  public String homeTopicGroupByCityString(
+      @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
+      @PathVariable("city") String city, HttpSession session, Map<String, Object> map) {
+    List<String> cities = userService.getAllCities();
+    int page;
+    inOtherPage = false;
+    inTopicPage = false;
+    try {
+      page = Integer.parseInt(pageNum);
+      if (page < 1) {
+        page = 1;
+      }
+    } catch (Exception e) {
+      throw new IllegalAccessException(WRONGFORMAT);
+    }
+    try {
+      city = new String(city.getBytes("ISO-8859-1"), "utf-8");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+    if (checkLogin(session)) {
+      User user = (User) session.getAttribute("user");
+      //获取用户统计数据
+      int notifiedNumber = userService.getNotifiedNumber(user);
+      int topicNumber = userService.getTopicNumber(user);
+      int followedNumber = userService.getFollowedNumber(user);
+      System.out.println(
+          "获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
+      map.put("notifiedNumber", notifiedNumber);
+      map.put("topicNumber", topicNumber);
+      map.put("followedNumber", followedNumber);
+    }
+    Pagination<Topic> cityTopics = userService.getTopicsPageByCity(city, page, TOPICPAGESIZE);
+    //   将所有城市写入session
+    session.setAttribute("cities", cities);
+    //    将第一个城市对应的分页分享写入session
+    session.setAttribute("cityTopics", cityTopics);
+    //    取消标识为达人分类
+    session.setAttribute("showTopPeople", "false");
+    //    取消标识为分享分类
+    session.setAttribute("showTopic", "false");
+    //    标识为热门城市分类
+    session.setAttribute("showPopularCity", "true");
+    return HOME;
+
   }
 
   /**
@@ -281,13 +377,13 @@ public class UserHandler {
       Map<String, Object> map) {
     System.out.println("表单回显,id = " + id);
     User user = (User) map.get("user");
-    if (user.getId() != id) {
-      System.out.println("非法访问");
-      happenError(session, "非法访问");
-      return ERROR;
+    if (user != null && user.getId() == id) {
+      map.put("user", userService.getById(user.getId()));
+      return USERINPUT;
     }
-    map.put("user", userService.getById(user.getId()));
-    return USERINPUT;
+    System.out.println("更新用户表单回显,非法访问");
+    throw new IllegalAccessException("无法访问用户信息,登录已过期");
+
   }
 
   /**
@@ -324,8 +420,7 @@ public class UserHandler {
     user.setPassword(Encrypt.execEncrypt(user.getPassword()));
     //  如果是更新,用户ID不为空
     if (userService.getByName(user.getName()) != null && user.getId() == null) {
-      happenError(session, "用户名已存在,注册失败");
-      return ERROR;
+      throw new UserExistException("用户名已存在,注册失败");
     }
     //包含中文名称的用户,先设置别名
     if (hasChinese(user.getName())) {
@@ -346,28 +441,20 @@ public class UserHandler {
       }
     }
     Integer id = user.getId();
-    try {
-      if (userService.newOrUpdate(user).getId() > 0) {
-        user = userService.login(user);
-        if (user.getId() == null) {
-          happenError(session, "系统出错了,操作被取消,请返回重新操作");
-          return ERROR;
-        }
-        map.put("user", user);
-        //更新用户应返回到个人主页
-        if (id != null) {
-          return "redirect:/user/personal";
-        }
-        //注册用户返回到主页
-        return "redirect:/home";
+    if (userService.newOrUpdate(user).getId() > 0) {
+      user = userService.login(user);
+      if (user.getId() == null) {
+        throw new SystemWrongException("系统出错了,操作被取消,请返回重新操作");
       }
-    } catch (Exception e) {
-      System.out.println(e);
-      happenError(session, "操作失败,请检查输入信息是否合法");
-      return ERROR;
+      map.put("user", user);
+      //更新用户应返回到个人主页
+      if (id != null) {
+        return "redirect:/user/personal";
+      }
+      //注册用户返回到主页
+      return "redirect:/home";
     }
-    happenError(session, "系统出错了,操作被取消,请返回重新操作");
-    return ERROR;
+    throw new SystemWrongException("系统出错了,操作被取消,请返回重新操作");
   }
 
   /**
@@ -393,16 +480,15 @@ public class UserHandler {
       map.put("user", user2);
       return "redirect:/home";
     }
-    happenError(session, "登录失败,用户名或密码错误");
-    return ERROR;
+    throw new UsernameOrPasswordNotMatchException("登录失败,用户名或密码错误");
   }
 
   /**
    * 验证用户名.
+   * 如果用户名存在,写入true,否者写入false
    *
    * @param user 当更新时,表示更新用户
    * @param username 当前用户输入或自动填充的用户名
-   * @param isLogin 是否是登录请求
    * @param response the response
    * @param session the session
    * @param map the map
@@ -410,44 +496,58 @@ public class UserHandler {
    */
   @RequestMapping("/user/validateUserName")
   public void validateUserName(User user, @RequestParam("username") String username,
-      @RequestParam("isLogin") String isLogin, HttpServletResponse response, HttpSession session,
-      Map<String, Object> map) throws IOException {
+      HttpServletResponse response, HttpSession session, Map<String, Object> map)
+          throws IOException {
     System.out.println("验证用户名");
+    response.setCharacterEncoding("UTF-8");
     if (username == null || username.trim().equals("")) {
       return;
     }
-    String result = null;
-    try {
-      boolean flag = (Boolean.parseBoolean(isLogin));
-      if (flag) {
-        if (userService.getByName(username) == null) {
-          result = "<img class='valid' src='../pictures/wrong.png' weight='10px' height='10px'>";
-          response.setCharacterEncoding("UTF-8");
-          response.getWriter().write(result);
-        } else {
-          result = "";
-          response.setCharacterEncoding("UTF-8");
-          response.getWriter().write(result);
-        }
-
-      } else {
-        //问题:
-        //这里通过名称获取用户可能会导致错误,原因未知
-        //具体表现为: 用户输入中文验证时,即使数据库中无对应数据,也会返回一个user,导致这里检测失败
-        //用户名可用或用户名未被更改 :
-        if (userService.getByName(username) == null || username.equals(user.getName())) {
-          result = "<img class='valid' src='../pictures/right.png' weight='10px' height='10px'>";
-          response.setCharacterEncoding("UTF-8");
-          response.getWriter().write(result);
-        } else {
-          result = "<img class='valid' src='../pictures/wrong.png' weight='10px' height='10px'>";
-          response.setCharacterEncoding("UTF-8");
-          response.getWriter().write(result);
-        }
+    //    id存在,用户更新
+    if (user.getId() != null && user.getId() > 0) {
+      System.out.println("用户更新: name  : " + user.getName());
+      if (user.getName().equals(username)) {
+        response.getWriter().write("false");
       }
-    } catch (Exception e) {
-      happenError(session);
     }
+    if (userService.getByName(username) == null) {
+      response.getWriter().write("false");
+      return;
+    } else {
+      response.getWriter().write("true");
+      return;
+    }
+  }
+
+  /**
+   * 验证邮箱是否可用
+   * @param emailString 邮箱字符串
+   * @param response
+   * @param map
+   * @throws IOException
+   */
+  @RequestMapping(value = "/user/validateEmail", method = RequestMethod.POST)
+  public void validateEmail(@RequestParam("email") String emailString, HttpServletResponse response,
+      Map<String, Object> map) throws IOException {
+    String result = "";
+    response.setCharacterEncoding("UTF-8");
+    if (emailString == null || emailString.trim().equals("")) {
+      return;
+    }
+    if (!MailUtils.isEmail(emailString)) {
+      result = "<img class='valid' src='../pictures/wrong.png' weight='10px' height='10px'>";
+      response.getWriter().write(result);
+      return;
+    }
+
+    if (userService.getByEmail(emailString) == null) {
+      result = "<img class='valid' src='../pictures/right.png' weight='10px' height='10px'>";
+      response.getWriter().write(result);
+      return;
+    }
+    System.out.println("邮箱已存在");
+    result = "<img class='valid' src='../pictures/wrong.png' weight='10px' height='10px'>";
+    response.getWriter().write(result);
   }
 
   /**
@@ -493,8 +593,7 @@ public class UserHandler {
     //	当用户上传文件时保存文件
     if (file.isEmpty()) {
       System.out.println("未选择图片");
-      happenError(session, NOPICMESSAGE);
-      return ERROR;
+      throw new NoPictureException("请选择一张图片");
     }
     System.out.println("保存图片");
     String pictureUrl = saveFile(file, session, false, hasChinese(user.getName()));
@@ -630,8 +729,7 @@ public class UserHandler {
     inOtherPage = true;
     User other = userService.getById(id);
     if (other == null) {
-      happenError(session, "用户不存在");
-      return ERROR;
+      throw new UserNotExistException("您访问的用户不存在");
     }
     if (checkLogin(session)) {
       System.out.println("已登录,写入信息");
@@ -880,8 +978,7 @@ public class UserHandler {
     //如果访问的临时用户存在,说明当前用户在他人的分享主页
     //用户将无法执行删除
     if (map.keySet().contains("other")) {
-      happenError(session);
-      return ERROR;
+      throw new IllegalAccessException("你没有删除该条分享的权限");
     }
     Topic topic = userService.getTopicById(topic_id);
     userService.deleteTopic(topic);
@@ -952,28 +1049,21 @@ public class UserHandler {
     //如果在他人页面,代码属于人为构造
     //用户将无法执行删除
     if (inOtherPage) {
-      happenError(session);
-      return ERROR;
+      throw new IllegalAccessException("你没有删除该条评论的权限");
     }
     Comment comment = new Comment();
     Topic topic = new Topic();
     //防止用户非法传入topic参数
-    try {
-      comment.setId(Integer.parseInt(comment_id));
-      topic.setId(Integer.parseInt(topic_id));
-      // 如果在分享页面,判断是否为本人的分享,非本人的分享将无法删除
-      if (inTopicPage
-          && !userService.getTopicByUserIdAndTopicId(topic.getId(), (User) map.get("user"))) {
-        happenError(session, ERRORMESSAGE);
-      }
-    } catch (Exception e) {
-      happenError(session);
-      return ERROR;
+    comment.setId(Integer.parseInt(comment_id));
+    topic.setId(Integer.parseInt(topic_id));
+    // 如果在分享页面,判断是否为本人的分享,非本人的分享将无法删除
+    if (inTopicPage
+        && !userService.getTopicByUserIdAndTopicId(topic.getId(), (User) map.get("user"))) {
+      throw new IllegalAccessException("你没有删除该条评论的权限");
     }
     comment.setTopic(topic);
     if (!userService.deleteComment(comment)) {
-      happenError(session);
-      return ERROR;
+      throw new SystemWrongException();
     }
     return "redirect:/user/personal";
   }
@@ -1049,8 +1139,7 @@ public class UserHandler {
       reply_id = Integer.parseInt(id);
     } catch (NumberFormatException e) {
       System.out.println("数据格式错误");
-      happenError(session, WRONGFORMAT);
-      return ERROR;
+      throw new IllegalAccessException("数据格式有误");
     }
     if (reply_id != 0) {
       if (userService.deleteReply(reply_id)) {
@@ -1099,12 +1188,8 @@ public class UserHandler {
       return;
     }
     User notifiedUser = new User();
-    try {
-      notifiedUser = (User) session.getAttribute("other");
-      System.out.println("被通知用户 = " + notifiedUser);
-    } catch (Exception e) {
-      happenError(session, ERRORMESSAGE);
-    }
+    notifiedUser = (User) session.getAttribute("other");
+    System.out.println("被通知用户 = " + notifiedUser);
     Notifying notifying = new Notifying();
     notifying.setUser(user);
     notifying.setNotifiedUser(notifiedUser);
@@ -1115,7 +1200,6 @@ public class UserHandler {
     response.setCharacterEncoding("utf-8");
     if (!flag) {
       System.out.println("消息发送失败");
-      happenError(session, "系统错误,请稍后再试");
       response.getWriter().write("系统正在打麻将,请稍后再试");
       return;
     }
@@ -1140,8 +1224,7 @@ public class UserHandler {
     try {
       notify_id = Integer.parseInt(notifyId);
     } catch (Exception e) {
-      happenError(session, ERRORMESSAGE);
-      return ERROR;
+      throw new IllegalAccessException("数据格式有误");
     }
     if (notify_id > 0) {
       notifying.setId(notify_id);
@@ -1149,12 +1232,10 @@ public class UserHandler {
       notifying.setHasCheck("true");
       boolean flag = userService.updateNotifying(notifying);
       if (!flag) {
-        happenError(session, ERRORMESSAGE);
-        return ERROR;
+        throw new SystemWrongException();
       }
     } else {
-      happenError(session, ERRORMESSAGE);
-      return ERROR;
+      throw new IllegalAccessException("数据格式有误");
     }
     return "redirect:/user/personal";
   }
@@ -1205,8 +1286,7 @@ public class UserHandler {
     user.setPassword(Encrypt.execEncrypt(newPassword));
     user = userService.newOrUpdate(user);
     if (user == null) {
-      happenError(session, "系统正在打盹儿,过会儿再试试");
-      return ERROR;
+      throw new SystemWrongException();
     }
     session.setAttribute("error_modifyPass", "");
     session.setAttribute("succMessage", "密码修改成功");
@@ -1295,21 +1375,19 @@ public class UserHandler {
     String expireTime = new SimpleDateFormat("yyMMddhhmmss")
         .format(Calendar.getInstance().getTime());
     if (expireTime.compareTo(user.getExpireTime()) > 0) {
-      happenError(session, "链接已失效");
-      return ERROR;
+      System.out.println("链接已失效");
+      throw new LinkInvalidException();
     }
     if (!password.equals(repassword)) {
-      happenError(session, ERRORMESSAGE);
-      return ERROR;
+      throw new PasswordNotMatchException();
     }
     user.setPassword(Encrypt.execEncrypt(password));
     if (userService.newOrUpdate(user) == null) {
-      happenError(session, ERRORMESSAGE);
+      throw new SystemWrongException();
     } else {
       execSuccess(session, SUCCESSCHANGEPASS);
       return SUCCESS;
     }
-    return SUCCESS;
   }
 
   /**
@@ -1383,9 +1461,7 @@ public class UserHandler {
         .format(Calendar.getInstance().getTime());
     User user = userService.getByEmail(email);
     if (user == null || expireTime.compareTo(user.getExpireTime()) > 0) {
-      System.out.println("链接失效");
-      happenError(session, "链接已失效");
-      return ERROR;
+      throw new LinkInvalidException("链接失效");
     }
     user.setEmail(newEmail);
     userService.newOrUpdate(user);
@@ -1518,20 +1594,6 @@ public class UserHandler {
       return true;
     }
     return false;
-  }
-
-  /**
-   * 当发生错误时,该方法可以在session中写入错误信息,当不传入错误信息时写入默认错误信息.
-   *
-   * @param session the session
-   * @param errorMessage 错误信息
-   */
-  private void happenError(HttpSession session, String... errorMess) {
-    if (errorMess.length > 0) {
-      session.setAttribute("errorMessage", errorMess[0]);
-      return;
-    }
-    session.setAttribute("errorMessage", ERRORMESSAGE);
   }
 
   /**

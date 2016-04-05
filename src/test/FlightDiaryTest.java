@@ -106,6 +106,9 @@ public class FlightDiaryTest {
     }
   }
 
+  /**
+   * 测试通过城市和页码获取分享
+   */
   @Test
   public void testGetTopicPageByCity() {
     Pagination<Topic> pageTopic = userService.getTopicsPageByCity("重庆", 2, 4);
@@ -113,6 +116,16 @@ public class FlightDiaryTest {
     for (Topic topic : topics) {
       System.out.println("name : " + topic.getContent());
     }
+  }
+
+  @Test
+  public void testGetAllCities() {
+    List<String> cities = userService.getAllCities();
+    System.out.println("城市名 :  ");
+    for (String city : cities) {
+      System.out.println("\t" + city);
+    }
+    System.out.println("----------------------\n" + "第一个城市 :  " + cities.iterator().next());
   }
 
 }

@@ -1,7 +1,8 @@
 $(function() {
-	// 获取城市列表
+	// 从xml文件获取城市列表
 	var optionNodeCountry = document.getElementById("optionNodeCountry");
 	var optionNodeCity = document.getElementById("optionNodeCity");
+	// requetsUrl为全局变量,在jsp文件中声明
 	$.get(requestUrl, function(xml) {
 		var country = $(xml).find("country");
 		country.each(function(index, content) {
@@ -10,6 +11,7 @@ $(function() {
 		})
 		$("#country").append(optionNodeCountry);
 	});
+	// 二级下拉菜单,获取城市列表
 	$("#country").change(
 			function() {
 				$("#city").empty();
@@ -128,5 +130,4 @@ $(function() {
 											+ this.result + '">');
 						})
 			});
-
 })
