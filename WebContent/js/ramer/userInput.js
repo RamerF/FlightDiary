@@ -221,7 +221,8 @@ $(function() {
 			$("#message3").html("<font color='red'>请确认信息无误</font>");
 			return false;
 		}
-		return false;
+		
+		$("_form").submit();
 	});
 	// 预览图片
 	$("#userHead").change(function() {

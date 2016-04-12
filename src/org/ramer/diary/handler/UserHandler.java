@@ -497,7 +497,7 @@ public class UserHandler {
   @RequestMapping("/user/validateUserName")
   public void validateUserName(User user, @RequestParam("username") String username,
       HttpServletResponse response, HttpSession session, Map<String, Object> map)
-          throws IOException {
+      throws IOException {
     System.out.println("验证用户名");
     response.setCharacterEncoding("UTF-8");
     if (username == null || username.trim().equals("")) {
@@ -914,7 +914,7 @@ public class UserHandler {
   @RequestMapping("/user/topic/praise/{topic_id}")
   public void praise(@PathVariable("topic_id") Integer topic_id, Map<String, Object> map,
       HttpServletResponse response, HttpServletRequest request, HttpSession session)
-          throws IOException {
+      throws IOException {
     response.setCharacterEncoding("utf-8");
     User user = (User) map.get("user");
     if (!checkLogin(session)) {
@@ -1174,7 +1174,7 @@ public class UserHandler {
   @RequestMapping("/user/personal/sendPrivMess")
   public void sendPrivMess(User user, @RequestParam("content") String content,
       Map<String, Object> map, HttpServletResponse response, HttpSession session)
-          throws IOException {
+      throws IOException {
     System.out.println("发送私信");
     response.setCharacterEncoding("utf-8");
     if (!checkLogin(session)) {
@@ -1416,7 +1416,7 @@ public class UserHandler {
   @RequestMapping("/user/modifyEmail/sendMail")
   public void sendEmailToModifyEmail(@RequestParam("newEmail") String newEmail, User user,
       Map<String, Object> map, HttpSession session, HttpServletResponse response)
-          throws IOException {
+      throws IOException {
 
     System.out.println("发送邮件,修改邮箱");
     response.setCharacterEncoding("utf-8");
@@ -1528,14 +1528,16 @@ public class UserHandler {
    */
   private String saveFile(MultipartFile file, HttpSession session, boolean head, boolean chn)
       throws IOException {
+    String separator = File.separator;
     User user = (User) session.getAttribute("user");
     System.out.println("用户名: " + user.getName());
     String username = user.getName();
     String alias = user.getAlias();
     File userFolder = new File(
-        session.getServletContext().getRealPath("pictures") + "\\" + username);
+        session.getServletContext().getRealPath("pictures") + separator + username);
     if (chn) {
-      userFolder = new File(session.getServletContext().getRealPath("pictures") + "\\" + alias);
+      userFolder = new File(
+          session.getServletContext().getRealPath("pictures") + separator + alias);
     }
     //	判断用户文件夹是否存在,不存在则创建
     if (!userFolder.exists()) {
@@ -1543,9 +1545,10 @@ public class UserHandler {
     }
     //获取图片的名称
     String name = file.getOriginalFilename();
-    String path = session.getServletContext().getRealPath("pictures") + "\\" + username + "\\";
+    String path = session.getServletContext().getRealPath("pictures") + separator + username
+        + separator;
     if (chn) {
-      path = session.getServletContext().getRealPath("pictures") + "\\" + alias + "\\";
+      path = session.getServletContext().getRealPath("pictures") + separator + alias + separator;
     }
     String suffix = name.substring(name.indexOf("."));
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
@@ -1569,14 +1572,14 @@ public class UserHandler {
     }
     inputStream.close();
     outputStream.close();
-    String pictureUrl = "pictures\\" + username + "\\" + name + suffix;
+    String pictureUrl = "pictures" + separator + username + separator + name + suffix;
     if (chn) {
-      pictureUrl = "pictures\\" + alias + "\\" + name + suffix;
+      pictureUrl = "pictures" + separator + alias + separator + name + suffix;
     }
     if (head) {
-      pictureUrl = "pictures\\" + username + "\\" + username + suffix;
+      pictureUrl = "pictures" + separator + username + separator + username + suffix;
       if (chn) {
-        pictureUrl = "pictures\\" + alias + "\\" + alias + suffix;
+        pictureUrl = "pictures" + separator + alias + separator + alias + suffix;
       }
     }
     System.out.println("数据库中的图片路径:" + pictureUrl);
