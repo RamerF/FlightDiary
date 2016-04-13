@@ -43,7 +43,8 @@
         <div class="head"><a
             href="${pageContext.request.contextPath}/user/personal/${topic.user.id}">
                 <img alt="error"
-                src="${pageContext.request.contextPath}/${topic.user.head }">
+                src="${pageContext.request.contextPath}/${topic.user.head }"
+                onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'">
         </a></div>
         <div class="selfinfo">
             <div class="name"><a

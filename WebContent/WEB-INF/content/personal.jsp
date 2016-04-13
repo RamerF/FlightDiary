@@ -43,7 +43,8 @@
 <div class="user_panel">
     <div class="head">
         <a id="showProfile">
-            <img alt="error" src="${pageContext.request.contextPath}/${user.head }" class="user_head">
+            <img alt="error" src="${pageContext.request.contextPath}/${user.head }" class="user_head"
+              onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'">
             <br>
             <span>更换头像</span>
         </a>

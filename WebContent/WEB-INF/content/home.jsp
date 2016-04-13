@@ -133,7 +133,8 @@ $(function() {
                   </a>
                   <div class="name_panel">
                     <a href="${pageContext.request.contextPath}/user/personal/${t.user.id}">
-                        <img src="${pageContext.request.contextPath}/${t.user.head}" class="head">
+                        <img src="${pageContext.request.contextPath}/${t.user.head}" class="head"
+                         onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'">
                         <br>
                         <span class="name">${t.user.name }</span>
                     </a>
@@ -166,11 +167,13 @@ $(function() {
             <li>
                 <div class="user_mess">
                   <a href="${pageContext.request.contextPath}/user/topic/${u.id}">
-                    <img src="${pageContext.request.contextPath}/${u.head}" alt="error" />
+                    <img src="${pageContext.request.contextPath}/${u.head}" alt="error" 
+                      onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'"/>
                   </a>
                   <div class="name_panel">
                     <a href="${pageContext.request.contextPath}/user/personal/${u.id}">
-                        <img src="${pageContext.request.contextPath}/${u.head}" class="head">
+                        <img src="${pageContext.request.contextPath}/${u.head}" class="head"
+                          onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'">
                         <br>
                         <span class="name">${u.name }</span>
                     </a>

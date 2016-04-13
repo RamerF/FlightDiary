@@ -113,7 +113,7 @@ span.username {
     position: absolute;
     left: 77%;
     text-align: left;
-    margin-top: 88px;
+    margin-top: 92px;
     z-index: 10;
     padding: 10px;
     box-shadow: 0px 1px 10px #E2E1E1;
@@ -139,7 +139,7 @@ div.topic_panel {
     display: none;
     width: 400px;
     min-width: 400px;
-    margin-top: 88px;
+    margin-top: 92px;
     position: absolute;
     text-align: center;
     z-index: 100;
@@ -203,8 +203,8 @@ div.topic_panel {
 
 .input_city_panel select {
     outline: none;
-    border: none;
-    border-bottom: 1px solid #70BBF7;
+    background: #FFFFFF;
+    border: 1px solid #70BBF7;
     height: 30px;
     margin-right: 6px;
 }

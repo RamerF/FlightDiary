@@ -26,7 +26,8 @@
     <div class="user_info_panel">
       <div class="head">
         <a>
-          <img alt="error" src="${pageContext.request.contextPath}/${other.head }">
+          <img alt="error" src="${pageContext.request.contextPath}/${other.head }"
+            onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'">
         </a>
       </div>
       <div class="selfinfo">
