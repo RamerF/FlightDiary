@@ -75,7 +75,7 @@ public class Pagination<T> {
    * @param number
    */
   public void setNumber(int number) {
-    this.number = number <= 0 ? 1 : number >= totalPages ? totalPages : number;
+    this.number = (number <= 0 || totalPages <= 0) ? 1 : number >= totalPages ? totalPages : number;
   }
 
   public int getNumber() {
@@ -149,12 +149,14 @@ public class Pagination<T> {
     List<T> tempList = new ArrayList<>();
     @SuppressWarnings("unchecked")
     T[] tArray = (T[]) ts.toArray();
-    page = page - 1;
-    int remainder = totalNumber % pageSize;
-    int result = (int) Math.floor(totalNumber * 1.0 / pageSize);
-    int n = remainder == 0 || page < result ? (page + 1) * size : tArray.length;
-    for (int i = page * size; i < n; i++) {
-      tempList.add(tArray[i]);
+    if (tArray.length > 0) {
+      page = page - 1;
+      int remainder = totalNumber % pageSize;
+      int result = (int) Math.floor(totalNumber * 1.0 / pageSize);
+      int n = remainder == 0 || page < result ? (page + 1) * size : tArray.length;
+      for (int i = page * size; i < n; i++) {
+        tempList.add(tArray[i]);
+      }
     }
     return tempList;
   }

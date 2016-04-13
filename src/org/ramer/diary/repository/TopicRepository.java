@@ -5,13 +5,12 @@ package org.ramer.diary.repository;
 
 import java.util.List;
 
+import org.ramer.diary.domain.Topic;
+import org.ramer.diary.domain.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
-
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
 
 /**
  * @author ramer
@@ -73,7 +72,7 @@ public interface TopicRepository extends PagingAndSortingRepository<Topic, Integ
    * @return 非空城市的集合
    */
   @Query(value = "select city from (select city,count(city) as n from topic where city!='' group by"
-      + " city) as t", nativeQuery = true)
+      + " city) as t order by t.n desc", nativeQuery = true)
   List<String> getOrderedCity();
 
   /**

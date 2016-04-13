@@ -8,16 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import org.ramer.diary.domain.Comment;
 import org.ramer.diary.domain.Favourite;
 import org.ramer.diary.domain.Follow;
@@ -36,6 +26,15 @@ import org.ramer.diary.repository.TopicRepository;
 import org.ramer.diary.repository.UserRepository;
 import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.Pagination;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author ramer
@@ -107,6 +106,10 @@ public class UserService {
     return pageUser;
   }
 
+  /**
+   * 获取所有的城市
+   * @return 所有城市的集合
+   */
   public List<String> getAllCities() {
     List<String> cities = topicRepository.getOrderedCity();
     return cities;
@@ -123,6 +126,9 @@ public class UserService {
   @Transactional(readOnly = true)
   public Pagination<Topic> getTopicsPageByCity(String city, int page, int size) {
     List<Topic> topics = topicRepository.getByCity(city);
+    if (topics.size() <= 0) {
+      return new Pagination<>(new ArrayList<Topic>(), page, size);
+    }
     Pagination<Topic> pageTopic = new Pagination<>(topics, page, size);
     return pageTopic;
   }

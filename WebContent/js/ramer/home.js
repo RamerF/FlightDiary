@@ -2,7 +2,7 @@ $(function() {
 	// 从xml文件获取城市列表
 	var optionNodeCountry = document.getElementById("optionNodeCountry");
 	var optionNodeCity = document.getElementById("optionNodeCity");
-	// requetsUrl为全局变量,在jsp文件中声明
+	// requestUrl为全局变量,在jsp文件中声明
 	$.get(requestUrl, function(xml) {
 		var country = $(xml).find("country");
 		country.each(function(index, content) {
@@ -33,6 +33,13 @@ $(function() {
 							$("#city").append(optionNodeCity);
 						});
 			})
+	// 通过城市名查询分享
+	$(".querytopic").change(function() {
+		var url = path + "/home/groupByCity/" + $(this).val();
+		$("#queryTopic").attr("action", url);
+		$("#queryTopic").submit();
+		return false;
+	});
 
 	// 上一页
 	$("#lastPage").click(function() {

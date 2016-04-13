@@ -20,6 +20,7 @@
 $(function() {
 	/* 指定城市信息的xml文件,全局变量 */
     requestUrl = "${pageContext.request.contextPath}/xml/city.xml";
+    path = "${pageContext.request.contextPath}";
 })
 </script>
 <script src="${pageContext.request.contextPath}/js/ramer/home.js"></script>
@@ -50,10 +51,13 @@ $(function() {
         <a href="${pageContext.request.contextPath}/home/groupByCity" id="topCity">热门城市</a>
     </span>
   </div>
+  <!-- 通过用户输入城市获取分享 -->
   <div class="query">
-    <input type="text" name="city" placeholder="输入旅游城市" class="querycity">
+    <input type="text" name="city" placeholder="输入旅游城市" class="querytopic">
     <i class="icon-search search"></i>
   </div>
+  <!-- 查询分享的表单 -->
+  <form action="" id="queryTopic"></form>
   <c:if test="${user.id gt 0}">
     <div class="user_panel">
       <span>
@@ -218,7 +222,8 @@ $(function() {
                       </a>
                       <div class="name_panel">
                         <a href="${pageContext.request.contextPath}/user/personal/${t.user.id}">
-                            <img src="${pageContext.request.contextPath}/${t.user.head}" class="head">
+                            <img src="${pageContext.request.contextPath}/${t.user.head}" class="head"
+                              onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'">
                             <br>
                             <span class="name">${t.user.name }</span>
                         </a>
