@@ -1528,40 +1528,64 @@ public class UserHandler {
   private String saveFile(MultipartFile file, HttpSession session, boolean head, boolean chn)
       throws IOException {
     String separator = File.separator;
+    String location = "";
+    //    如果操作系统是Linux
+    if (System.getProperty("os.name").equals("Linux")) {
+      location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
+          + session.getServletContext().getServletContextName()).getCanonicalPath();
+    } else {
+      location = new File(
+          "D:/workspace/eclipse/" + session.getServletContext().getServletContextName())
+              .getCanonicalPath();
+    }
+    String rootdir = location + separator + "WebContent" + separator + "pictures";
     User user = (User) session.getAttribute("user");
     System.out.println("用户名: " + user.getName());
     String username = user.getName();
     String alias = user.getAlias();
     File userFolder = new File(
         session.getServletContext().getRealPath("pictures") + separator + username);
+    File userFolderBack = new File(rootdir + separator + username);
     if (chn) {
       userFolder = new File(
           session.getServletContext().getRealPath("pictures") + separator + alias);
+      userFolderBack = new File(rootdir + separator + alias);
     }
     //	判断用户文件夹是否存在,不存在则创建
     if (!userFolder.exists()) {
       userFolder.mkdir();
     }
+    if (!userFolderBack.exists()) {
+      userFolderBack.mkdir();
+    }
     //获取图片的名称
     String name = file.getOriginalFilename();
     String path = session.getServletContext().getRealPath("pictures") + separator + username
         + separator;
+    String pathBack = rootdir + separator + username + separator;
     if (chn) {
       path = session.getServletContext().getRealPath("pictures") + separator + alias + separator;
+      pathBack = rootdir + separator + alias + separator;
     }
     String suffix = name.substring(name.indexOf("."));
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
     name = simpleDateFormat.format(new Date());
     String pathname = path + name + suffix;
+    String pathnameBack = pathBack + name + suffix;
     if (head) {
       pathname = path + username + suffix;
+      pathnameBack = pathBack + username + suffix;
       if (chn) {
         pathname = path + alias + suffix;
+        pathnameBack = pathBack + alias + suffix;
       }
     }
     System.out.println("上传的图片信息 : \n\t" + pathname);
+    System.out.println("上传的图片备份信息 : \n\t" + pathnameBack);
     File saveFile = new File(pathname);
+    File saveFileBack = new File(pathnameBack);
     saveFile.createNewFile();
+    saveFileBack.createNewFile();
     InputStream inputStream = file.getInputStream();
     OutputStream outputStream = new FileOutputStream(saveFile);
     byte[] bys = new byte[inputStream.available()];
@@ -1571,6 +1595,14 @@ public class UserHandler {
     }
     inputStream.close();
     outputStream.close();
+    inputStream = file.getInputStream();
+    OutputStream outputStreamBack = new FileOutputStream(saveFileBack);
+    byte[] bysBack = new byte[inputStream.available()];
+    int lengthBack = 0;
+    while ((lengthBack = inputStream.read(bysBack)) != -1) {
+      outputStreamBack.write(bysBack, 0, lengthBack);
+    }
+    outputStreamBack.close();
     String pictureUrl = "pictures" + separator + username + separator + name + suffix;
     if (chn) {
       pictureUrl = "pictures" + separator + alias + separator + name + suffix;
