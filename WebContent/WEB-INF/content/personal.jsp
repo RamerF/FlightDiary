@@ -298,7 +298,6 @@
                     <div class="reply_double_form_panel">
                         <form action="" method="post" class="reply_double_form">
                             <textarea rows="7" cols="30" class="reply_double_content" name="content"></textarea>
-                            <br>
                             <input type="submit" value="回复">
                             <input type="reset" value="收起" class="hiddenReplyDoubleForm">
                         </form>

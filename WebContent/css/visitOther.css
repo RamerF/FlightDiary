@@ -175,10 +175,11 @@
 .reply_double_content {
  width: 100%;
  height: 117px;
- outline-color: rgba(61, 80, 76, 0.63);
+ outline: none;
+ resize: none;
  text-indent: 2em;
  border: none;
- border-bottom: 1px solid rgba(61, 80, 76, 0.63);
+ border-bottom: 1px solid #4DABF5;
 }
 
 .reply_double_panel {
