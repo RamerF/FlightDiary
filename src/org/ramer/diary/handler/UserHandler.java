@@ -583,7 +583,9 @@ public class UserHandler {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   @RequestMapping("/publish")
-  public String publish(@RequestParam("content") String content, @RequestParam("city") String city,
+  public String publish(@RequestParam("content") String content,
+      @RequestParam(value = "city", required = false, defaultValue = "") String city,
+      @RequestParam(value = "city2", required = false, defaultValue = "") String city2,
       @RequestParam(value = "personal", required = false, defaultValue = "") String personal,
       @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {
     User user = (User) session.getAttribute("user");
@@ -601,6 +603,9 @@ public class UserHandler {
     topic.setDate(new Date());
     topic.setUser(user);
     topic.setUpCounts(0);
+    //默认取值为city，若为空则取值city2，即用户手动输入
+    city = (city == null || city.equals("")) ? city2 : city;
+
     topic.setCity(city);
     //保存用户经历
     topic = userService.publish(topic);
@@ -730,6 +735,7 @@ public class UserHandler {
     if (other == null) {
       throw new UserNotExistException("您访问的用户不存在");
     }
+    System.out.println(other.getTopics().iterator().next().getDate());
     if (checkLogin(session)) {
       System.out.println("已登录,写入信息");
       //获取收藏信息
@@ -810,6 +816,7 @@ public class UserHandler {
     }
     User followedUser = new User();
     followedUser = (topic.getId() == null) ? (User) session.getAttribute("other") : topic.getUser();
+    System.out.println("topic: " + topic.getContent());
     System.out.println("被关注用户: " + followedUser.getName());
     // 虽然在访问他人的主页时,topic没有显示写入到map中,但是在页面EL和foreach迭代输出的时候,产生了topic,
     //springmvc会将此topic封装,因此这里的topic是最后一个被迭代的topic对象

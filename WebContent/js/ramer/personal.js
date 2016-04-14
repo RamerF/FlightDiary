@@ -46,7 +46,6 @@ $(function() {
 	// 显示私信
 	// 读私信
 	$(".readPrivMess").click(function() {
-		alert("读取通知");
 		var id = $(this).children(".notifyId").val();
 		var url = $(this).attr("href");
 		$("#sendPrivMessForm").attr("aciton", url);

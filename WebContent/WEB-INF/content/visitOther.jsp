@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -196,9 +197,7 @@
             <!-- 评论表单 -->
             <div class="comment_form_panel">
               <form action="" method="post" class="comment_form">
-                <textarea rows="7" cols="30" class="comment_content" name="content">
-                </textarea>
-                <br>
+                <textarea rows="7" cols="30" class="comment_content" name="content"></textarea>
                 <input type="hidden" name="user" value="${user.id }" />
                 <input type="submit" value="发表评论">
                 <input type="reset" value="收起" class="hiddenCommentForm">
@@ -210,7 +209,7 @@
                 <p>
                   ${comment.user.name } : ${comment.content }
                   <sub>
-                    &nbsp;&nbsp;${comment.date}
+                    &nbsp;&nbsp;<fmt:formatDate value="${comment.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
                   </sub>
                   <a href="${pageContext.request.contextPath}/user/topic/comment/reply/${comment.id}" class="reply">
                     <i class="icon-edit">
@@ -220,9 +219,7 @@
                 <!-- 回复评论表单 -->
                 <div class="reply_form_panel">
                   <form action="" method="post" class="reply_form">
-                    <textarea rows="7" cols="30" class="reply_content" name="content">
-                    </textarea>
-                    <br>
+                    <textarea rows="7" cols="30" class="reply_content" name="content"></textarea>
                     <input type="submit" value="发表评论">
                     <input type="reset" value="收起" class="hiddenReplyForm">
                   </form>
@@ -231,7 +228,7 @@
                   <p>
                     ${reply.user.name}&nbsp;回复&nbsp;${comment.user.name} : ${reply.content }
                     <sub>
-                      &nbsp;&nbsp;${reply.date}
+                      &nbsp;&nbsp;<fmt:formatDate value="${reply.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
                     </sub>
                     <a 
                         href="${pageContext.request.contextPath}/user/topic/comment/reply/${reply.comment.id}"

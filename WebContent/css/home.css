@@ -291,6 +291,7 @@ select#city {
     line-height: 2em;
     /*     box-shadow: 0px 1px 10px #E2E1E1; */
     border: 1px solid #4DABF5;
+    display: table;
 }
 
 .cityname {

@@ -2,6 +2,7 @@
 		pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,8 +53,9 @@
     <div class="selfinfo">
     <div class="name">${sessionScope.user.name}</div>
         <div class="contact">
-            <span> QQ: ${user.qqNum }</span>
+            <span> QQ: ${!empty user.qqNum ? user.qqNum : "无" }</span>
             <span> 微博: ${!empty user.weiboNum ? user.weiboNum : "无"}</span>
+            <!-- 用户通知 -->
             <span>
                 <c:if test="${!empty user.notifyings }">
                     <a href="javascript:void(0)" id="showPrivMess">
@@ -96,14 +98,17 @@
 
 <!-- 私信面板 -->
 <div class="privMessPanel" id="privMessPanel">
-    <c:forEach items="${user.notifyings}" var="notify">
-        <span>
-            <a href="${pageContext.request.contextPath}/user/personal/readPrivMess" class="readPrivMess">
-                <input type="hidden" value="${notify.id}" name="notifyId" class="notifyId">
-                ${notify.user.name } : ${notify.content}<sub>${notify.date }</sub>
-            </a>
-        </span>
-    </c:forEach>
+ <c:forEach items="${user.notifyings}" var="notify">
+  <span>
+   <a href="${pageContext.request.contextPath}/user/personal/readPrivMess" class="readPrivMess">
+    <input type="hidden" value="${notify.id}" name="notifyId" class="notifyId">
+    ${notify.user.name } : ${notify.content}
+    <sub>
+      <fmt:formatDate value="${notify.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
+    </sub>
+   </a>
+  </span>
+ </c:forEach>
 </div>
 <!-- 私信表单 -->
 <form
@@ -257,13 +262,16 @@
         <!-- 显示评论 -->
         <c:forEach items="${topic.comments}" var="comment">
             <div class="comment_panel">
-                <p>${comment.user.name } : ${comment.content }<sub>&nbsp;&nbsp;${comment.date}</sub>
-                    <a href="${pageContext.request.contextPath}/user/topic/comment/reply/${comment.id}" class="reply">
-                        <i class="icon-edit"></i>
-                    </a>
-                    <a href="${pageContext.request.contextPath}/user/topic/comment/delete/${comment.id}" class="trash2">
-                        <i class="icon-trash"></i>
-                    </a>
+                <p>${comment.user.name } : ${comment.content }
+                  <sub>
+                    &nbsp;&nbsp;<fmt:formatDate value="${comment.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
+                  </sub>
+                  <a href="${pageContext.request.contextPath}/user/topic/comment/reply/${comment.id}" class="reply">
+                      <i class="icon-edit"></i>
+                  </a>
+                  <a href="${pageContext.request.contextPath}/user/topic/comment/delete/${comment.id}" class="trash2">
+                      <i class="icon-trash"></i>
+                  </a>
                 </p>
                 <!-- 回复评论表单 -->
                 <div class="reply_form_panel">
@@ -275,7 +283,10 @@
                     </form>
                 </div>
                 <c:forEach items="${comment.replies}" var="reply">
-                    <p>${reply.user.name}&nbsp;回复&nbsp;${comment.user.name} : ${reply.content }<sub>&nbsp;&nbsp;${reply.date}</sub>
+                    <p>${reply.user.name}&nbsp;回复&nbsp;${comment.user.name} : ${reply.content }
+                      <sub>
+                        &nbsp;&nbsp;<fmt:formatDate value="${reply.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
+                      </sub>
                         <a href="${pageContext.request.contextPath}/user/topic/comment/reply/${reply.comment.id}" class="reply2">
                             <i class="icon-edit"></i>
                         </a>

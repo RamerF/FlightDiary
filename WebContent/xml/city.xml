@@ -9,6 +9,7 @@
 
 <location>
  <country name="中国">
+  <city name="江南"></city>
   <city name="香港"></city>
   <city name="澳门"></city>
   <city name="深圳"></city>
@@ -66,6 +67,8 @@
  </country>
  <country name="泰国">
   <city name="曼谷"></city>
+  <city name="迈阿密"></city>
+  <city name="斯米兰群岛"></city>
  </country>
  <country name="新加坡">
   <city name="新加坡"></city>
@@ -75,5 +78,11 @@
  </country>
  <country name="马来西亚">
   <city name="吉隆坡"></city>
+ </country>
+ <country name="罗马">
+  <city name="圣天使堡"></city>
+ </country>
+ <country name="缅甸">
+  <city name="蒲甘"></city>
  </country>
 </location>
