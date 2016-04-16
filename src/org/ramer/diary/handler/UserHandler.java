@@ -64,10 +64,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserHandler {
   @Autowired
   private UserService userService;
-  // 初始化在他人主页变量
-  private boolean inOtherPage = false;
   // 主页面
   private final String HOME = PageConstant.HOME.toString();
+  // 初始化在他人主页变量
+  private boolean inOtherPage = false;
   // 初始化在分享页面变量
   private boolean inTopicPage = false;
   // 全局出错页面
@@ -102,8 +102,12 @@ public class UserHandler {
     System.out.println("主页");
     System.out.println("pagesize = " + TOPICPAGESIZE);
     int page = 1;
-    inOtherPage = false;
-    inTopicPage = false;
+    //    inOtherPage = false;
+    //    inTopicPage = false;
+
+    //重置标识信息
+    map.put("inOtherPage", inOtherPage);
+    map.put("inTopicPage", inTopicPage);
     try {
       page = Integer.parseInt(pageNum);
       if (page < 1) {
@@ -155,8 +159,12 @@ public class UserHandler {
     System.out.println("热门主页");
 
     int page = 1;
-    inOtherPage = false;
-    inTopicPage = false;
+
+    //    inOtherPage = false;
+    //    inTopicPage = false;
+
+    session.setAttribute("inOtherPage", false);
+    session.setAttribute("inTopicPage", false);
     try {
       page = Integer.parseInt(pageNum);
       if (page < 1) {
@@ -254,8 +262,11 @@ public class UserHandler {
       HttpSession session, Map<String, Object> map) {
     System.out.println("热门城市主页");
     int page = 1;
-    inOtherPage = false;
-    inTopicPage = false;
+    //    inOtherPage = false;
+    //    inTopicPage = false;
+
+    session.setAttribute("inOtherPage", false);
+    session.setAttribute("inTopicPage", false);
     try {
       page = Integer.parseInt(pageNum);
       if (page < 1) {
@@ -306,8 +317,11 @@ public class UserHandler {
       @PathVariable("city") String city, HttpSession session, Map<String, Object> map) {
     List<String> cities = userService.getAllCities();
     int page;
-    inOtherPage = false;
-    inTopicPage = false;
+    //    inOtherPage = false;
+    //    inTopicPage = false;
+
+    session.setAttribute("inOtherPage", false);
+    session.setAttribute("inTopicPage", false);
     try {
       page = Integer.parseInt(pageNum);
       if (page < 1) {
@@ -657,8 +671,11 @@ public class UserHandler {
    */
   @RequestMapping("/user/personal")
   public String personalMiddle(User user, Map<String, Object> map, HttpSession session) {
-    inOtherPage = false;
-    inTopicPage = false;
+    //    inOtherPage = false;
+    //    inTopicPage = false;
+
+    session.setAttribute("inOtherPage", false);
+    session.setAttribute("inTopicPage", false);
     if (!UserUtils.checkLogin(session)) {
       throw new UserNotLoginException("您的登录已过期,请重新登录");
     }
@@ -685,8 +702,11 @@ public class UserHandler {
   @RequestMapping("/user/topic/{topic_id}")
   public String forwardTopic(@PathVariable("topic_id") Integer topic_id, Map<String, Object> map,
       HttpSession session) {
-    inOtherPage = false;
-    inTopicPage = true;
+    //    inOtherPage = false;
+    //    inTopicPage = true;
+
+    session.setAttribute("inOtherPage", false);
+    session.setAttribute("inTopicPage", true);
     //  查看分享
     System.out.println("-----查看分享-----");
     Topic topic = userService.getTopicById(topic_id);
@@ -730,7 +750,9 @@ public class UserHandler {
       map.put("user", userService.getById(id));
       return "redirect:/user/personal";
     }
-    inOtherPage = true;
+    //    inOtherPage = true;
+
+    session.setAttribute("inOtherPage", true);
     User other = userService.getById(id);
     if (other == null) {
       throw new UserNotExistException("您访问的用户不存在");
@@ -1025,13 +1047,17 @@ public class UserHandler {
     comment.setDate(new Date());
     userService.comment(comment);
     //在他人主页
-    if (inOtherPage) {
+    User tUser = (User) session.getAttribute("other");
+    System.out.println("other:" + tUser.getName());
+    Topic topic2 = (Topic) session.getAttribute("topic");
+    System.out.println("topic:" + topic2.getContent());
+    if ((boolean) session.getAttribute("inOtherPage")) {
       User other = (User) session.getAttribute("other");
       System.out.println("在他人主页评论");
       return "redirect:/user/personal/" + other.getId();
     }
     // 在某个分享页面
-    if (inTopicPage) {
+    if ((boolean) session.getAttribute("inTopicPage")) {
       System.out.println("在分享页面评论");
       return "redirect:/user/topic/" + topic_id;
     }
@@ -1054,7 +1080,7 @@ public class UserHandler {
     System.out.println("-----删除某个评论-----");
     //如果在他人页面,代码属于人为构造
     //用户将无法执行删除
-    if (inOtherPage) {
+    if ((boolean) session.getAttribute("inOtherPage")) {
       throw new IllegalAccessException("你没有删除该条评论的权限");
     }
     Comment comment = new Comment();
@@ -1063,7 +1089,7 @@ public class UserHandler {
     comment.setId(Integer.parseInt(comment_id));
     topic.setId(Integer.parseInt(topic_id));
     // 如果在分享页面,判断是否为本人的分享,非本人的分享将无法删除
-    if (inTopicPage
+    if ((boolean) session.getAttribute("inTopicPage")
         && !userService.getTopicByUserIdAndTopicId(topic.getId(), (User) map.get("user"))) {
       throw new IllegalAccessException("你没有删除该条评论的权限");
     }
@@ -1111,13 +1137,13 @@ public class UserHandler {
     if (!userService.replyComment(reply)) {
       return ERROR;
     }
-    if (inOtherPage) {
+    if ((boolean) session.getAttribute("inOtherPage")) {
       User other = (User) session.getAttribute("other");
       System.out.println("在他人主页评论");
       return "redirect:/user/personal/" + other.getId();
     }
     // 在某个分享页面
-    if (inTopicPage) {
+    if ((boolean) session.getAttribute("inTopicPage")) {
       System.out.println("在分享页面评论");
       Topic topic = (Topic) session.getAttribute("topic");
       return "redirect:/user/topic/" + topic.getId();
@@ -1149,13 +1175,13 @@ public class UserHandler {
     }
     if (reply_id != 0) {
       if (userService.deleteReply(reply_id)) {
-        if (inOtherPage) {
+        if ((boolean) session.getAttribute("inOtherPage")) {
           User other = (User) session.getAttribute("other");
           System.out.println("在他人主页评论");
           return "redirect:/user/personal/" + other.getId();
         }
         // 在某个分享页面
-        if (inTopicPage) {
+        if ((boolean) session.getAttribute("inTopicPage")) {
           System.out.println("在分享页面评论");
           Topic topic = (Topic) session.getAttribute("topic");
           return "redirect:/user/topic/" + topic.getId();
@@ -1165,6 +1191,7 @@ public class UserHandler {
       }
     }
     return ERROR;
+
   }
 
   /**

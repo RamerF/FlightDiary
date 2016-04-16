@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
 
 	<classpath>
-		<dir name="/home/ramer/Projects/web/workspace/eclipse/FlightDiary/build/classes">
+		<dir name="/home/ramer/Projects/web/workspace/eclipse/FlightDiary/bin">
 		</dir>
 	</classpath>
 
