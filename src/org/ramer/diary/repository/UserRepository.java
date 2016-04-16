@@ -5,18 +5,17 @@ package org.ramer.diary.repository;
 
 import java.util.List;
 
+import org.ramer.diary.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-
-import org.ramer.diary.domain.User;
 
 /**
  * @author ramer
  *
  */
 public interface UserRepository
-extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
+    extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
 
   /**
    * 根据用户名和密码获取用户
@@ -51,6 +50,22 @@ extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
    * @return 用户
    */
   User getByName(String username);
+
+  /**
+   * 通过已加密邮箱获取用户
+   * @param id 用户ID
+   * @param email 已加密邮箱
+   * @return
+   */
+  User getByIdAndEmail(Integer id, String email);
+
+  /**
+   * 通过已加密密码获取用户
+   * @param id 用户ID
+   * @param password 已加密密码
+   * @return
+   */
+  User getByIdAndPassword(Integer id, String password);
 
   /**
    * 通过邮箱获取用户信息

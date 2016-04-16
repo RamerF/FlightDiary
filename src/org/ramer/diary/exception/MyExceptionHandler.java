@@ -64,6 +64,9 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
       case "PasswordNotMatchException":
         errorMessage = (errorMessage == null || errorMessage == "") ? "密码不匹配" : errorMessage;
         break;
+      case "EmailFormatErrorException":
+        errorMessage = (errorMessage == null || errorMessage == "") ? "邮箱格式错误" : errorMessage;
+        break;
 
       default:
         errorMessage = "系统出错了";

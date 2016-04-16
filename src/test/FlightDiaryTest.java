@@ -49,7 +49,7 @@ public class FlightDiaryTest {
    */
   @Test
   public void testEncrypt() {
-    String string = Encrypt.execEncrypt("Jelly");
+    String string = Encrypt.execEncrypt("Jelly", false);
     System.out.println("string = " + string);
   }
 

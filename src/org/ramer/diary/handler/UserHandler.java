@@ -25,6 +25,7 @@ import org.ramer.diary.domain.Notifying;
 import org.ramer.diary.domain.Reply;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.exception.EmailFormatErrorException;
 import org.ramer.diary.exception.IllegalAccessException;
 import org.ramer.diary.exception.LinkInvalidException;
 import org.ramer.diary.exception.NoPictureException;
@@ -402,6 +403,18 @@ public class UserHandler {
     }
   }
 
+  @ModelAttribute
+  public void getUser(User u, Map<String, Object> map) {
+    Integer id;
+    if (u != null) {
+      id = u.getId();
+      User user = userService.getById(id);
+      map.put("user", user);
+      return;
+    }
+    return;
+  }
+
   /**
    * 注册或更新用户信息.
    *
@@ -416,7 +429,21 @@ public class UserHandler {
   @RequestMapping(value = "/user", method = RequestMethod.POST)
   public String newOrUpdate(User user, @RequestParam("picture") MultipartFile file,
       HttpSession session, Map<String, Object> map) {
-    user.setPassword(Encrypt.execEncrypt(user.getPassword()));
+    System.out.println("邮箱 ： " + user.getEmail());
+    //验证邮箱格式
+    if (!MailUtils.isEmail(user.getEmail())) {
+      throw new EmailFormatErrorException();
+    }
+    //邮箱加密：
+    //如果用户输入与加密后的邮箱相同，则用户未更改邮箱，直接存储
+    if (userService.getByIdAndEmail(user.getId(), user.getEmail()) == null) {
+      user.setEmail(Encrypt.execEncrypt(user.getEmail(), true));
+    }
+    //密码加密：
+    //如果用户输入与加密后的密码相同，则用户未更改密码，直接存储
+    if (userService.getByIdAndPassword(user.getId(), user.getEmail()) == null) {
+      user.setPassword(Encrypt.execEncrypt(user.getPassword(), false));
+    }
     //  如果是更新,用户ID不为空
     if (userService.getByName(user.getName()) != null && user.getId() == null) {
       throw new UserExistException("用户名已存在,注册失败");
@@ -470,10 +497,10 @@ public class UserHandler {
     String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
     if (user.getName().matches(regex)) {
       System.out.println("通过邮箱登录");
-      user.setEmail(Encrypt.execEncrypt(user.getName()));
+      user.setEmail(Encrypt.execEncrypt(user.getName(), true));
       user.setName(null);
     }
-    user.setPassword(Encrypt.execEncrypt(user.getPassword()));
+    user.setPassword(Encrypt.execEncrypt(user.getPassword(), false));
     User user2 = userService.login(user);
     if (user2.getId() != null) {
       map.put("user", user2);
@@ -520,6 +547,7 @@ public class UserHandler {
 
   /**
    * 验证邮箱是否可用
+   * @param user
    * @param emailString 邮箱字符串
    * @param response
    * @param map
@@ -528,25 +556,23 @@ public class UserHandler {
   @RequestMapping(value = "/user/validateEmail", method = RequestMethod.POST)
   public void validateEmail(@RequestParam("email") String emailString, HttpServletResponse response,
       Map<String, Object> map) throws IOException {
-    String result = "";
+    emailString = emailString.trim();
     response.setCharacterEncoding("UTF-8");
-    if (emailString == null || emailString.trim().equals("")) {
+    if (emailString == null || emailString.equals("")) {
       return;
     }
     if (!MailUtils.isEmail(emailString)) {
-      result = "<img class='valid' src='../pictures/wrong.png' weight='10px' height='10px'>";
-      response.getWriter().write(result);
+      response.getWriter().write("true");
       return;
     }
-
+    //将邮箱加密，对比数据库中的加密邮箱
+    emailString = Encrypt.execEncrypt(emailString, true);
     if (userService.getByEmail(emailString) == null) {
-      result = "<img class='valid' src='../pictures/right.png' weight='10px' height='10px'>";
-      response.getWriter().write(result);
+      response.getWriter().write("false");
       return;
     }
     System.out.println("邮箱已存在");
-    result = "<img class='valid' src='../pictures/wrong.png' weight='10px' height='10px'>";
-    response.getWriter().write(result);
+    response.getWriter().write("true");
   }
 
   /**
@@ -1278,7 +1304,7 @@ public class UserHandler {
   public String modifyPassword(@RequestParam("oldPassword") String oldPassword,
       @RequestParam("newPassword") String newPassword, User user, Map<String, Object> map,
       HttpServletResponse response, HttpSession session) throws IOException {
-    if (!Encrypt.execEncrypt(oldPassword).equals(user.getPassword())) {
+    if (!Encrypt.execEncrypt(oldPassword, false).equals(user.getPassword())) {
       System.out.println("原始密码错误");
       session.setAttribute("error_modifyPass", "原始密码错误");
       return "redirect:/user/forwardModifyPassword";
@@ -1289,7 +1315,7 @@ public class UserHandler {
       session.setAttribute("succMessage", "密码修改成功");
       return SUCCESS;
     }
-    user.setPassword(Encrypt.execEncrypt(newPassword));
+    user.setPassword(Encrypt.execEncrypt(newPassword, false));
     user = userService.newOrUpdate(user);
     if (user == null) {
       throw new SystemWrongException();
@@ -1338,7 +1364,7 @@ public class UserHandler {
       response.getWriter().write("您输入的不是邮箱哒 ^o^||");
       return;
     }
-    String encodedEmail = Encrypt.execEncrypt(email);
+    String encodedEmail = Encrypt.execEncrypt(email, true);
     User user = userService.getByEmail(encodedEmail);
     //    发送邮件之前判断是否存在,防止用户而已发送邮件
     if (user == null) {
@@ -1387,7 +1413,7 @@ public class UserHandler {
     if (!password.equals(repassword)) {
       throw new PasswordNotMatchException();
     }
-    user.setPassword(Encrypt.execEncrypt(password));
+    user.setPassword(Encrypt.execEncrypt(password, false));
     if (userService.newOrUpdate(user) == null) {
       throw new SystemWrongException();
     } else {
@@ -1441,7 +1467,7 @@ public class UserHandler {
     user.setExpireTime(expireTime);
     userService.newOrUpdate(user);
     String servletName = session.getServletContext().getServletContextName();
-    String encodedEmail = Encrypt.execEncrypt(newEmail);
+    String encodedEmail = Encrypt.execEncrypt(newEmail, true);
     String content = "<h3>请点击下面的链接完成邮箱更改,五分钟内有效</h3><br>" + "<a href='http://localhost:8080/"
         + servletName + "/user/modifyEmail?email1=" + encodedEmail + "&email2=" + user.getEmail()
         + "'>http://localhost:8080/" + servletName + "/user/modifyEmail/" + newEmail + "</a>";

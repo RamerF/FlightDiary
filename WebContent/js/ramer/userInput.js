@@ -10,6 +10,30 @@ $(function() {
 		$(":input[type='submit']").val("更新");
 		$("#title").text("更新");
 		$("#reg").css("display", "none");
+
+		/* 邮箱格式化显示 */
+		var email = $("input[name='email']").val();
+		var startString = email.charAt(0);
+		var endString = email.substring(email.indexOf("@") - 2, email.length);
+		var showEmail = startString + "***" + endString;
+		$("input[name='email']").attr("value", showEmail);
+		$("input[type='reset']").click(
+				function() {
+					$("#_form")[0].reset();
+					/* 邮箱格式化显示 */
+					var email = $("input[name='email']").val();
+					var startString = email.charAt(0);
+					var endString = email.substring(email.indexOf("@") - 2,
+							email.length);
+					var showEmail = startString + "***" + endString;
+					$("input[name='email']").attr("value", showEmail);
+					$("#message2").text("");
+				});
+		$("input[type='submit']").click(function() {
+			$("input[name='email']").attr("value", email);
+			$("#_form").submit();
+		});
+
 	}
 
 	// ,注册用户,顶部导航条
@@ -198,21 +222,37 @@ $(function() {
 					});
 
 	// 验证邮箱
-	$("#email").change(function() {
-		var email = $("input[name='email']").val();
-		var url = path + "/user/validateEmail";
-		if (email == "" || $.trim(email) == "") {
-			return;
-		}
-		var args = {
-			"email" : email,
-			"time" : new Date()
-		};
-		$.post(url, args, function(data) {
-			var url = data.replace("../", "./");
-			$("#message2").html(url);
-		});
-	});
+	$("#email")
+			.change(
+					function() {
+						var email = $("input[name='email']").val();
+						var url = path + "/user/validateEmail";
+						if (email == "" || $.trim(email) == "") {
+							return;
+						}
+						var args = {
+							"email" : email,
+							"time" : new Date()
+						};
+						$
+								.post(
+										url,
+										args,
+										function(data) {
+											var result = "";
+											if (data == "true") {
+												result = "<img class='valid' src='"
+														+ path
+														+ "/pictures/wrong.png' weight='10px' height='10px'>";
+											} else {
+												result = "<img class='valid' src='"
+														+ path
+														+ "/pictures/right.png' weight='10px' height='10px'>";
+
+											}
+											$("#message2").html(result);
+										});
+					});
 	// 表单提交验证
 	$("input[type='submit']").click(function() {
 		var message = $("#message img").attr("src");
@@ -221,7 +261,7 @@ $(function() {
 			$("#message3").html("<font color='red'>请确认信息无误</font>");
 			return false;
 		}
-		
+
 		$("_form").submit();
 	});
 	// 预览图片

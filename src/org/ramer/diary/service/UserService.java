@@ -163,6 +163,24 @@ public class UserService {
   }
 
   /**
+   * 通过id和邮箱获取用户
+   * @param email
+   * @return
+   */
+  public User getByIdAndEmail(Integer id, String email) {
+    return userRepository.getByIdAndEmail(id, email);
+  }
+
+  /**
+   * 通过id和密码获取用户
+   * @param password
+   * @return
+   */
+  public User getByIdAndPassword(Integer id, String password) {
+    return userRepository.getByIdAndPassword(id, password);
+  }
+
+  /**
    * 用户发表日记
    * @param topic 用户分享,日记
    * @return 发表分享成功返回true
@@ -240,7 +258,7 @@ public class UserService {
     String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
     if (username.matches(regex)) {
       System.out.println("邮箱");
-      return userRepository.getByEmail(Encrypt.execEncrypt(username));
+      return userRepository.getByEmail(Encrypt.execEncrypt(username, true));
     } else {
       System.out.println("用户名");
       return userRepository.getByName(username);

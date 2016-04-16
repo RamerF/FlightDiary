@@ -3,11 +3,11 @@
  */
 package test;
 
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
-
 import org.ramer.diary.util.MailUtils;
 
 /**
@@ -35,5 +35,11 @@ public class MailTest {
         "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
     Matcher matcher = pattern.matcher("feng1390635973@aa.cn");
     System.out.println(matcher.matches());
+    @SuppressWarnings("resource")
+    Scanner scanner = new Scanner(System.in);
+    String email = "";
+    while (!(email = scanner.next()).equals("exit")) {
+      MailUtils.isEmail(email);
+    }
   }
 }
