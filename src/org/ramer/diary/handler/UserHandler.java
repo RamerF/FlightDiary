@@ -1,10 +1,6 @@
 package org.ramer.diary.handler;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,8 +32,11 @@ import org.ramer.diary.exception.UserNotLoginException;
 import org.ramer.diary.exception.UsernameOrPasswordNotMatchException;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.MailUtils;
 import org.ramer.diary.util.Pagination;
+import org.ramer.diary.util.StringUtils;
+import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -81,8 +80,6 @@ public class UserHandler {
   private final String WRONGFORMAT = MessageConstant.WRONGFORMAT.toString();
   //  密码修改成功信息
   private final String SUCCESSCHANGEPASS = MessageConstant.SUCCESSCHANGEPASS.toString();
-  //	默认成功信息
-  private final String SUCCESSMESSAGE = MessageConstant.SUCCESSMESSAGE.toString();
   //分享页面大小
   @Value("#{diaryProperties['topic.page.size']}")
   private int TOPICPAGESIZE;
@@ -118,7 +115,7 @@ public class UserHandler {
     //获取分页分享
     Page<Topic> topics = userService.getTopicsPage(page, TOPICPAGESIZE);
     map.put("topics", topics);
-    if (checkLogin(session)) {
+    if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
       int notifiedNumber = userService.getNotifiedNumber(user);
@@ -171,7 +168,7 @@ public class UserHandler {
     //获取分页分享
     Page<Topic> topics = userService.getTopicsPageOrderByFavourite(page, TOPICPAGESIZE);
     map.put("topics", topics);
-    if (checkLogin(session)) {
+    if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
       int notifiedNumber = userService.getNotifiedNumber(user);
@@ -218,7 +215,7 @@ public class UserHandler {
     //    获取达人的分页信息
     Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLEPAGESIZE);
     map.put("topPeoples", topPeoples);
-    if (checkLogin(session)) {
+    if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
       int notifiedNumber = userService.getNotifiedNumber(user);
@@ -267,7 +264,7 @@ public class UserHandler {
     } catch (Exception e) {
       throw new IllegalAccessException("数据格式有误");
     }
-    if (checkLogin(session)) {
+    if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
       int notifiedNumber = userService.getNotifiedNumber(user);
@@ -324,7 +321,7 @@ public class UserHandler {
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     }
-    if (checkLogin(session)) {
+    if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
       int notifiedNumber = userService.getNotifiedNumber(user);
@@ -422,7 +419,7 @@ public class UserHandler {
       throw new UserExistException("用户名已存在,注册失败");
     }
     //包含中文名称的用户,先设置别名
-    if (hasChinese(user.getName())) {
+    if (StringUtils.hasChinese(user.getName())) {
       System.out.println("用户名包含中文");
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
       String alias = simpleDateFormat.format(new Date());
@@ -433,7 +430,8 @@ public class UserHandler {
       System.out.println("保存图片");
       String pictureUrl;
       try {
-        pictureUrl = saveFile(file, session, true, hasChinese(user.getName()));
+        pictureUrl = FileUtils.saveFile(file, session, true,
+            StringUtils.hasChinese(user.getName()));
         user.setHead(pictureUrl);
       } catch (IOException e) {
         e.printStackTrace();
@@ -597,7 +595,8 @@ public class UserHandler {
       throw new NoPictureException("请选择一张图片");
     }
     System.out.println("保存图片");
-    String pictureUrl = saveFile(file, session, false, hasChinese(user.getName()));
+    String pictureUrl = FileUtils.saveFile(file, session, false,
+        StringUtils.hasChinese(user.getName()));
     topic.setPicture(pictureUrl);
     topic.setContent(content);
     topic.setDate(new Date());
@@ -640,7 +639,8 @@ public class UserHandler {
     System.out.println("更新用户头像");
     if (!file.isEmpty()) {
       System.out.println("保存图片");
-      String pictureUrl = saveFile(file, session, true, hasChinese(user.getName()));
+      String pictureUrl = FileUtils.saveFile(file, session, true,
+          StringUtils.hasChinese(user.getName()));
       user.setHead(pictureUrl);
     }
     userService.updateHead(user);
@@ -659,7 +659,7 @@ public class UserHandler {
   public String personalMiddle(User user, Map<String, Object> map, HttpSession session) {
     inOtherPage = false;
     inTopicPage = false;
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       throw new UserNotLoginException("您的登录已过期,请重新登录");
     }
     // 避免懒加载异常,重新获取user
@@ -691,7 +691,7 @@ public class UserHandler {
     System.out.println("-----查看分享-----");
     Topic topic = userService.getTopicById(topic_id);
     User user = (User) session.getAttribute("user");
-    if (checkLogin(session)) {
+    if (UserUtils.checkLogin(session)) {
       System.out.println("已登录,写入信息");
       //获取收藏信息
       List<Integer> favourites = favouriteToList(user, topic.getUser(), session);
@@ -736,7 +736,7 @@ public class UserHandler {
       throw new UserNotExistException("您访问的用户不存在");
     }
     System.out.println(other.getTopics().iterator().next().getDate());
-    if (checkLogin(session)) {
+    if (UserUtils.checkLogin(session)) {
       System.out.println("已登录,写入信息");
       //获取收藏信息
       List<Integer> favourites = favouriteToList(user, other, session);
@@ -772,7 +772,7 @@ public class UserHandler {
    * @return list中存储的是当前用户收藏的所有,当前被浏览用户,的分享的id.
    */
   private List<Integer> favouriteToList(User user, User other, HttpSession session) {
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       return new ArrayList<>();
     }
     List<Integer> list = userService.getFavouriteTopicIds(user, other);
@@ -784,7 +784,7 @@ public class UserHandler {
   }
 
   private List<Integer> praiseToList(User user, User other, HttpSession session) {
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       return new ArrayList<>();
     }
     List<Integer> list = userService.getPraiseTopicIds(user, other);
@@ -809,7 +809,7 @@ public class UserHandler {
       HttpSession session) throws IOException {
     System.out.println("添加关注");
     response.setCharacterEncoding("UTF-8");
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       System.out.println("用户未登录");
       response.getWriter().write("主人说没登录不能关注哒");
       return;
@@ -841,7 +841,7 @@ public class UserHandler {
       HttpSession session) throws IOException {
     System.out.println("取消关注");
     response.setCharacterEncoding("UTF-8");
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       System.out.println("用户未登录");
       response.getWriter().write("请先登录再继续操作");
       return;
@@ -872,7 +872,7 @@ public class UserHandler {
   public void favourite(@PathVariable("topic_id") Integer topic_id, User user,
       HttpServletResponse response, HttpSession session) throws IOException {
     response.setCharacterEncoding("UTF-8");
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       response.getWriter().write("麻麻说没登录不能收藏哒 !");
       return;
     }
@@ -923,7 +923,7 @@ public class UserHandler {
       throws IOException {
     response.setCharacterEncoding("utf-8");
     User user = (User) map.get("user");
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       response.getWriter().write("麻麻说没登录不能点赞哒 !");
       return;
     }
@@ -954,7 +954,7 @@ public class UserHandler {
       HttpSession session) throws IOException {
     System.out.println("取消点赞");
     response.setCharacterEncoding("utf-8");
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       throw new UserNotLoginException("没登录的哦");
     }
     Topic topic = new Topic();
@@ -988,7 +988,7 @@ public class UserHandler {
     }
     Topic topic = userService.getTopicById(topic_id);
     userService.deleteTopic(topic);
-    boolean flag = deleteFile(topic, session, hasChinese(user.getName()));
+    boolean flag = FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getName()));
     System.out.println("-----删除图片 : " + flag + "-----");
     return "redirect:/user/personal";
   }
@@ -1009,7 +1009,7 @@ public class UserHandler {
       @RequestParam("content") String content, Map<String, Object> map, HttpSession session,
       HttpServletResponse response) throws IOException {
     System.out.println("用户评论");
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       throw new UserNotLoginException("要先登录,才能评论哦 !");
     }
     System.out.println("-----用户评论-----");
@@ -1090,7 +1090,7 @@ public class UserHandler {
   public String replyComment(@PathVariable("comment_id") String id,
       @RequestParam("content") String content, User user, HttpSession session,
       HttpServletResponse response, Map<String, Object> map) throws IOException {
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       throw new UserNotLoginException("您还未登录,或登录已过期,请登录");
     }
     Integer comment_id = 0;
@@ -1183,7 +1183,7 @@ public class UserHandler {
       throws IOException {
     System.out.println("发送私信");
     response.setCharacterEncoding("utf-8");
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       response.getWriter().write("需要先登录才能说悄悄话哦");
       System.out.println("未登录");
       return;
@@ -1255,7 +1255,7 @@ public class UserHandler {
    */
   @RequestMapping(value = "/user/forwardModifyPassword", method = RequestMethod.GET)
   public String forwardModifyPassword(Map<String, Object> map, HttpSession session) {
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       throw new UserNotLoginException("您还未登录或登录已过期");
     }
     System.out.println("引导到修改用户密码页面");
@@ -1391,7 +1391,7 @@ public class UserHandler {
     if (userService.newOrUpdate(user) == null) {
       throw new SystemWrongException();
     } else {
-      execSuccess(session, SUCCESSCHANGEPASS);
+      UserUtils.execSuccess(session, SUCCESSCHANGEPASS);
       return SUCCESS;
     }
   }
@@ -1403,7 +1403,7 @@ public class UserHandler {
    */
   @RequestMapping("/user/forwardModifyEmail")
   public String forwardModifyEmail(HttpSession session) {
-    if (!checkLogin(session)) {
+    if (!UserUtils.checkLogin(session)) {
       throw new UserNotLoginException("您的登录已过期,请重新登录");
     }
     return "modifyEmail";
@@ -1471,7 +1471,7 @@ public class UserHandler {
     }
     user.setEmail(newEmail);
     userService.newOrUpdate(user);
-    execSuccess(session, "邮箱更改成功啦,去主页溜溜吧");
+    UserUtils.execSuccess(session, "邮箱更改成功啦,去主页溜溜吧");
     user.setExpireTime(expireTime);
     return SUCCESS;
   }
@@ -1494,178 +1494,6 @@ public class UserHandler {
   @RequestMapping("/error")
   public String forwardError() {
     return ERROR.substring(10);
-  }
-
-  /**
-   * 删除分享图片.
-   *
-   * @param topic 图片对应的分享
-   * @param session the session
-   * @param chn 是否中文
-   * @return 删除成功返回true
-   */
-  private boolean deleteFile(Topic topic, HttpSession session, boolean chn) {
-    User user = (User) session.getAttribute("user");
-    String username = user.getName();
-    String alias = user.getAlias();
-    String picture = topic.getPicture();
-    String pictureName = picture.substring(picture.lastIndexOf("\\"));
-    String servletPath = session.getServletContext().getRealPath("pictures");
-    System.out.println("servletPath:\n\t" + servletPath + "\npictureName:\n\t" + pictureName);
-    String realPath = servletPath + "\\" + username + "\\" + pictureName;
-    // 如果用户名中含有中文,路径是别名
-    if (chn) {
-      realPath = servletPath + "\\" + alias + "\\" + pictureName;
-    }
-    File file = new File(realPath);
-    System.out.println("删除文件 : " + file.getAbsolutePath());
-    return file.exists() ? file.delete() : true;
-  }
-
-  /**
-   * 保存上传的图片.
-   *
-   * @param file 文件流
-   * @param session httpsession
-   * @param head 是否用户头像
-   * @param chn 用户名中是否包含中文
-   * @return 返回数据库中的图片路径
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  private String saveFile(MultipartFile file, HttpSession session, boolean head, boolean chn)
-      throws IOException {
-    String separator = File.separator;
-    String location = "";
-    //    如果操作系统是Linux
-    if (System.getProperty("os.name").equals("Linux")) {
-      location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
-          + session.getServletContext().getServletContextName()).getCanonicalPath();
-    } else {
-      location = new File(
-          "D:/workspace/eclipse/" + session.getServletContext().getServletContextName())
-              .getCanonicalPath();
-    }
-    String rootdir = location + separator + "WebContent" + separator + "pictures";
-    User user = (User) session.getAttribute("user");
-    System.out.println("用户名: " + user.getName());
-    String username = user.getName();
-    String alias = user.getAlias();
-    File userFolder = new File(
-        session.getServletContext().getRealPath("pictures") + separator + username);
-    File userFolderBack = new File(rootdir + separator + username);
-    if (chn) {
-      userFolder = new File(
-          session.getServletContext().getRealPath("pictures") + separator + alias);
-      userFolderBack = new File(rootdir + separator + alias);
-    }
-    //	判断用户文件夹是否存在,不存在则创建
-    if (!userFolder.exists()) {
-      userFolder.mkdir();
-    }
-    if (!userFolderBack.exists()) {
-      userFolderBack.mkdir();
-    }
-    //获取图片的名称
-    String name = file.getOriginalFilename();
-    String path = session.getServletContext().getRealPath("pictures") + separator + username
-        + separator;
-    String pathBack = rootdir + separator + username + separator;
-    if (chn) {
-      path = session.getServletContext().getRealPath("pictures") + separator + alias + separator;
-      pathBack = rootdir + separator + alias + separator;
-    }
-    String suffix = name.substring(name.indexOf("."));
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
-    name = simpleDateFormat.format(new Date());
-    String pathname = path + name + suffix;
-    String pathnameBack = pathBack + name + suffix;
-    if (head) {
-      pathname = path + username + suffix;
-      pathnameBack = pathBack + username + suffix;
-      if (chn) {
-        pathname = path + alias + suffix;
-        pathnameBack = pathBack + alias + suffix;
-      }
-    }
-    System.out.println("上传的图片信息 : \n\t" + pathname);
-    System.out.println("上传的图片备份信息 : \n\t" + pathnameBack);
-    File saveFile = new File(pathname);
-    File saveFileBack = new File(pathnameBack);
-    saveFile.createNewFile();
-    saveFileBack.createNewFile();
-    InputStream inputStream = file.getInputStream();
-    OutputStream outputStream = new FileOutputStream(saveFile);
-    byte[] bys = new byte[inputStream.available()];
-    int length = 0;
-    while ((length = inputStream.read(bys)) != -1) {
-      outputStream.write(bys, 0, length);
-    }
-    inputStream.close();
-    outputStream.close();
-    inputStream = file.getInputStream();
-    OutputStream outputStreamBack = new FileOutputStream(saveFileBack);
-    byte[] bysBack = new byte[inputStream.available()];
-    int lengthBack = 0;
-    while ((lengthBack = inputStream.read(bysBack)) != -1) {
-      outputStreamBack.write(bysBack, 0, lengthBack);
-    }
-    outputStreamBack.close();
-    String pictureUrl = "pictures" + separator + username + separator + name + suffix;
-    if (chn) {
-      pictureUrl = "pictures" + separator + alias + separator + name + suffix;
-    }
-    if (head) {
-      pictureUrl = "pictures" + separator + username + separator + username + suffix;
-      if (chn) {
-        pictureUrl = "pictures" + separator + alias + separator + alias + suffix;
-      }
-    }
-    System.out.println("数据库中的图片路径:" + pictureUrl);
-    return pictureUrl;
-  }
-
-  /**
-   * 判断给定的字符串中是否包含中文: 中文是全角,这种判断并不精确.
-   *
-   * @param args 需要判断的字符串
-   * @return true, if successful
-   */
-  private boolean hasChinese(String args) {
-    if (args.getBytes().length != args.length()) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * 操作成功.
-   *
-   * @param session the session
-   * @param succMessage 成功信息
-   */
-  private void execSuccess(HttpSession session, String... succMessage) {
-    if (succMessage.length > 0) {
-      session.setAttribute("succMessage", succMessage[0]);
-      return;
-    }
-    session.setAttribute("succMessage", SUCCESSMESSAGE);
-  }
-
-  /**
-   * 检测用户是否登录.
-   *
-   * @param session the session
-   * @return 已登录返回true,否则返回false
-   */
-  public boolean checkLogin(HttpSession session) {
-    System.out.println("登录检测");
-    if (session.getAttribute("user") != null
-        && ((User) session.getAttribute("user")).getId() != null) {
-      System.out.println("\t已登录");
-      return true;
-    }
-    System.out.println("\t未登录");
-    return false;
   }
 
 }
