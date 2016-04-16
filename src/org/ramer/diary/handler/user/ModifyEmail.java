@@ -1,0 +1,119 @@
+package org.ramer.diary.handler.user;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.ramer.diary.constant.PageConstant;
+import org.ramer.diary.domain.Topic;
+import org.ramer.diary.domain.User;
+import org.ramer.diary.exception.LinkInvalidException;
+import org.ramer.diary.exception.UserNotLoginException;
+import org.ramer.diary.service.UserService;
+import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.MailUtils;
+import org.ramer.diary.util.UserUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+/**
+ *修改邮箱.
+ * @author ramer
+ *
+ */
+@SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
+@Controller
+public class ModifyEmail {
+
+  @Autowired
+  UserService userService;
+  //全局成功页面
+  final String SUCCESS = PageConstant.SUCCESS.toString();
+
+  /**
+   * 定向到修改邮箱页面.
+   * @param session JSP内置对象
+   * @return 修改邮箱页面
+   */
+  @RequestMapping("/user/forwardModifyEmail")
+  public String forwardModifyEmail(HttpSession session) {
+    if (!UserUtils.checkLogin(session)) {
+      throw new UserNotLoginException("您的登录已过期,请重新登录");
+    }
+    return "modifyEmail";
+  }
+
+  /**
+   * 发送邮件,更改邮箱.
+   *
+   * @param newEmail 新邮箱
+   * @param user the user
+   * @param map the map
+   * @param session the session
+   * @param response the response
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @RequestMapping("/user/modifyEmail/sendMail")
+  public void sendEmailToModifyEmail(@RequestParam("newEmail") String newEmail, User user,
+      Map<String, Object> map, HttpSession session, HttpServletResponse response)
+      throws IOException {
+
+    System.out.println("发送邮件,修改邮箱");
+    response.setCharacterEncoding("utf-8");
+    if (newEmail.trim() == null || newEmail.trim().equals("")) {
+      response.getWriter().write("臣妾还不知道发到哪儿呐");
+      return;
+    }
+    if (!MailUtils.isEmail(newEmail)) {
+      response.getWriter().write("您输入的不是邮箱哒 ^o^||");
+      return;
+    }
+    Calendar calendar = Calendar.getInstance();
+    //    时间是五分钟之后
+    calendar.add(Calendar.MINUTE, 5);
+    String expireTime = new SimpleDateFormat("yyMMddhhmmss").format(calendar.getTime()).toString();
+    user.setExpireTime(expireTime);
+    userService.newOrUpdate(user);
+    String servletName = session.getServletContext().getServletContextName();
+    String encodedEmail = Encrypt.execEncrypt(newEmail);
+    String content = "<h3>请点击下面的链接完成邮箱更改,五分钟内有效</h3><br>" + "<a href='http://localhost:8080/"
+        + servletName + "/user/modifyEmail?email1=" + encodedEmail + "&email2=" + user.getEmail()
+        + "'>http://localhost:8080/" + servletName + "/user/modifyEmail/" + newEmail + "</a>";
+    String top = "来自飞行日记的更改邮箱邮件";
+    MailUtils.sendMail(newEmail, top, content);
+    response.getWriter().write("嗖.......... 到家啦 ^v^,查收邮件后再继续操作哦");
+  }
+
+  /**
+   * 修改邮箱.
+   *
+   * @param email 用户原来的邮箱
+   * @param newEmail 修改的新邮箱
+   * @param map the map
+   * @param session the session
+   * @return the string
+   */
+  @RequestMapping("/user/modifyEmail")
+  public String modifyEmail(@RequestParam("email2") String email,
+      @RequestParam("email1") String newEmail, Map<String, Object> map, HttpSession session) {
+    System.out.println("修改邮箱");
+    String expireTime = new SimpleDateFormat("yyMMddhhmmss")
+        .format(Calendar.getInstance().getTime());
+    User user = userService.getByEmail(email);
+    if (user == null || expireTime.compareTo(user.getExpireTime()) > 0) {
+      throw new LinkInvalidException("链接失效");
+    }
+    user.setEmail(newEmail);
+    userService.newOrUpdate(user);
+    UserUtils.execSuccess(session, "邮箱更改成功啦,去主页溜溜吧");
+    user.setExpireTime(expireTime);
+    return SUCCESS;
+  }
+}
