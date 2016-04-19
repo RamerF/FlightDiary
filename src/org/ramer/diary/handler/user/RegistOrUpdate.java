@@ -69,6 +69,8 @@ public class RegistOrUpdate {
       } catch (IOException e) {
         e.printStackTrace();
       }
+    } else {
+      user.setHead("pictures/userHead.jpg");
     }
     Integer id = user.getId();
     if (userService.newOrUpdate(user).getId() > 0) {

@@ -176,8 +176,7 @@ $(function() {
                   </a>
                   <div class="name_panel">
                     <a href="${pageContext.request.contextPath}/user/personal/${u.id}">
-                        <img src="${pageContext.request.contextPath}/${u.head}" class="head"
-                          onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'">
+                        <img src="${pageContext.request.contextPath}/${u.head}" class="head">
                         <br>
                         <span class="name">${u.name }</span>
                     </a>

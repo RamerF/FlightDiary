@@ -1,5 +1,6 @@
 package org.ramer.diary.handler;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
@@ -55,12 +56,14 @@ public class ForwardHome {
    * @param map the map
    * @param session the session
    * @return 引导到主页
+   * @throws IOException 
    */
   @RequestMapping("/home")
   public String home(
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
-      Map<String, Object> map, HttpSession session) {
+      Map<String, Object> map, HttpSession session) throws IOException {
     System.out.println("主页");
+    System.out.println(session.getServletContext().getResource("pictures").getPath());
     System.out.println("pagesize = " + TOPICPAGESIZE);
     int page = 1;
     //    inOtherPage = false;

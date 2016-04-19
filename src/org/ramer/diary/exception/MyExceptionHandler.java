@@ -64,9 +64,17 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
       case "PasswordNotMatchException":
         errorMessage = (errorMessage == null || errorMessage == "") ? "密码不匹配" : errorMessage;
         break;
+      case "SQLExecException":
+        errorMessage = (errorMessage == null || errorMessage == "") ? "系统无法执行当前操作，请稍后再试"
+            : errorMessage;
+        break;
+      case "DefaultException":
+        errorMessage = (errorMessage == null || errorMessage == "") ? "系统被程序猿玩儿坏啦，看看其他东东坏没"
+            : errorMessage;
+        break;
 
       default:
-        errorMessage = "系统出错了";
+        errorMessage = "系统被程序猿玩儿坏啦，看看其他东东坏没";
         break;
     }
     modelAndView.addObject("errorMessage", errorMessage);

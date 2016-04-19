@@ -70,7 +70,7 @@ public class UserService {
     //页号从零开始
     page = page - 1;
     //按时间排序
-    Order orders = new Order(Direction.ASC, "date");
+    Order orders = new Order(Direction.DESC, "date");
     Sort sort = new Sort(orders);
     Pageable pageable = new PageRequest(page, size, sort);
     return topicRepository.findAll(pageable);
@@ -169,7 +169,12 @@ public class UserService {
    */
   @Transactional
   public Topic publish(Topic topic) {
-    Topic t = topicRepository.save(topic);
+    Topic t = new Topic();
+    try {
+      t = topicRepository.save(topic);
+    } catch (Exception exception) {
+      return new Topic();
+    }
     return t;
   }
 
