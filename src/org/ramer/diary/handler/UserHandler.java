@@ -9,10 +9,10 @@ import javax.servlet.http.HttpSession;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.UserService;
+import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.MailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,23 +28,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class UserHandler {
   @Autowired
   UserService userService;
-
-  /**
-   * 更新前获取user.
-   *
-   * @param id UID
-   * @param map the map
-   */
-  @ModelAttribute
-  public void getUser(@RequestParam(value = "id", required = false) Integer id,
-      Map<String, Object> map) {
-    if (id != null) {
-      System.out.println("更新前获取user");
-      System.out.println("id = " + id);
-      User user = userService.getById(id);
-      map.put("user", user);
-    }
-  }
 
   /**
    * 验证用户名.
@@ -93,25 +76,22 @@ public class UserHandler {
   @RequestMapping(value = "/user/validateEmail", method = RequestMethod.POST)
   public void validateEmail(@RequestParam("email") String emailString, HttpServletResponse response,
       Map<String, Object> map) throws IOException {
-    String result = "";
+    emailString = emailString.trim();
     response.setCharacterEncoding("UTF-8");
-    if (emailString == null || emailString.trim().equals("")) {
+    if (emailString == null || emailString.equals("")) {
       return;
     }
     if (!MailUtils.isEmail(emailString)) {
-      result = "<img class='valid' src='../pictures/wrong.png' weight='10px' height='10px'>";
-      response.getWriter().write(result);
+      response.getWriter().write("notEmail");
       return;
     }
 
-    if (userService.getByEmail(emailString) == null) {
-      result = "<img class='valid' src='../pictures/right.png' weight='10px' height='10px'>";
-      response.getWriter().write(result);
+    if (userService.getByEmail(Encrypt.execEncrypt(emailString, true)) == null) {
+      response.getWriter().write("notExist");
       return;
     }
     System.out.println("邮箱已存在");
-    result = "<img class='valid' src='../pictures/wrong.png' weight='10px' height='10px'>";
-    response.getWriter().write(result);
+    response.getWriter().write("exist");
   }
 
 }

@@ -27,23 +27,25 @@
 <title>修改密码</title>
 </head>
 <body>
-		<div class="container">
-				<div class="title" id="title">修改密码</div>
-				<div class="form">
-						<form
-								action="${pageContext.request.contextPath}/user/modifyPassword"
-								method="post" id="modifyPassForm">
-								<span>原始密码: </span> <input type="text" name="oldPassword"><br>
-								<span>新密码: </span> <input type="text" name="newPassword"><br>
-								<input type="submit" value="确认"> <input type="reset"
-										value="取消">
-						</form>
-				</div>
-				<div>
-						<input type="hidden" value="${error_modifyPass}"
-								id="errorModifyPass">
-				</div>
-		</div>
-
+<div class="container">
+ <div class="title" id="title">修改密码</div>
+  <div class="form">
+   <form
+    action="${pageContext.request.contextPath}/user/modifyPassword"
+    method="post" id="modifyPassForm">
+    <span>原始密码: </span>
+    <input type="text" name="oldPassword">
+    <br>
+    <span>新密码: </span>
+    <input type="text" name="newPassword">
+    <br>
+    <input type="submit" value="确认">
+    <input type="reset" value="取消">
+   </form>
+  </div>
+  <div>
+    <input type="hidden" value="${error_modifyPass}" id="errorModifyPass">
+  </div>
+</div>
 </body>
 </html>

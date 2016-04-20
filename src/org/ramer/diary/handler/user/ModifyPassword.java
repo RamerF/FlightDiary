@@ -67,7 +67,7 @@ public class ModifyPassword {
   public String modifyPassword(@RequestParam("oldPassword") String oldPassword,
       @RequestParam("newPassword") String newPassword, User user, Map<String, Object> map,
       HttpServletResponse response, HttpSession session) throws IOException {
-    if (!Encrypt.execEncrypt(oldPassword).equals(user.getPassword())) {
+    if (!Encrypt.execEncrypt(oldPassword, false).equals(user.getPassword())) {
       System.out.println("原始密码错误");
       session.setAttribute("error_modifyPass", "原始密码错误");
       return "redirect:/user/forwardModifyPassword";
@@ -78,7 +78,7 @@ public class ModifyPassword {
       session.setAttribute("succMessage", "密码修改成功");
       return SUCCESS;
     }
-    user.setPassword(Encrypt.execEncrypt(newPassword));
+    user.setPassword(Encrypt.execEncrypt(newPassword, false));
     user = userService.newOrUpdate(user);
     if (user == null) {
       throw new SystemWrongException();

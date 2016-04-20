@@ -4,7 +4,6 @@
 package test;
 
 import org.junit.Test;
-
 import org.ramer.diary.util.Encrypt;
 
 /**
@@ -19,10 +18,9 @@ public class EncryptTest {
    */
   @Test
   public void testEncrypt() {
-    String string = "1390635973@qq.com";
-    String encoded = Encrypt.execEncrypt(string);
+    String string = "1874890499@qq.com";
+    String encoded = Encrypt.execEncrypt(string, true);
     System.out.println(encoded);
   }
-
 
 }

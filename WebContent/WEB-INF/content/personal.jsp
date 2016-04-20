@@ -32,6 +32,40 @@
   });
  })
 </script>
+<!-- 获取当前位置信息 -->
+<script type="text/javascript">
+function getLocation()
+  {
+  if (navigator.geolocation)
+    {
+    navigator.geolocation.watchPosition(showPosition);
+    }
+  else{alert("浏览器不支持位置信息获取");}
+  }
+function showPosition(position)
+  {
+ var latlon = position.coords.latitude+','+position.coords.longitude;
+  
+  //baidu
+  var url = "http://api.map.baidu.com/geocoder/v2/?ak=C93b5178d7a8ebdb830b9b557abce78b&callback=renderReverse&location="+latlon+"&output=json&pois=0";
+  $.ajax({ 
+    type: "GET", 
+    dataType: "jsonp", 
+    url: url,
+    beforeSend: function(){
+      $("#geo").attr("value",'正在获取位置。。。');
+    },
+    success: function (json) { 
+      if(json.status==0){
+        $("#geo").attr("value",json.result.addressComponent.city);
+      }
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) { 
+      $("#geo").attr("value",latlon+"位置获取失败"); 
+    }
+  });
+  }
+</script>
 <script src="${pageContext.request.contextPath}/js/ramer/personal.js"></script>
 <title>Personal Center</title>
 </head>
@@ -186,7 +220,7 @@
             <select id="city" name="city">
                 <option value="no" id="optionNodeCity">城市</option>
             </select>
-            <input type="text" name="city2" class="input_city" placeholder="手动输入">
+            <input type="text" name="city2" class="input_city" placeholder="手动输入" id="geo" onfocus="getLocation()">
             </div>
         <input type="submit" value="分享">
         <input type="reset" value="收起" class="hiddenTopic">

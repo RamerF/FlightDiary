@@ -81,6 +81,7 @@ public class Publish {
       @RequestParam(value = "city2", required = false, defaultValue = "") String city2,
       @RequestParam(value = "personal", required = false, defaultValue = "") String personal,
       @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {
+
     User user = (User) session.getAttribute("user");
     System.out.println("发表日记: \n\t用户名: " + user.getName());
     Topic topic = new Topic();
@@ -98,7 +99,8 @@ public class Publish {
     topic.setUser(user);
     topic.setUpCounts(0);
     //默认取值为city，若为空则取值city2，即用户手动输入
-    city = (city == null || city.equals("")) ? city2 : city;
+    city = (city2 != null && city2 != "") ? city2 : city;
+    System.out.println(city + "---" + city2);
 
     topic.setCity(city);
     //保存用户经历

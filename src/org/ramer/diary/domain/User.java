@@ -40,7 +40,7 @@ public class User {
   private String says;
 
   /** 用户名. */
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String name;
 
   /** 用户别名. */
@@ -48,7 +48,7 @@ public class User {
   private String alias;
 
   /** 密码. */
-  @Column
+  @Column(nullable = false)
   private String password;
 
   /** qq号. */
@@ -60,7 +60,7 @@ public class User {
   private String weiboNum;
 
   /** 邮箱. */
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String email;
 
   /** 过期时间. */
@@ -323,6 +323,7 @@ public class User {
   public void setName(String name) {
     this.name = name;
   }
+
   public String getPassword() {
     return password;
   }
@@ -354,6 +355,7 @@ public class User {
   public void setAddress(String address) {
     this.address = address;
   }
+
   public String getTelephone() {
     return telephone;
   }
@@ -361,6 +363,7 @@ public class User {
   public void setTelephone(String telephone) {
     this.telephone = telephone;
   }
+
   public Set<Topic> getTopics() {
     return topics;
   }

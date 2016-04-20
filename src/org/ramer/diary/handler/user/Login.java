@@ -39,10 +39,10 @@ public class Login {
     String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
     if (user.getName().matches(regex)) {
       System.out.println("通过邮箱登录");
-      user.setEmail(Encrypt.execEncrypt(user.getName()));
+      user.setEmail(Encrypt.execEncrypt(user.getName(), true));
       user.setName(null);
     }
-    user.setPassword(Encrypt.execEncrypt(user.getPassword()));
+    user.setPassword(Encrypt.execEncrypt(user.getPassword(), false));
     User user2 = userService.login(user);
     if (user2.getId() != null) {
       map.put("user", user2);

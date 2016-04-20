@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.exception.EmailExistException;
 import org.ramer.diary.exception.LinkInvalidException;
 import org.ramer.diary.exception.UserNotLoginException;
 import org.ramer.diary.service.UserService;
@@ -64,7 +65,9 @@ public class ModifyEmail {
   public void sendEmailToModifyEmail(@RequestParam("newEmail") String newEmail, User user,
       Map<String, Object> map, HttpSession session, HttpServletResponse response)
       throws IOException {
-
+    if (!UserUtils.checkLogin(session)) {
+      throw new UserNotLoginException("您的登录已过期,请重新登录");
+    }
     System.out.println("发送邮件,修改邮箱");
     response.setCharacterEncoding("utf-8");
     if (newEmail.trim() == null || newEmail.trim().equals("")) {
@@ -75,6 +78,10 @@ public class ModifyEmail {
       response.getWriter().write("您输入的不是邮箱哒 ^o^||");
       return;
     }
+    //判断邮箱在数据库中是否存在
+    if (MailUtils.exist(newEmail, userService)) {
+      throw new EmailExistException();
+    }
     Calendar calendar = Calendar.getInstance();
     //    时间是五分钟之后
     calendar.add(Calendar.MINUTE, 5);
@@ -82,11 +89,11 @@ public class ModifyEmail {
     user.setExpireTime(expireTime);
     userService.newOrUpdate(user);
     String servletName = session.getServletContext().getServletContextName();
-    String encodedEmail = Encrypt.execEncrypt(newEmail);
+    String encodedEmail = Encrypt.execEncrypt(newEmail, true);
     String content = "<h3>请点击下面的链接完成邮箱更改,五分钟内有效</h3><br>" + "<a href='http://localhost:8080/"
         + servletName + "/user/modifyEmail?email1=" + encodedEmail + "&email2=" + user.getEmail()
         + "'>http://localhost:8080/" + servletName + "/user/modifyEmail/" + newEmail + "</a>";
-    String top = "来自飞行日记的更改邮箱邮件";
+    String top = "来自旅行日记的更改邮箱邮件";
     MailUtils.sendMail(newEmail, top, content);
     response.getWriter().write("嗖.......... 到家啦 ^v^,查收邮件后再继续操作哦");
   }
@@ -108,7 +115,11 @@ public class ModifyEmail {
         .format(Calendar.getInstance().getTime());
     User user = userService.getByEmail(email);
     if (user == null || expireTime.compareTo(user.getExpireTime()) > 0) {
-      throw new LinkInvalidException("链接失效");
+      throw new LinkInvalidException();
+    }
+    //判断邮箱是否存在
+    if (MailUtils.exist(newEmail, userService)) {
+      throw new EmailExistException();
     }
     user.setEmail(newEmail);
     userService.newOrUpdate(user);

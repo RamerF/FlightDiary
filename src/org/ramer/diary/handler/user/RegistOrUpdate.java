@@ -17,6 +17,7 @@ import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,24 @@ public class RegistOrUpdate {
   private UserService userService;
 
   /**
+   * 更新前获取user.
+   *
+   * @param id UID
+   * @param map the map
+   */
+  @ModelAttribute
+  public void getUser(@RequestParam(value = "id", required = false) Integer id,
+      Map<String, Object> map) {
+    System.out.println("更新前获取user");
+    if (id != null) {
+      System.out.println("更新前获取user");
+      System.out.println("id = " + id);
+      User user = this.userService.getById(id);
+      map.put("user", user);
+    }
+  }
+
+  /**
   * 注册或更新用户信息.
   *
   * @param user 用户
@@ -46,10 +65,13 @@ public class RegistOrUpdate {
   @RequestMapping(value = "/user", method = RequestMethod.POST)
   public String newOrUpdate(User user, @RequestParam("picture") MultipartFile file,
       HttpSession session, Map<String, Object> map) {
-    user.setPassword(Encrypt.execEncrypt(user.getPassword()));
     //  如果是更新,用户ID不为空
-    if (userService.getByName(user.getName()) != null && user.getId() == null) {
+    if (this.userService.getByName(user.getName()) != null && user.getId() == null) {
       throw new UserExistException("用户名已存在,注册失败");
+    }
+    //如果是注册需要加密密码，而更新是不允许修改密码的
+    if (user.getId() == null) {
+      user.setPassword(Encrypt.execEncrypt(user.getPassword(), false));
     }
     //包含中文名称的用户,先设置别名
     if (StringUtils.hasChinese(user.getName())) {
@@ -72,9 +94,13 @@ public class RegistOrUpdate {
     } else {
       user.setHead("pictures/userHead.jpg");
     }
+    //    判断邮箱是否存在，如果存在说明以后未修改，不不要加密
+    if (this.userService.getByEmail(user.getEmail()) == null) {
+      user.setEmail(Encrypt.execEncrypt(user.getEmail(), true));
+    }
     Integer id = user.getId();
-    if (userService.newOrUpdate(user).getId() > 0) {
-      user = userService.login(user);
+    if (this.userService.newOrUpdate(user).getId() > 0) {
+      user = this.userService.login(user);
       if (user.getId() == null) {
         throw new SystemWrongException("系统出错了,操作被取消,请返回重新操作");
       }

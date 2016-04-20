@@ -82,18 +82,19 @@ public class ForgetPassword {
       response.getWriter().write("您输入的不是邮箱哒 ^o^||");
       return;
     }
-    String encodedEmail = Encrypt.execEncrypt(email);
+    String encodedEmail = Encrypt.execEncrypt(email, true);
     User user = userService.getByEmail(encodedEmail);
     //    发送邮件之前判断是否存在,防止用户而已发送邮件
     if (user == null) {
       response.getWriter().write("您输入的邮箱未注册哟");
       return;
     }
+    System.out.println("邮箱认证通过");
     String servletName = session.getServletContext().getServletContextName();
     String content = "<h3>请点击下面的链接继续重置密码,五分钟内有效</h3><br>" + "<a href='http://localhost:8080/"
         + servletName + "/user/forwardForgetPassword?email=" + encodedEmail
         + "'>http://localhost:8080/" + servletName + "/user/forgetPassword/" + email + "</a>";
-    String top = "来自飞行日记的重置密码邮件";
+    String top = "来自旅行日记的重置密码邮件";
     MailUtils.sendMail(email, top, content);
     Calendar calendar = Calendar.getInstance();
     //		时间是五分钟之后
@@ -101,7 +102,7 @@ public class ForgetPassword {
     String expireTime = new SimpleDateFormat("yyMMddhhmmss").format(calendar.getTime()).toString();
     user.setExpireTime(expireTime);
     userService.newOrUpdate(user);
-    response.getWriter().write("邮件发送成功");
+    response.getWriter().write("嗖.......... 到家啦 ^v^,查收邮件后再继续操作哦");
   }
 
   /**
@@ -131,7 +132,7 @@ public class ForgetPassword {
     if (!password.equals(repassword)) {
       throw new PasswordNotMatchException();
     }
-    user.setPassword(Encrypt.execEncrypt(password));
+    user.setPassword(Encrypt.execEncrypt(password, false));
     if (userService.newOrUpdate(user) == null) {
       throw new SystemWrongException();
     } else {

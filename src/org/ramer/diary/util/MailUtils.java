@@ -14,6 +14,9 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.ramer.diary.domain.User;
+import org.ramer.diary.service.UserService;
+
 /**
  * 邮箱工具类:
  *  功能:
@@ -76,5 +79,18 @@ public class MailUtils {
     }
     System.out.println("邮箱格式不正确");
     return false;
+  }
+
+  /**
+   * 数据库是否存在.
+   *
+   * @param email 未加密邮箱
+   * @param userService the UserService
+   * @return 存在, 返回true
+   */
+  public static boolean exist(String email, UserService userService) {
+    User user = userService.getByEmail(Encrypt.execEncrypt(email, true));
+    return user == null ? false : true;
+
   }
 }

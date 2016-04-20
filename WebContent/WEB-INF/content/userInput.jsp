@@ -53,11 +53,11 @@ $(function() {
          </div>
         <div class="update_panel">
           <span class="label">电话号码 : </span>
-          <form:input path="telephone" />
+          <form:input path="telephone" id="telephone"/>
          
           <br> 
           <span class="label">年龄 : </span>
-          <form:input path="age" />
+          <form:input path="age" id="age"/>
           
           <br> 
           <span class="label">
@@ -69,16 +69,16 @@ $(function() {
           
           <br>
           <span class="label">QQ : </span>
-          <form:input path="qqNum" />
+          <form:input path="qqNum" id="qqNum"/>
           
           <br>
           <span class="label">微博 : </span>
-          <form:input path="weiboNum" />
+          <form:input path="weiboNum" id="weiboNum"/>
           
           <br>
           <span class="label adjustment">性别 : </span>
-          <form:radiobutton path="sex" label="男" value="M" class="radio"></form:radiobutton>
-          <form:radiobutton path="sex" label="女" value="F" class="radio"></form:radiobutton>
+          <form:radiobutton path="sex" label="男" value="M" class="radio" ></form:radiobutton>
+          <form:radiobutton path="sex" label="女" value="F" class="radio" ></form:radiobutton>
         </div>
         
         <div class="forget_pass" id="forgetPass">

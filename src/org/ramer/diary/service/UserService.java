@@ -158,7 +158,7 @@ public class UserService {
   public User newOrUpdate(User user) {
     //    userRepository.testUpdate(user.getSays(), user.getId());
     User u = userRepository.saveAndFlush(user);
-    return u != null ? u : new User();
+    return u;
 
   }
 
@@ -245,7 +245,7 @@ public class UserService {
     String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
     if (username.matches(regex)) {
       System.out.println("邮箱");
-      return userRepository.getByEmail(Encrypt.execEncrypt(username));
+      return userRepository.getByEmail(Encrypt.execEncrypt(username, true));
     } else {
       System.out.println("用户名");
       return userRepository.getByName(username);
