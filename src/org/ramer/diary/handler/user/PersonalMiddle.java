@@ -9,6 +9,7 @@ import org.ramer.diary.domain.Notifying;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.UserNotLoginException;
+import org.ramer.diary.service.NotifyService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class PersonalMiddle {
 
   @Autowired
   private UserService userService;
+  @Autowired
+  private NotifyService notifyService;
 
   /**
    * 个人中心.
@@ -50,7 +53,7 @@ public class PersonalMiddle {
     user = userService.getById(user.getId());
     System.out.println("个人中心");
     String hasCheck = "false";
-    Set<Notifying> notifyings = userService.getNotifyings(user, hasCheck);
+    Set<Notifying> notifyings = notifyService.getNotifyings(user, hasCheck);
     user.setNotifyings(notifyings);
     System.out.println(" 用户 " + user.getId() + " 收到 " + notifyings.size() + "	条消息");
     map.put("user", user);

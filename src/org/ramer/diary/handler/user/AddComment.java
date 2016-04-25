@@ -13,7 +13,8 @@ import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.IllegalAccessException;
 import org.ramer.diary.exception.SystemWrongException;
 import org.ramer.diary.exception.UserNotLoginException;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.CommentService;
+import org.ramer.diary.service.TopicService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +33,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class AddComment {
 
   @Autowired
-  private UserService userService;
+  private CommentService commentService;
+  @Autowired
+  private TopicService topicService;
 
   /**
    * 发表用户评论.
@@ -64,7 +67,7 @@ public class AddComment {
     comment.setUser(user);
     comment.setTopic(topic);
     comment.setDate(new Date());
-    userService.comment(comment);
+    commentService.comment(comment);
     //在他人主页
     User tUser = (User) session.getAttribute("other");
     System.out.println("other:" + tUser.getName());
@@ -109,11 +112,11 @@ public class AddComment {
     topic.setId(Integer.parseInt(topic_id));
     // 如果在分享页面,判断是否为本人的分享,非本人的分享将无法删除
     if ((boolean) session.getAttribute("inTopicPage")
-        && !userService.getTopicByUserIdAndTopicId(topic.getId(), (User) map.get("user"))) {
+        && !topicService.getTopicByUserIdAndTopicId(topic.getId(), (User) map.get("user"))) {
       throw new IllegalAccessException("你没有删除该条评论的权限");
     }
     comment.setTopic(topic);
-    if (!userService.deleteComment(comment)) {
+    if (!commentService.deleteComment(comment)) {
       throw new SystemWrongException();
     }
     return "redirect:/user/personal";

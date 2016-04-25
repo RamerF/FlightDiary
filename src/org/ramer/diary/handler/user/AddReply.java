@@ -14,7 +14,7 @@ import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.IllegalAccessException;
 import org.ramer.diary.exception.UserNotLoginException;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.ReplyService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,10 +32,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @Controller
 public class AddReply {
 
-  @Autowired
-  private UserService userService;
   //全局出错页面
   final String ERROR = PageConstant.ERROR.toString();
+
+  @Autowired
+  private ReplyService replyService;
 
   /**
    * 回复评论.
@@ -71,7 +72,7 @@ public class AddReply {
     comment.setId(comment_id);
     reply.setComment(comment);
     response.setCharacterEncoding("utf-8");
-    if (!userService.replyComment(reply)) {
+    if (!replyService.replyComment(reply)) {
       return ERROR;
     }
     if ((boolean) session.getAttribute("inOtherPage")) {
@@ -111,7 +112,7 @@ public class AddReply {
       throw new IllegalAccessException("数据格式有误");
     }
     if (reply_id != 0) {
-      if (userService.deleteReply(reply_id)) {
+      if (replyService.deleteReply(reply_id)) {
         if ((boolean) session.getAttribute("inOtherPage")) {
           User other = (User) session.getAttribute("other");
           System.out.println("在他人主页评论");

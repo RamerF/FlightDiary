@@ -48,9 +48,9 @@ public class Topic {
   /** 图片. */
   @Column
   private String picture;
-  //  城市
+  //  标签
   @Column
-  private String city;
+  private String tags;
 
   /** 点赞次数. */
   @Column
@@ -67,6 +67,32 @@ public class Topic {
   @Column
   @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "topic")
   private Set<Comment> comments = new HashSet<>();
+  /** 收藏. */
+  //对应多个用户收藏
+  @Column
+  @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "topic")
+  private Set<Favourite> favourites = new HashSet<>();
+  /** 点赞. */
+  //对应多个用户点赞
+  @Column
+  @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "topic")
+  private Set<Praise> praises = new HashSet<>();
+
+  public Set<Favourite> getFavourites() {
+    return favourites;
+  }
+
+  public void setFavourites(Set<Favourite> favourites) {
+    this.favourites = favourites;
+  }
+
+  public Set<Praise> getPraises() {
+    return praises;
+  }
+
+  public void setPraises(Set<Praise> praises) {
+    this.praises = praises;
+  }
 
   public Integer getUpCounts() {
     return upCounts;
@@ -124,12 +150,12 @@ public class Topic {
     this.user = user;
   }
 
-  public void setCity(String city) {
-    this.city = city;
+  public String getTags() {
+    return tags;
   }
 
-  public String getCity() {
-    return city;
+  public void setTags(String tags) {
+    this.tags = tags;
   }
 
   /**
@@ -139,23 +165,29 @@ public class Topic {
    * @param content the content
    * @param date the date
    * @param picture the picture
+   * @param tags the tags
    * @param upCounts the up counts
    * @param user the user
    * @param comments the comments
+   * @param favourites the favourites
+   * @param praises the praises
    */
-  public Topic(Integer id, String content, Date date, String picture, Integer upCounts, User user,
-      Set<Comment> comments) {
+
+  public Topic(Integer id, String content, Date date, String picture, String tags, Integer upCounts,
+      User user, Set<Comment> comments, Set<Favourite> favourites, Set<Praise> praises) {
     super();
     this.id = id;
     this.content = content;
     this.date = date;
     this.picture = picture;
+    this.tags = tags;
     this.upCounts = upCounts;
     this.user = user;
     this.comments = comments;
+    this.favourites = favourites;
+    this.praises = praises;
   }
 
   public Topic() {
   }
-
 }

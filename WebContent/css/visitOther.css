@@ -55,12 +55,15 @@
 }
 
 .notifying_content {
+ color: rgba(77, 171, 245, 0.75);
  width: 640px;
  height: 117px;
  outline-color: rgba(61, 80, 76, 0.63);
  text-indent: 2em;
  border: none;
- border-bottom: 1px solid rgba(61, 80, 76, 0.63);
+ resize: none;
+ outline: none;
+ border-bottom: 1px solid #4DABF5;
 }
 
 .follow_panel {

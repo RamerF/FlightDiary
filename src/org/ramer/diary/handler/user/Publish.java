@@ -13,7 +13,9 @@ import org.ramer.diary.exception.DefaultException;
 import org.ramer.diary.exception.IllegalAccessException;
 import org.ramer.diary.exception.NoPictureException;
 import org.ramer.diary.exception.SQLExecException;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.FollowService;
+import org.ramer.diary.service.NotifyService;
+import org.ramer.diary.service.TopicService;
 import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class Publish {
   @Autowired
-  private UserService userService;
+  private FollowService followService;
+  @Autowired
+  private TopicService topicService;
+  @Autowired
+  private NotifyService notifyService;
 
   /**
    * 删除分享.
@@ -41,7 +47,7 @@ public class Publish {
    * @param map the map
    * @param session the session
    * @return 重定向到个人页面,或返回错误页面
-   * @throws IOException 
+   * @throws IOException
    */
   @RequestMapping("/user/topic/deleteTopic/{topic_id}")
   public String deleteTopic(User user, @PathVariable("topic_id") Integer topic_id,
@@ -52,8 +58,8 @@ public class Publish {
     if (map.keySet().contains("other")) {
       throw new IllegalAccessException("你没有删除该条分享的权限");
     }
-    Topic topic = userService.getTopicById(topic_id);
-    userService.deleteTopic(topic);
+    Topic topic = topicService.getTopicById(topic_id);
+    topicService.deleteTopic(topic);
     boolean flag = FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getName()));
     System.out.println("-----删除图片 : " + flag + "-----");
     if (!flag) {
@@ -67,8 +73,7 @@ public class Publish {
    * 用户发表分享.
    *
    * @param content 日记文本
-   * @param city the city
-   * @param city2 the city2
+   * @param tags the tags
    * @param personal the personal
    * @param file the file
    * @param session the session
@@ -77,8 +82,7 @@ public class Publish {
    */
   @RequestMapping("/publish")
   public String publish(@RequestParam("content") String content,
-      @RequestParam(value = "city", required = false, defaultValue = "") String city,
-      @RequestParam(value = "city2", required = false, defaultValue = "") String city2,
+      @RequestParam(value = "tags") String tags,
       @RequestParam(value = "personal", required = false, defaultValue = "") String personal,
       @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {
 
@@ -98,13 +102,14 @@ public class Publish {
     topic.setDate(new Date());
     topic.setUser(user);
     topic.setUpCounts(0);
-    //默认取值为city，若为空则取值city2，即用户手动输入
-    city = (city2 != null && city2 != "") ? city2 : city;
-    System.out.println(city + "---" + city2);
 
-    topic.setCity(city);
+    //    考虑到用户输入的各种问题，先处理tag才能保存
+    if (tags.contains("；")) {
+      tags = tags.replace("；", ";");
+    }
+    topic.setTags(tags);
     //保存用户经历
-    topic = userService.publish(topic);
+    topic = topicService.publish(topic);
     //为空说明sql执行出错
     if (topic.getId() == null) {
       //删除文件，写入出错信息
@@ -112,13 +117,13 @@ public class Publish {
       throw new SQLExecException("系统被程序猿玩儿坏啦，当前无法发表分享 ！！！");
     }
     //    获取所有关注'我'的人
-    List<User> followUsers = userService.getFollowUser(user);
+    List<User> followUsers = followService.getFollowUser(user);
     //通知关注用户消息
     String message = "<a href='/" + session.getServletContext().getServletContextName()
         + "/user/topic/" + topic.getId() + "'>您关注的 " + user.getName() + " 分享了一个新的旅行日记 </a>";
     for (User followUser : followUsers) {
       System.out.println("通知用户: " + followUser.getId());
-      userService.notifyFollowUser(user, followUser, message);
+      notifyService.notifyFollowUser(user, followUser, message);
     }
     if (personal.equals("true")) {
       return "redirect:/user/personal";

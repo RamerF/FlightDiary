@@ -18,8 +18,6 @@
 <script src="${pageContext.request.contextPath}/js/TextAreaExpander.js"></script>
 <script type="text/javascript">
 $(function() {
-	/* 指定城市信息的xml文件,全局变量 */
-    requestUrl = "${pageContext.request.contextPath}/xml/city.xml";
     path = "${pageContext.request.contextPath}";
 })
 </script>
@@ -82,16 +80,14 @@ function showPosition(position)
         <a href="${pageContext.request.contextPath}/home/topPeople">达人</a>
     </span> / 
     <span>
-        <a href="${pageContext.request.contextPath}/home/groupByCity" id="topCity">热门城市</a>
+        <a href="${pageContext.request.contextPath}/home/tag" id="topTags">热门标签</a>
     </span>
   </div>
-  <!-- 通过用户输入城市获取分享 -->
+  <!-- 通过用户输入标签获取分享 -->
   <div class="query">
-    <input type="text" name="city" placeholder="输入旅游城市" class="querytopic">
+    <input type="text" name="tag" placeholder="输入关键词" class="querytopic">
     <i class="icon-search search"></i>
   </div>
-  <!-- 查询分享的表单 -->
-  <form action="" id="queryTopic"></form>
   <c:if test="${user.id gt 0}">
     <div class="user_panel">
       <span>
@@ -142,20 +138,25 @@ function showPosition(position)
 <div class="topic_panel" id="topic_panel">
     <form action="${pageContext.request.contextPath}/publish" method="post" enctype="multipart/form-data">
         <textarea rows="7" cols="30" name="content" class="topic_content"></textarea>
+        <div class="tool">
+         <div id="addPosition" class="add_position">
+           <img alt="" src="${pageContext.request.contextPath}/pictures/position.png">
+         </div>
+         <div id="addTime" class="add_time">
+           <img alt="" src="${pageContext.request.contextPath}/pictures/calendar.png">
+         </div>
+        </div>
         <input class="upbtn" type="file" name="picture" accept="image/*" id="upPic">
         <input class="upbtn2" placeholder="点击添加一张图片">
         <div id="preview" class="preview"></div>
-        <div class="input_city_panel">
-            <span>城市:</span>
-            <select id="country">
-                <option value="no" id="optionNodeCountry" >国家</option>
-            </select>
-            <select id="city" name="city">
-                <option value="no" id="optionNodeCity">城市</option>
-            </select>
-            <input type="text" name="city2" class="input_city" placeholder="手动输入" onfocus="getLocation();" id="geo">
-            </div>
-        <input type="submit" value="分享">
+        <div class="input_tag_panel">
+         <span>标签：</span>
+         <select id="tags">
+          <option value="no" id="optionTag">请选择</option>
+         </select>
+         <input type="text" name="tags" class="input_tags" placeholder="标签使用;隔开" >
+        </div>
+        <input type="submit" value="分享" id="submitTopic">
         <input type="reset" value="收起" class = "hiddenTopic">
     </form>
 </div>
@@ -204,7 +205,7 @@ function showPosition(position)
         <c:forEach items="${topPeoples.content}" var="u">
             <li>
                 <div class="user_mess">
-                  <a href="${pageContext.request.contextPath}/user/topic/${u.id}">
+                  <a href="${pageContext.request.contextPath}/user/personal/${u.id}">
                     <img src="${pageContext.request.contextPath}/${u.head}" alt="error" 
                       onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'"/>
                   </a>
@@ -234,22 +235,27 @@ function showPosition(position)
     </div>
 </div>
 </c:if>
-<!-- 显示热门城市 -->
-<c:if test="${showPopularCity eq 'true' }">
-    <div class="city_panel" id="cityPanel">
-        <c:forEach items="${cities }" var="city">
-            <div class="cityname">
-                <a href="${pageContext.request.contextPath}/home/groupByCity/${city}">
-                    ${city}
+<!-- 显示热门标签 -->
+<c:if test="${showPopularTags eq 'true' }">
+    <div class="tag_panel" id="tagPanel">
+        <c:forEach items="${tags }" var="tag">
+            <div class="tagname">
+                <a href="${pageContext.request.contextPath}/home/tag/${tag}" class="tag">
+                    ${tag}
                 </a>
             </div>
-        </c:forEach>
+         </c:forEach>
     </div>
+    <!-- 通过标签获取分享表单 -->
+    <form action="${pageContext.request.contextPath}/home/tag" id="tagForm">
+      <input type="text" name = "tag" id="tagName">
+    </form>
+    <!-- 显示分享 -->
     <div class="container">
         <ul class="grid effect-2" id="grid">
-            <c:forEach items="${cityTopics.content}" var="t">
+          <c:forEach items="${tagTopics.content}" var="t">
                 <li>
-                    <div class="user_mess textshadow">
+                    <div class="user_mess">
                       <a href="${pageContext.request.contextPath}/user/topic/${t.id}">
                         <img src="${pageContext.request.contextPath}/${t.picture}" alt="error" />
                       </a>
@@ -264,10 +270,11 @@ function showPosition(position)
                       </div>
                     </div>
                 </li>
-            </c:forEach>
+             </c:forEach>
         </ul>
     </div>
 </c:if>
+<input type="hidden" id="positionVal">
 <script src="${pageContext.request.contextPath}/js/masonry.pkgd.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/imagesloaded.js"></script>
 <script src="${pageContext.request.contextPath}/js/classie.js"></script>

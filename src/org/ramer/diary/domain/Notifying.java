@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.ramer.diary.domain;
 

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.UserNotLoginException;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.PraiseService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class AddPraise {
 
   @Autowired
-  private UserService userService;
+  private PraiseService praiseService;
 
   /**
    * 用户点赞.
@@ -54,7 +54,7 @@ public class AddPraise {
     Topic topic = new Topic();
     topic.setId(topic_id);
 
-    if (!userService.praise(user, topic)) {
+    if (!praiseService.praise(user, topic)) {
       System.out.println("-----重复点赞-----");
       response.getWriter().write("你已经赞过了哒 !");
       return;
@@ -84,7 +84,7 @@ public class AddPraise {
     }
     Topic topic = new Topic();
     topic.setId(topic_id);
-    if (!userService.notPraise(topic, user)) {
+    if (!praiseService.notPraise(topic, user)) {
       System.out.println("重复取消点赞");
       response.getWriter().write("重复取消点赞 !");
     }

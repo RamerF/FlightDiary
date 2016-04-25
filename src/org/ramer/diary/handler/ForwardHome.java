@@ -2,6 +2,8 @@ package org.ramer.diary.handler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +14,9 @@ import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.IllegalAccessException;
+import org.ramer.diary.service.FollowService;
+import org.ramer.diary.service.NotifyService;
+import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Pagination;
 import org.ramer.diary.util.UserUtils;
@@ -19,8 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -34,6 +39,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class ForwardHome {
   @Autowired
   private UserService userService;
+  @Autowired
+  private TopicService topicService;
+  @Autowired
+  private NotifyService notifyService;
+  @Autowired
+  private FollowService followService;
+
   //主页面
   private final String HOME = PageConstant.HOME.toString();
   //初始化在他人主页变量
@@ -56,7 +68,7 @@ public class ForwardHome {
    * @param map the map
    * @param session the session
    * @return 引导到主页
-   * @throws IOException 
+   * @throws IOException
    */
   @RequestMapping("/home")
   public String home(
@@ -81,14 +93,14 @@ public class ForwardHome {
       throw new IllegalAccessException("非法参数");
     }
     //获取分页分享
-    Page<Topic> topics = userService.getTopicsPage(page, TOPICPAGESIZE);
+    Page<Topic> topics = topicService.getTopicsPage(page, TOPICPAGESIZE);
     map.put("topics", topics);
     if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
-      int notifiedNumber = userService.getNotifiedNumber(user);
-      int topicNumber = userService.getTopicNumber(user);
-      int followedNumber = userService.getFollowedNumber(user);
+      int notifiedNumber = notifyService.getNotifiedNumber(user);
+      int topicNumber = topicService.getTopicNumber(user);
+      int followedNumber = followService.getFollowedNumber(user);
       System.out.println(
           "获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
       map.put("notifiedNumber", notifiedNumber);
@@ -103,8 +115,8 @@ public class ForwardHome {
     session.setAttribute("showTopic", "true");
     //  取消标识为达人分类
     session.setAttribute("showTopPeople", "false");
-    //  取消标识为热门城市分类
-    session.setAttribute("showPopularCity", "false");
+    //  取消标识为热门标签分类
+    session.setAttribute("showPopularTags", "false");
     return HOME;
   }
 
@@ -138,14 +150,14 @@ public class ForwardHome {
       throw new IllegalAccessException("非法参数");
     }
     //获取分页分享
-    Page<Topic> topics = userService.getTopicsPageOrderByFavourite(page, TOPICPAGESIZE);
+    Page<Topic> topics = topicService.getTopicsPageOrderByFavourite(page, TOPICPAGESIZE);
     map.put("topics", topics);
     if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
-      int notifiedNumber = userService.getNotifiedNumber(user);
-      int topicNumber = userService.getTopicNumber(user);
-      int followedNumber = userService.getFollowedNumber(user);
+      int notifiedNumber = notifyService.getNotifiedNumber(user);
+      int topicNumber = topicService.getTopicNumber(user);
+      int followedNumber = followService.getFollowedNumber(user);
       System.out.println(
           "获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
       map.put("notifiedNumber", notifiedNumber);
@@ -161,8 +173,8 @@ public class ForwardHome {
     session.setAttribute("showTopic", "true");
     //  取消标识为达人分类
     session.setAttribute("showTopPeople", "false");
-    //    取消标识为热门城市分类
-    session.setAttribute("showPopularCity", "false");
+    //    取消标识为热门标签分类
+    session.setAttribute("showPopularTags", "false");
     return HOME;
   }
 
@@ -190,9 +202,9 @@ public class ForwardHome {
     if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
-      int notifiedNumber = userService.getNotifiedNumber(user);
-      int topicNumber = userService.getTopicNumber(user);
-      int followedNumber = userService.getFollowedNumber(user);
+      int notifiedNumber = notifyService.getNotifiedNumber(user);
+      int topicNumber = topicService.getTopicNumber(user);
+      int followedNumber = followService.getFollowedNumber(user);
       System.out.println(
           "获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
       map.put("notifiedNumber", notifiedNumber);
@@ -206,25 +218,28 @@ public class ForwardHome {
     session.setAttribute("showTopPeople", "true");
     //    取消标识为分享分类
     session.setAttribute("showTopic", "false");
-    //    取消标识为热门城市分类
-    session.setAttribute("showPopularCity", "false");
+    //    取消标识为热门标签分类
+    session.setAttribute("showPopularTags", "false");
     return HOME;
   }
 
   /**
-   * 热门城市:
-   *  先获取所有城市按统计的次数排序,
-   *  取得第一个城市名,并获取对应的分享
+   * 热门标签:
+   *  先获取所有标签，剔除重复的标签，按统计的次数排序,
+   *  取得第一个标签名,并获取对应的分享.
+   *  通过标签获取分享.
    * @param pageNum 页号
    * @param session
    * @param map
    * @return
+   * @throws UnsupportedEncodingException
    */
-  @RequestMapping("/home/groupByCity")
-  public String homeTopicGroupByCity(
+  @RequestMapping(value = "/home/tag", method = RequestMethod.GET)
+  public String homeTagsGetTopicsByTag(
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
-      HttpSession session, Map<String, Object> map) {
-    System.out.println("热门城市主页");
+      @RequestParam(value = "tag", required = false, defaultValue = "default") String tag,
+      HttpSession session, Map<String, Object> map) throws UnsupportedEncodingException {
+    System.out.println("热门标签主页");
     int page = 1;
     //    inOtherPage = false;
     //    inTopicPage = false;
@@ -242,88 +257,55 @@ public class ForwardHome {
     if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
-      int notifiedNumber = userService.getNotifiedNumber(user);
-      int topicNumber = userService.getTopicNumber(user);
-      int followedNumber = userService.getFollowedNumber(user);
+      int notifiedNumber = notifyService.getNotifiedNumber(user);
+      int topicNumber = topicService.getTopicNumber(user);
+      int followedNumber = followService.getFollowedNumber(user);
       System.out.println(
           "获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
       map.put("notifiedNumber", notifiedNumber);
       map.put("topicNumber", topicNumber);
       map.put("followedNumber", followedNumber);
     }
-    List<String> cities = userService.getAllCities();
-    String city = cities.iterator().next();
-    Pagination<Topic> cityTopics = userService.getTopicsPageByCity(city, page, TOPICPAGESIZE);
-    //   将所有城市写入session
-    session.setAttribute("cities", cities);
-    //    将第一个城市对应的分页分享写入session
-    session.setAttribute("cityTopics", cityTopics);
-    //    取消标识为达人分类
-    session.setAttribute("showTopPeople", "false");
-    //    取消标识为分享分类
-    session.setAttribute("showTopic", "false");
-    //    标识为热门城市分类
-    session.setAttribute("showPopularCity", "true");
-    return HOME;
-  }
-
-  /**
-   * 通过城市获取分享
-   * @param pageNum 页号
-   * @param city 城市名
-   * @param session
-   * @param map
-   * @return
-   */
-  @RequestMapping("/home/groupByCity/{city}")
-  public String homeTopicGroupByCityString(
-      @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
-      @PathVariable("city") String city, HttpSession session, Map<String, Object> map) {
-    List<String> cities = userService.getAllCities();
-    int page;
-    //    inOtherPage = false;
-    //    inTopicPage = false;
-
-    session.setAttribute("inOtherPage", false);
-    session.setAttribute("inTopicPage", false);
-    try {
-      page = Integer.parseInt(pageNum);
-      if (page < 1) {
-        page = 1;
+    //    获取数据库中所有的标签
+    List<String> tags = topicService.getAllTags();
+    //    去除重复的标签
+    StringBuilder stringBuilder = new StringBuilder();
+    for (String string : tags) {
+      stringBuilder.append(string + ",");
+    }
+    String[] strings = stringBuilder.toString().split(";");
+    //    使用这个方法得到的只是一个ArrayList代理，因此里面的某些方法如： add(),remove() 无法使用
+    //    解决方法就是使用Iterator或者转换为ArrayList
+    List<String> tagslist = Arrays.asList(strings);
+    tagslist = new ArrayList<>(tagslist);
+    for (int i = 0; i < tagslist.size(); i++) {
+      for (int j = i + 1; j < tagslist.size(); j++) {
+        if (tagslist.get(i).equals(tagslist.get(j))) {
+          tagslist.remove(j);
+          j--;
+        }
       }
-    } catch (Exception e) {
-      throw new IllegalAccessException(WRONGFORMAT);
     }
-    try {
-      city = new String(city.getBytes("ISO-8859-1"), "utf-8");
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
+    tags = tagslist;
+    Pagination<Topic> tagTopics;
+    //    取得第一个标签的分享数据
+    if (tag.equals("default")) {
+      tagTopics = topicService.getTopicsPageByTags(tags.iterator().next(), page, TOPICPAGESIZE);
+    } else {
+      tag = java.net.URLDecoder.decode(tag, "utf8");
+      tagTopics = topicService.getTopicsPageByTags(tag, page, TOPICPAGESIZE);
     }
-    if (UserUtils.checkLogin(session)) {
-      User user = (User) session.getAttribute("user");
-      //获取用户统计数据
-      int notifiedNumber = userService.getNotifiedNumber(user);
-      int topicNumber = userService.getTopicNumber(user);
-      int followedNumber = userService.getFollowedNumber(user);
-      System.out.println(
-          "获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
-      map.put("notifiedNumber", notifiedNumber);
-      map.put("topicNumber", topicNumber);
-      map.put("followedNumber", followedNumber);
-    }
-    Pagination<Topic> cityTopics = userService.getTopicsPageByCity(city, page, TOPICPAGESIZE);
-    //   将所有城市写入session
-    session.setAttribute("cities", cities);
-    //    将第一个城市对应的分页分享写入session
-    session.setAttribute("cityTopics", cityTopics);
+    //   将所有标签写入session
+    session.setAttribute("tags", tags);
+    //    将第一个标签对应的分页分享写入session
+    session.setAttribute("tagTopics", tagTopics);
     //    取消标识为达人分类
     session.setAttribute("showTopPeople", "false");
     //    取消标识为分享分类
     session.setAttribute("showTopic", "false");
-    //    标识为热门城市分类
-    session.setAttribute("showPopularCity", "true");
+    //    标识为热门标签分类
+    session.setAttribute("showPopularTags", "true");
     return HOME;
-
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package org.ramer.diary.handler.user;
 
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.FavouriteService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,14 +26,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
 public class AddFavourite {
-
   @Autowired
-  private UserService userService;
+  private FavouriteService favouriteService;
 
   /**
-   * 
+   *
    * 收藏.
-   * 
+   *
    * @param topic_id 分享id
    * @param user 用户
    * @param response the response
@@ -50,7 +49,7 @@ public class AddFavourite {
     }
     Topic topic = new Topic();
     topic.setId(topic_id);
-    boolean flag = userService.favourite(user, topic);
+    boolean flag = favouriteService.favourite(user, topic);
     if (flag) {
       response.getWriter().write("收藏成功 !");
       return;
@@ -73,7 +72,7 @@ public class AddFavourite {
     response.setCharacterEncoding("UTF-8");
     Topic topic = new Topic();
     topic.setId(topic_id);
-    boolean flag = userService.notFavourite(user, topic);
+    boolean flag = favouriteService.notFavourite(user, topic);
     if (flag) {
       response.getWriter().write("取消收藏成功 !");
       return;

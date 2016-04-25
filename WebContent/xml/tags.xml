@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tags [
+  <!ELEMENT tags (tag+)>
+  <!ATTLIST tag name CDATA "">
+]>
+
+<tags>
+ <tag name="旅行"></tag>
+ <tag name="纪实"></tag>
+ <tag name="UI"></tag>
+</tags>

@@ -8,18 +8,19 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import org.ramer.diary.domain.Comment;
+import org.ramer.diary.domain.Reply;
+import org.ramer.diary.domain.Topic;
+import org.ramer.diary.repository.TopicRepository;
+import org.ramer.diary.service.CommentService;
+import org.ramer.diary.service.ReplyService;
+import org.ramer.diary.service.TopicService;
+import org.ramer.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.ramer.diary.domain.Comment;
-import org.ramer.diary.domain.Reply;
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.repository.TopicRepository;
-import org.ramer.diary.service.UserService;
 
 /**
  * @author ramer
@@ -34,6 +35,12 @@ public class CommentReplyTest {
   UserService userService;
   @Autowired
   TopicRepository topicRepository;
+  @Autowired
+  private CommentService commentService;
+  @Autowired
+  private TopicService topicService;
+  @Autowired
+  private ReplyService replyService;
 
   /**
    * 测试获取评论
@@ -44,7 +51,7 @@ public class CommentReplyTest {
     //        "applicationContext.xml");
     //    AutowireCapableBeanFactory factory = applicationContext.getAutowireCapableBeanFactory();
     //    UserService userService = factory.getBean(UserService.class);
-    Topic topic = userService.getTopicById(1);
+    Topic topic = topicService.getTopicById(1);
     Set<Comment> comments = topic.getComments();
     if (comments != null) {
       for (Comment comment : comments) {
@@ -61,7 +68,7 @@ public class CommentReplyTest {
   public void testReplyComment() {
     Comment comment = new Comment();
     Reply reply = new Reply();
-    Topic topic = userService.getTopicById(1);
+    Topic topic = topicService.getTopicById(1);
     Set<Comment> comments = topic.getComments();
     for (Comment comment2 : comments) {
       if (comment2.getUser().getId() == 3) {
@@ -70,7 +77,7 @@ public class CommentReplyTest {
     }
     reply.setComment(comment);
     reply.setDate(new Date());
-    userService.replyComment(reply);
+    replyService.replyComment(reply);
   }
 
   /**
@@ -86,7 +93,7 @@ public class CommentReplyTest {
     Topic topic = new Topic();
     topic.setId(1);
     comment.setTopic(topic);
-    userService.deleteComment(comment);
+    commentService.deleteComment(comment);
     topic = topicRepository.getById(1);
     Set<Comment> comments = topic.getComments();
     for (Comment comment2 : comments) {

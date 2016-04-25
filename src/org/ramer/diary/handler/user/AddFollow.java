@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.FollowService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class AddFollow {
 
   @Autowired
-  private UserService userService;
+  private FollowService followService;
 
   /**
    * 添加关注.
@@ -53,7 +53,7 @@ public class AddFollow {
     System.out.println("被关注用户: " + followedUser.getName());
     // 虽然在访问他人的主页时,topic没有显示写入到map中,但是在页面EL和foreach迭代输出的时候,产生了topic,
     //springmvc会将此topic封装,因此这里的topic是最后一个被迭代的topic对象
-    boolean flag = userService.follow(user, followedUser);
+    boolean flag = followService.follow(user, followedUser);
     if (flag) {
       response.getWriter().write("关注成功 !");
       return;
@@ -86,7 +86,7 @@ public class AddFollow {
     System.out.println("被关注用户: " + followedUser.getName());
     // 虽然在访问他人的主页时,topic没有显示写入到map中,但是在页面EL和foreach迭代输出的时候,产生了topic,
     //springmvc会将此topic封装,因此这里的topic是最后一个被迭代的topic对象
-    boolean flag = userService.notFollow(user, followedUser);
+    boolean flag = followService.notFollow(user, followedUser);
     if (flag) {
       response.getWriter().write("取消关注成功 !");
       return;

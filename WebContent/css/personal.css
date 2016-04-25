@@ -92,6 +92,32 @@ a.readPrivMess {
  text-align: center;
 }
 
+.tool {
+ display: table;
+ position: absolute;
+ margin-top: -136px;
+ margin-left: 646px;
+}
+
+div#addPosition {
+ width: 40px;
+ cursor: pointer;
+ font-size: .9em;
+ padding: 5px;
+}
+
+#addTime img {
+ height: 23px;
+ width: 21px;
+}
+
+div#addTime {
+ cursor: pointer;
+ font-size: .9em;
+ padding: 5px;
+ width: 40px;
+}
+
 .preview {
  position: absolute;
  margin-top: -55px;
@@ -125,7 +151,7 @@ input#upPic {
  cursor: pointer;
 }
 
-.input_city_panel {
+.input_tag_panel {
  height: 53px;
  margin-top: -63px;
  margin-right: 0px;
@@ -133,19 +159,16 @@ input#upPic {
  border-bottom: 1px solid #4DABF5;
 }
 
-.input_city_panel select {
+.input_tag_panel select {
  height: 30px;
  border: none;
  outline: none;
  padding-left: 10px;
+ margin-right: 35px;
 }
 
-select#city {
- margin-right: 42px;
-}
-
-input.input_city {
- width: 140px;
+input.input_tags {
+ width: 260px;
  margin-top: 14px;
  margin-right: 0px;
 }

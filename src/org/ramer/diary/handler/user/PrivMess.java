@@ -12,7 +12,7 @@ import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.IllegalAccessException;
 import org.ramer.diary.exception.SystemWrongException;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.NotifyService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class PrivMess {
 
   @Autowired
-  private UserService userService;
+  private NotifyService notifyService;
 
   /**
    * 发送私信.
@@ -67,7 +67,7 @@ public class PrivMess {
     notifying.setContent(content);
     notifying.setDate(new Date());
     notifying.setHasCheck("false");
-    boolean flag = userService.sendPrivMess(notifying);
+    boolean flag = notifyService.sendPrivMess(notifying);
     response.setCharacterEncoding("utf-8");
     if (!flag) {
       System.out.println("消息发送失败");
@@ -99,9 +99,9 @@ public class PrivMess {
     }
     if (notify_id > 0) {
       notifying.setId(notify_id);
-      notifying = userService.getNotifyingById(notifying);
+      notifying = notifyService.getNotifyingById(notifying);
       notifying.setHasCheck("true");
-      boolean flag = userService.updateNotifying(notifying);
+      boolean flag = notifyService.updateNotifying(notifying);
       if (!flag) {
         throw new SystemWrongException();
       }

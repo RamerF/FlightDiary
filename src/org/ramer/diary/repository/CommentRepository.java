@@ -3,10 +3,9 @@
  */
 package org.ramer.diary.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import org.ramer.diary.domain.Comment;
 import org.ramer.diary.domain.Topic;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * @author ramer
@@ -20,4 +19,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
    * @return 返回指定的评论
    */
   Comment getByIdAndTopic(Integer id, Topic topic);
+
 }

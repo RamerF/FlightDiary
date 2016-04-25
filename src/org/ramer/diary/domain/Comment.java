@@ -57,7 +57,7 @@ public class Comment {
   private User user;
 
   /** 评论回复. */
-  @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "comment", cascade = { CascadeType.REMOVE })
   @OrderBy("date asc")
   private Set<Reply> replies;
 

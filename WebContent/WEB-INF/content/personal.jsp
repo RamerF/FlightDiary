@@ -16,8 +16,8 @@
 <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
 <script type="text/javascript">
  $(function() {
-     /* 指定城市信息的xml文件,全局变量 */
-     requestUrl = "${pageContext.request.contextPath}/xml/city.xml";
+     /* 指定标签信息的xml文件,全局变量 */
+     path = "${pageContext.request.contextPath}";
   /* 记录滚动条的位置 */
   /* 获取滚动条的位置 */
   var scrollCookie = Cookies.get("scrollCookie_personal" +"${user.id}");
@@ -31,40 +31,6 @@
    Cookies.set("scrollCookie_personal"+"${user.id}", $(document).scrollTop());
   });
  })
-</script>
-<!-- 获取当前位置信息 -->
-<script type="text/javascript">
-function getLocation()
-  {
-  if (navigator.geolocation)
-    {
-    navigator.geolocation.watchPosition(showPosition);
-    }
-  else{alert("浏览器不支持位置信息获取");}
-  }
-function showPosition(position)
-  {
- var latlon = position.coords.latitude+','+position.coords.longitude;
-  
-  //baidu
-  var url = "http://api.map.baidu.com/geocoder/v2/?ak=C93b5178d7a8ebdb830b9b557abce78b&callback=renderReverse&location="+latlon+"&output=json&pois=0";
-  $.ajax({ 
-    type: "GET", 
-    dataType: "jsonp", 
-    url: url,
-    beforeSend: function(){
-      $("#geo").attr("value",'正在获取位置。。。');
-    },
-    success: function (json) { 
-      if(json.status==0){
-        $("#geo").attr("value",json.result.addressComponent.city);
-      }
-    },
-    error: function (XMLHttpRequest, textStatus, errorThrown) { 
-      $("#geo").attr("value",latlon+"位置获取失败"); 
-    }
-  });
-  }
 </script>
 <script src="${pageContext.request.contextPath}/js/ramer/personal.js"></script>
 <title>Personal Center</title>
@@ -209,19 +175,24 @@ function showPosition(position)
         method="post" enctype="multipart/form-data">
         <input type="hidden" name="personal" value="true">
         <textarea rows="7" cols="30" class="topic_content" name="content"></textarea>
+        <div class="tool">
+         <div id="addPosition" class="add_position">
+           <img alt="" src="${pageContext.request.contextPath}/pictures/position.png">
+         </div>
+         <div id="addTime" class="add_time">
+           <img alt="" src="${pageContext.request.contextPath}/pictures/calendar.png">
+         </div>
+        </div>
         <input class="choose_pic" type="text" placeholder="请选择一张图片" id="picName">
         <input type="file" name="picture" class="choose_file" accept="image/*" id="upPic">
         <div id="preview" class="preview"></div>
-        <div class="input_city_panel">
-            <span>城市:</span>
-            <select id="country">
-                <option value="no" id="optionNodeCountry" >国家</option>
-            </select>
-            <select id="city" name="city">
-                <option value="no" id="optionNodeCity">城市</option>
-            </select>
-            <input type="text" name="city2" class="input_city" placeholder="手动输入" id="geo" onfocus="getLocation()">
-            </div>
+        <div class="input_tag_panel">
+         <span>标签：</span>
+         <select id="tags">
+          <option value="no" id="optionTag">请选择</option>
+         </select>
+         <input type="text" name="tags" class="input_tags" placeholder="标签使用;隔开" >
+        </div>
         <input type="submit" value="分享">
         <input type="reset" value="收起" class="hiddenTopic">
     </form>
@@ -287,7 +258,6 @@ function showPosition(position)
                     <input type="reset" value="收起" class="hiddenCommentForm">
                 </form>
             </div>
-            <span class="errorMessage"></span>
             <!-- 删除用户评论表单 -->
             <form action="" method="post" class="delete_comment_form">
                 <input type="hidden" name="topic" value="${topic.id}">
@@ -342,5 +312,6 @@ function showPosition(position)
         </div>
     </c:forEach>
 </c:if>
+<input type="hidden" id="positionVal">
 </body>
 </html>

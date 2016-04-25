@@ -77,10 +77,7 @@
             method="post"
             enctype="multipart/form-data"
             id="sendPrivMessForm">
-
-          <textarea id="privMessContent" rows="7" cols="30" class="notifying_content" name="content">
-          </textarea>
-          <br>
+          <textarea id="privMessContent" rows="7" cols="30" class="notifying_content" name="content"></textarea>
           <input type="submit" value="发送私信" id="sendPrivMess">
           <input type="reset" value="收起" class="hiddenNotifying">
         </form>

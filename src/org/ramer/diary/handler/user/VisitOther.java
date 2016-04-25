@@ -9,6 +9,10 @@ import javax.servlet.http.HttpSession;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.UserNotExistException;
+import org.ramer.diary.service.FavouriteService;
+import org.ramer.diary.service.FollowService;
+import org.ramer.diary.service.PraiseService;
+import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,14 @@ public class VisitOther {
 
   @Autowired
   private UserService userService;
+  @Autowired
+  private TopicService topicService;
+  @Autowired
+  private PraiseService praiseService;
+  @Autowired
+  private FavouriteService favouriteService;
+  @Autowired
+  private FollowService followService;
 
   /**
    * 访问他人主页.
@@ -93,7 +105,7 @@ public class VisitOther {
     session.setAttribute("inTopicPage", true);
     //  查看分享
     System.out.println("-----查看分享-----");
-    Topic topic = userService.getTopicById(topic_id);
+    Topic topic = topicService.getTopicById(topic_id);
     User user = (User) session.getAttribute("user");
     if (UserUtils.checkLogin(session)) {
       System.out.println("已登录,写入信息");
@@ -124,7 +136,7 @@ public class VisitOther {
     if (!UserUtils.checkLogin(session)) {
       return new ArrayList<>();
     }
-    List<Integer> list = userService.getFavouriteTopicIds(user, other);
+    List<Integer> list = favouriteService.getFavouriteTopicIds(user, other);
     System.out.println("已收藏分享id : ");
     for (Integer integer : list) {
       System.out.println("\t" + integer);
@@ -136,7 +148,7 @@ public class VisitOther {
     if (!UserUtils.checkLogin(session)) {
       return new ArrayList<>();
     }
-    List<Integer> list = userService.getPraiseTopicIds(user, other);
+    List<Integer> list = praiseService.getPraiseTopicIds(user, other);
     System.out.println("已点赞分享id : ");
     for (Integer integer : list) {
       System.out.println("\t" + integer);
@@ -151,7 +163,7 @@ public class VisitOther {
    * @return 已关注返回true
    */
   boolean isFollowed(User user, User followedUser) {
-    boolean flag = userService.isFollowed(user, followedUser);
+    boolean flag = followService.isFollowed(user, followedUser);
     return (flag == true) ? true : false;
   }
 }
