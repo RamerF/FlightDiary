@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>旅行日记</title>
+<title>Diary</title>
 
 <!-- 瀑布流导入 -->
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/default.css" >
@@ -15,45 +15,71 @@
 <script src="${pageContext.request.contextPath}/js/js.cookie.js"></script>
 <!-- 瀑布流导入 -->
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/home.css" >
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/balloon.min.css" >
 <script src="${pageContext.request.contextPath}/js/TextAreaExpander.js"></script>
 <script type="text/javascript">
 $(function() {
     path = "${pageContext.request.contextPath}";
-})
-</script>
-<!-- 获取当前位置信息 -->
-<script type="text/javascript">
-function getLocation()
-  {
-  if (navigator.geolocation)
-    {
-    navigator.geolocation.watchPosition(showPosition);
+    /* 记录滚动条的位置 */
+    /* 获取滚动条的位置 */
+    var scrollCookie = Cookies.get("scrollCookie_home");
+    if(scrollCookie != null && scrollCookie != ""){
+      $("html,body").animate({
+        scrollTop : scrollCookie + "px"
+      }, 1000);
     }
-  else{alert("浏览器不支持位置信息获取");}
-  }
-function showPosition(position)
-  {
- var latlon = position.coords.latitude+','+position.coords.longitude;
-  
-  //baidu
-  var url = "http://api.map.baidu.com/geocoder/v2/?ak=C93b5178d7a8ebdb830b9b557abce78b&callback=renderReverse&location="+latlon+"&output=json&pois=0";
-  $.ajax({ 
-    type: "GET", 
-    dataType: "jsonp", 
-    url: url,
-    beforeSend: function(){
-      $("#geo").attr("value",'正在获取位置。。。');
-    },
-    success: function (json) { 
-      if(json.status==0){
-        $("#geo").attr("value",json.result.addressComponent.city);
+    else{
+      Cookies.set("scrollCookie_home", $(document).scrollTop("1px"));
+    }
+    var scroll = 0;
+    var interval = null;
+    // 滚动条滚动时记录滚动条高度,判断滚动条是否停止滚动，滑动到底部翻页
+    $(window).scroll(function(){
+      Cookies.set("scrollCookie_home", $(document).scrollTop());
+      if(interval == null){
+        interval = setInterval(checkScroll, 1000);
       }
-    },
-    error: function (XMLHttpRequest, textStatus, errorThrown) { 
-      $("#geo").attr("value",latlon+"位置获取失败"); 
+      scroll = $(document).scrollTop();
+      //滑块位置
+      var scrollTop = $(this).scrollTop();
+      //文本总高度
+      var scrollHeight = $(document).height();
+      //滑块本身高度
+      var windowHeight = $(this).height();
+      //滚动到顶部
+      if(scrollTop =="0"){
+      //询问框
+        layer.confirm('想看看上一页？', {
+          btn: ['恩','不了'] 
+        }, function(){
+         $("#lastPage")[0].click();
+        }, function(){
+        });
+        return false;
+      }
+   
+      //滚动到底部
+      if(scrollTop + windowHeight == scrollHeight){
+        //询问框
+          layer.confirm('想看看下一页？', {
+            btn: ['恩','不了'] 
+          }, function(){
+           $("#nextPage")[0].click();
+          }, function(){
+          });
+          return false;
+      }
+    });
+    // 测试滚动条是否滚动
+    function checkScroll(){
+      if($(document).scrollTop() == scroll){
+        clearTimeout(interval);
+        interval = null;
+        $("::-webkit-scrollbar").css("display", "none");
+        // alert("停止滚动");
+      }
     }
-  });
-  }
+})
 </script>
 <script src="${pageContext.request.contextPath}/js/ramer/home.js"></script>
 <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
@@ -61,7 +87,7 @@ function showPosition(position)
 <body>
 <!-- 标题面板 -->
 <div class="top"> 
-  <div  class="title textshadow" >旅行日记</div>
+  <div  class="title textshadow" >Diary</div>
   <div class="about">
       <span><a href="#" class="textshadow">关于</a></span> / 
       <span><a href="#" class="textshadow">反馈</a></span>
@@ -71,16 +97,16 @@ function showPosition(position)
 <div class="category_panel">
   <div class="category">
     <span>
-      <a href="${pageContext.request.contextPath}/home" class="textshadow">默认</a>
+      <a href="${pageContext.request.contextPath}/home" data-toggle="默认">默认</a>
     </span> / 
     <span>
-        <a href="${pageContext.request.contextPath}/home/orderbyUpCounts">热门</a>
+        <a href="${pageContext.request.contextPath}/home/orderbyUpCounts" data-toggle="热门">热门</a>
     </span> / 
     <span>
-        <a href="${pageContext.request.contextPath}/home/topPeople">达人</a>
+        <a href="${pageContext.request.contextPath}/home/topPeople" data-toggle="达人">达人</a>
     </span> / 
     <span>
-        <a href="${pageContext.request.contextPath}/home/tag" id="topTags">热门标签</a>
+        <a href="${pageContext.request.contextPath}/home/tag" id="topTags" data-toggle="热门标签">热门标签</a>
     </span>
   </div>
   <!-- 通过用户输入标签获取分享 -->
@@ -131,7 +157,7 @@ function showPosition(position)
     <a href="${pageContext.request.contextPath}/user/forwardModifyEmail">修改绑定邮箱</a>
   </div>
   <div>
-    <a href="${pageContext.request.contextPath}/user/forwardModifyEmail">编辑个人信息</a>
+    <a href="${pageContext.request.contextPath}/user/${user.id}">编辑个人信息</a>
   </div>
 </div>
 <!-- 发表分享面板 -->
@@ -139,10 +165,10 @@ function showPosition(position)
     <form action="${pageContext.request.contextPath}/publish" method="post" enctype="multipart/form-data">
         <textarea rows="7" cols="30" name="content" class="topic_content"></textarea>
         <div class="tool">
-         <div id="addPosition" class="add_position">
+         <div id="addPosition" class="add_position" data-balloon="添加当前位置" data-balloon-pos="right">
            <img alt="" src="${pageContext.request.contextPath}/pictures/position.png">
          </div>
-         <div id="addTime" class="add_time">
+         <div id="addTime" class="add_time" data-balloon="添加当前时间" data-balloon-pos="right">
            <img alt="" src="${pageContext.request.contextPath}/pictures/calendar.png">
          </div>
         </div>
@@ -272,6 +298,15 @@ function showPosition(position)
                 </li>
              </c:forEach>
         </ul>
+    </div>
+    <!-- 分页 -->
+    <div class="page_panel">
+      <div class="lastPage">
+        <a href="?pageNum=${topPeoples.number - 1}" id="lastPage">上一页</a>&nbsp;&nbsp;
+      </div>
+      <div class="nextPage">
+        <a href="?pageNum=${topPeoples.number  + 1}" id="nextPage">下一页</a>
+      </div>
     </div>
 </c:if>
 <input type="hidden" id="positionVal">

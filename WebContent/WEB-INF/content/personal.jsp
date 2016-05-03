@@ -7,10 +7,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="${pageContext.request.contextPath}/css/default.css"
-		rel="stylesheet">
-<link href="${pageContext.request.contextPath}/css/personal.css"
-		rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/default.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/personal.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/balloon.min.css" >
 <script src="${pageContext.request.contextPath}/js/jquery-2.1.4.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/js.cookie.js"></script>
 <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
@@ -36,10 +35,10 @@
 <title>Personal Center</title>
 </head>
 <body>
-<!--  返回主页 -->
+<!--  返回-->
 <div class="return_link">
-    <a href="${pageContext.request.contextPath}/home">返回主页</a><br>
-</div>
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/back.png" id="back">
+    </div>
 <!-- 用户信息面板 -->
 <div class="user_panel">
     <div class="head">
@@ -176,10 +175,10 @@
         <input type="hidden" name="personal" value="true">
         <textarea rows="7" cols="30" class="topic_content" name="content"></textarea>
         <div class="tool">
-         <div id="addPosition" class="add_position">
+         <div id="addPosition" class="add_position" data-balloon="添加当前位置" data-balloon-pos="right">
            <img alt="" src="${pageContext.request.contextPath}/pictures/position.png">
          </div>
-         <div id="addTime" class="add_time">
+         <div id="addTime" class="add_time" data-balloon="添加当前时间" data-balloon-pos="right">
            <img alt="" src="${pageContext.request.contextPath}/pictures/calendar.png">
          </div>
         </div>

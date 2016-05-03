@@ -1,9 +1,37 @@
 @CHARSET "UTF-8";
 
 .return_link {
- position: fixed;
+ opacity: .7;
+ width: 48px; height : 48px; position : fixed;
  background: none;
- margin: 40px auto -10px 30px;
+ margin: 10% auto auto 5%;
+ position: fixed;
+ height: 48px;
+}
+
+.return_link::before {
+ background: url("../pictures/bubble.png") no-repeat;
+ background-position: 2px -2px;
+ display: -webkit-inline-box;
+ height: 50px;
+ position: absolute;
+ color: rgba(0, 0, 0,1);
+ padding: 10px;
+ left: 100%;
+ top: -100%;
+ width: 53px;
+ height: 48px; opacity : 0;
+ content: "返回";
+ transition: all .6s;
+ opacity: 0;
+}
+
+.return_link:hover::before {
+ opacity: .8;
+}
+
+.return_link:hover {
+ opacity: .5;
 }
 
 .user_panel {

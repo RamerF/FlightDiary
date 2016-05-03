@@ -25,7 +25,7 @@
 
 .category_panel {
  position: absolute;
- margin-top: 50px;
+ margin-top: 43px;
  width: 100%;
  /*  box-shadow: 0px 1px 10px #E2E1E1; */
  border-bottom: 1px solid #4DABF5;
@@ -63,9 +63,6 @@
 }
 
 .querytopic {
- /*     box-shadow: 1px 1px 0px rgb(216, 222, 225), 2px 2px 0px */
- /*         rgba(216, 222, 225, 0.18), 3px 3px 0px rgba(216, 222, 225, 0), 4px 4px */
- /*         0px rgba(216, 222, 225, 0.46), 5px 5px 0px rgba(216, 222, 225, 0.47); */
  color: #85918F;
  background: rgb(255, 255, 255);
  margin-left: -80px;
@@ -75,7 +72,6 @@
  outline: none;
  border: 1px solid rgb(77, 171, 245);
  position: absolute;
- margin-top: .5%;
  text-align: center;
  text-shadow: none;
  font-size: 13px;
@@ -84,7 +80,7 @@
 .search {
  position: absolute;
  margin-left: 8.5%;
- margin-top: .9%;
+ margin-top: 1.1%;
 }
 
 .user_panel {
@@ -99,11 +95,10 @@
 }
 
 span.username {
- text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px,
-  rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px
-  0px, rgba(133, 145, 143, .1) 3px 3px 0px, rgba(133, 145, 143, .1) 4px
-  4px 0px, rgba(133, 145, 143, .1) 5px 5px 0px, rgba(133, 145, 143, .1)
-  6px 6px 0px, rgba(133, 145, 143, .1) 7px 7px 0px,
+ text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px
+  1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px, rgba(133, 145, 143, .1) 3px 3px
+  0px, rgba(133, 145, 143, .1) 4px 4px 0px, rgba(133, 145, 143, .1) 5px 5px 0px,
+  rgba(133, 145, 143, .1) 6px 6px 0px, rgba(133, 145, 143, .1) 7px 7px 0px,
   rgba(133, 145, 143, .1) 8px 8px 0px;
  font-size: 20px;
  cursor: pointer;
@@ -239,7 +234,6 @@ div#addTime {
  margin-right: 35px;
 }
 
-
 .input_tags {
  width: 270px;
  height: 31px;
@@ -286,24 +280,34 @@ div#addTime {
 }
 
 .page_panel {
- width: 640px;
- margin: 0px auto;
+ display: table;
+ width: 100%;
+ margin: 10px auto 0px;
+}
+
+.page_panel a {
+ padding: 10px;
+ border: 1px solid #ccc;
+ border-left: none;
+ display: block;
 }
 
 .lastPage {
- width: 70px;
+/*  display: table; */
+ display: none;
+ width: 50%;
  float: left;
  text-align: center;
- border-radius: 400px;
- padding-left: 6px;
- font-size: 18px;
+ font-size: 15px;
 }
 
 .nextPage {
- font-size: 18px;
- margin-left: 570px;
+ display: none;
+ float: left;
+ width: 50%;
+ font-size: 15px;
+ border-left: none;
  text-align: center;
- border-radius: 400px;
 }
 
 .tag_panel {
@@ -327,6 +331,26 @@ form#tagForm {
 
 .tagname {
  text-align: center;
- font-size: 20px;
  margin-bottom: 10px;
+}
+
+a {
+ position: relative;
+}
+
+a::before {
+ position: absolute;
+ content: attr(data-toggle);
+ opacity: 0;
+ color: rgba(61, 80, 76, 0.63);
+ transform: scale(1.1) rotate(8deg) translateX(10px) translateY(-10px);
+ transition: all .5s;
+}
+
+a:hover::before {
+ position: absolute;
+ opacity: 1;
+ transform: scale(1) rotate(0deg) translateX(0px) translateY(0px);
+ color: #FFFFFF;
+// text-shadow: 0px 0px 0px rgb(0, 0, 0);
 }

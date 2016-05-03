@@ -12,7 +12,8 @@
 <link rel="stylesheet"
   href="${pageContext.request.contextPath}/css/userInput.css">
 <script src="${pageContext.request.contextPath}/js/jquery-2.1.4.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+<%-- <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script> --%>
+<script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
 <script type="text/javascript">
 var path = "";
 $(function() {
@@ -36,11 +37,10 @@ $(function() {
         <span class="label">用户名 : </span>
         <form:input path="name" class="username" id ="username" placeholder="用户名 / 邮箱" />
         <span id="message"></span>
-        <br>
         <c:if test="${empty user.id}">
-          <span class="label">密码 : </span>
+          <span class="label" >密码 : </span>
           <form:password path="password" id="password" class="password"/>
-          <br>
+          <div id="showPassword"></div>
         </c:if>
         <!-- 用户注册面板 -->
         <div class="reg_panel" id="regPanel">
@@ -86,7 +86,6 @@ $(function() {
             <span>忘记密码</span>
           </a>
         </div>
-        <div id="message3"></div>
         <div class="toggle">
             <input type="reset" value="重置" />
             <input type="submit" value="登录" />

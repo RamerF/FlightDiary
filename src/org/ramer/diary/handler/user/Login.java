@@ -6,12 +6,12 @@ import javax.servlet.http.HttpSession;
 
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
-import org.ramer.diary.exception.UsernameOrPasswordNotMatchException;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
@@ -34,6 +34,7 @@ public class Login {
    * @return 登录成功返回主页,失败返回错误页面
    */
   @RequestMapping(value = "/user/login")
+  @ResponseBody
   public String userLogin(User user, Map<String, Object> map, HttpSession session) {
     System.out.println("登录");
     String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
@@ -46,9 +47,12 @@ public class Login {
     User user2 = userService.login(user);
     if (user2.getId() != null) {
       map.put("user", user2);
-      return "redirect:/home";
+      session.setAttribute("user", user2);
+      return "success";
+      //      return "redirect:/home";
     }
-    throw new UsernameOrPasswordNotMatchException("登录失败,用户名或密码错误");
+    return "error";
+    //    throw new UsernameOrPasswordNotMatchException("登录失败,用户名或密码错误");
   }
 
 }

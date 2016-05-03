@@ -1,5 +1,7 @@
 // 页面中path被定义为全局变量
 $(function(){
+  $("input[type='submit']").attr("disabled", "disabled");
+  $("input[type='submit']").css("opacity", ".5");
 
   /* 更新用户 */
   if($("#userId").val() != null){
@@ -100,9 +102,13 @@ $(function(){
           if(data == "true"){
             // 注册时用户名应该不存在
             result = "<img class='valid' src='" + path + "/pictures/wrong.png' weight='10px' height='10px'>";
+            $("input[type='submit']").attr("disabled", "disabled");
+            $("input[type='submit']").css("opacity", ".5");
           }
           else{
             result = "<img class='valid' src='" + path + "/pictures/right.png' weight='10px' height='10px'>";
+            $("input[type='submit']").removeAttr("disabled", "disabled");
+            $("input[type='submit']").css("opacity", "1");
           }
           $("#message").html(result);
         });
@@ -131,9 +137,13 @@ $(function(){
           if(data == "false"){
             // 登录时用户名应该存在
             result = "<img class='valid' src='" + path + "/pictures/wrong.png' weight='10px' height='10px'>";
+            $("input[type='submit']").attr("disabled", "disabled");
+            $("input[type='submit']").css("opacity", ".5");
           }
           else{
             result = "";
+            $("input[type='submit']").removeAttr("disabled", "disabled");
+            $("input[type='submit']").css("opacity", "1");
           }
           $("#message").html(result);
         });
@@ -156,9 +166,13 @@ $(function(){
         if(data == "true"){
           // 更新时用户名应该不存在
           result = "<img class='valid' src='" + path + "/pictures/wrong.png' weight='10px' height='10px'>";
+          $("input[type='submit']").attr("disabled", "disabled");
+          $("input[type='submit']").css("opacity", ".5");
         }
         else{
           result = "<img class='valid' src='" + path + "/pictures/right.png' weight='10px' height='10px'>";
+          $("input[type='submit']").removeAttr("disabled", "disabled");
+          $("input[type='submit']").css("opacity", "1");
         }
       }
       // 如果是用户注册
@@ -166,9 +180,13 @@ $(function(){
         if(data == "true"){
           // 注册时用户名应该不存在
           result = "<img class='valid' src='" + path + "/pictures/wrong.png' weight='10px' height='10px'>";
+          $("input[type='submit']").attr("disabled", "disabled");
+          $("input[type='submit']").css("opacity", ".5");
         }
         else{
           result = "<img class='valid' src='" + path + "/pictures/right.png' weight='10px' height='10px'>";
+          $("input[type='submit']").removeAttr("disabled", "disabled");
+          $("input[type='submit']").css("opacity", "1");
         }
 
       }
@@ -177,9 +195,13 @@ $(function(){
         if(data == "true"){
           // 登录时用户名应该存在
           result = "";
+          $("input[type='submit']").removeAttr("disabled", "disabled");
+          $("input[type='submit']").css("opacity", "1");
         }
         else{
           result = "<img class='valid' src='" + path + "/pictures/wrong.png' weight='10px' height='10px'>";
+          $("input[type='submit']").attr("disabled", "disabled");
+          $("input[type='submit']").css("opacity", ".5");
         }
       }
       $("#message").html(result);
@@ -200,10 +222,13 @@ $(function(){
       var result = "";
       if(data == "exist" || data == "notEmail"){
         result = "<img class='valid' src='" + path + "/pictures/wrong.png' weight='10px' height='10px'>";
+        $("input[type='submit']").attr("disabled", "disabled");
+        $("input[type='submit']").css("opacity", ".5");
       }
       else{
         result = "<img class='valid' src='" + path + "/pictures/right.png' weight='10px' height='10px'>";
-
+        $("input[type='submit']").removeAttr("disabled", "disabled");
+        $("input[type='submit']").css("opacity", "1");
       }
       $("#message2").html(result);
     });
@@ -212,12 +237,39 @@ $(function(){
   $("input[type='submit']").click(function(){
     var message = $("#message img").attr("src");
     var message2 = $("#message2 img").attr("src");
-    if(message.indexOf("wrong") > 0 || message2.indexOf("wrong") > 0){
-      $("#message3").html("<font color='red'>请确认信息无误</font>");
+    if(!message === undefined) if(message.indexOf("wrong") > 0){
+      layer.msg("请确认信息无误", {
+        time : 1800,
+        color : "#000"
+      });
+      return false;
+    }
+    if(!message2 === undefined) if(message2.indexOf("wrong") > 0){ return false; }
+    // 如果是登陆，使用ajax验证
+    if(~~$("#userId").val() == 0){
+      if($("#title").text() == "登录"){
+        var url = $("#_form").attr("action"),args = {
+          "name" : $("#username").val(),
+          "password" : $("#password").val()
+        };
+        $.post(url, args, function(message){
+          if(message == "success"){
+            location.href = "http://localhost:8080" + path + "/home";
+            return false;
+          }
+          else{
+            layer.msg("用户名或密码不正确", {
+              time : 1800,
+              color : "red"
+            });
+          }
+        })
+        return false;
+      }
       return false;
     }
 
-    $("_form").submit();
+    $("#_form").submit();
   });
   // 预览图片
   $("#userHead").change(function(){
@@ -228,6 +280,14 @@ $(function(){
     $(reader).load(function(){
       $("#preview").attr("src", this.result);
     })
+  });
+  // 显示密码
+  $("#showPassword").hover(function(){
+    $("#password").attr("type", "text");
+  });
+  // 隐藏密码
+  $("#showPassword").mouseleave(function(){
+    $("#password").attr("type", "password");
   });
 
 })

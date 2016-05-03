@@ -1,4 +1,10 @@
 $(function(){
+  // 返回
+  $("#back").click(function(){
+    console.log("返回");
+    history.back();
+    return false;
+  })
   // 发送私信
   $("#sendPrivMess").click(function(){
     var url = $("#sendPrivMessForm").attr("action");

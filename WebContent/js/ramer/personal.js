@@ -47,7 +47,17 @@ $(function(){
       $(".input_tags").val(tag);
       return;
     }
-    else $(".input_tags").val(tags + "," + tag);
+    else if(tags.indexOf(tag) >= 0){
+      return;
+    }
+    else $(".input_tags").val(tags + ";" + tag);
+  })
+
+  // 返回
+  $("#back").click(function(){
+    console.log("返回");
+    history.back();
+    return false;
   })
 
   // 显示私信

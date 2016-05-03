@@ -37,8 +37,9 @@
 </script>
 </head>
 <body>
-    <div class="return_link"><a
-        href="${pageContext.request.contextPath}/home">返回主页</a><br></div>
+    <div class="return_link">
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/back.png" id="back">
+    </div>
     <div class="user_info_panel">
         <div class="head"><a
             href="${pageContext.request.contextPath}/user/personal/${topic.user.id}">

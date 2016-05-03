@@ -46,6 +46,9 @@ $(function(){
       $(".input_tags").val(tag);
       return;
     }
+    else if(tags.indexOf(tag) >= 0){
+      return;
+    }
     else $(".input_tags").val(tags + ";" + tag);
   })
 
@@ -104,13 +107,13 @@ $(function(){
       });
       return false;
     }
-    Cookies.set("scrollCookie_home", "0");
+    Cookies.set("scrollCookie_home", "1");
   });
   // 下一页
   $("#nextPage").click(function(){
     var totalPages = $("#totalPages").val();
     var number = new Number($("#number").val()) + 2;
-    Cookies.set("scrollCookie_home", "0");
+    Cookies.set("scrollCookie_home", "1");
     if(number > totalPages){
       layer.msg("报告主人,下一页已结婚	(^v^)", {
         time : 1800
@@ -118,42 +121,14 @@ $(function(){
       return false;
     }
   });
+
   // 注销
   $("#logOff").click(function(){
-    Cookies.set("scrollCookie_home", 0);
+    Cookies.set("scrollCookie_home", "1");
   });
   /* 文本域自适应 */
   $(".topic_content").TextAreaExpander(117, 250);
-  /* 记录滚动条的位置 */
-  /* 获取滚动条的位置 */
-  var scrollCookie = Cookies.get("scrollCookie_home");
-  if(scrollCookie != null && scrollCookie != ""){
-    $("html,body").animate({
-      scrollTop : scrollCookie + "px"
-    }, 1000);
-  }
-  else{
-    Cookies.set("scrollCookie_home", $(document).scrollTop("0px"));
-  }
-  var scroll = 0;
-  var interval = null;
-  // 滚动条滚动时记录滚动条高度,判断滚动条是否停止滚动
-  $(window).scroll(function(){
-    Cookies.set("scrollCookie_home", $(document).scrollTop());
-    if(interval == null){
-      interval = setInterval(checkScroll, 1000);
-    }
-    scroll = $(document).scrollTop();
-  });
-  // 测试滚动条是否滚动
-  function checkScroll(){
-    if($(document).scrollTop() == scroll){
-      clearTimeout(interval);
-      interval = null;
-      $("::-webkit-scrollbar").css("display", "none");
-      // alert("停止滚动");
-    }
-  }
+
   /* 显示用户链接面板 */
   $("#showProfile").click(function(){
     $("#personal").show(1000);

@@ -1,24 +1,36 @@
 package org.ramer.diary.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * 文件操作工具类，包含常用的静态方法：
  * <strong>
  * 1.删除文件
  * 2.保存文件
+ * 3.读取xml文件
+ * 4.向文件中写入数据
  * <strong>
  * @author ramer
  *
@@ -31,7 +43,7 @@ public class FileUtils {
    * @param session the session
    * @param chn 是否中文
    * @return 删除成功返回true
-   * @throws IOException 
+   * @throws IOException
    */
   public static boolean deleteFile(Topic topic, HttpSession session, boolean chn)
       throws IOException {
@@ -66,7 +78,7 @@ public class FileUtils {
   }
 
   /**
-   * 保存上传的图片：将会保存两份： 
+   * 保存上传的图片：将会保存两份：
    *  1.备份文件（项目路径下）.
    *  2.原文件（服务器路径下）.
    *
@@ -144,4 +156,80 @@ public class FileUtils {
     return pictureUrl;
   }
 
+  /**
+   * 读取文件中的tag.
+   *
+   * @param file 文件路径
+   * @return 返回tag集合
+   * @throws Exception the exception
+   */
+  public static List<String> readTag(String file) throws Exception {
+    //    String separator = File.separator;
+    //    String location = "";
+    //    //    如果操作系统是Linux
+    //    if (System.getProperty("os.name").equals("Linux")) {
+    //      location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
+    //          + servletContext.getServletContextName()).getCanonicalPath();
+    //    } else {
+    //      location = new File("D:/workspace/eclipse/" + servletContext.getServletContextName())
+    //          .getCanonicalPath();
+    //    }
+
+    List<String> tagsList = new ArrayList<>();
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    InputStream inputStream = new FileInputStream(file);
+    Document document = builder.parse(inputStream);
+    NodeList tagsNode = document.getElementsByTagName("tag");
+    for (int i = 0; i < tagsNode.getLength(); i++) {
+      Node item = tagsNode.item(i);
+      Element element = (Element) item;
+      String name = element.getAttribute("name");
+      tagsList.add(name);
+    }
+    return tagsList;
+  }
+
+  /**
+   * 向文件添加tag.
+   *
+   * @param tags 要新添加的tag
+   * @param file 文件路径
+   * @throws Exception the exception
+   */
+  public static void writeTag(List<String> tags, String file) throws Exception {
+    //
+    //    String separator = File.separator;
+    //    String location = "";
+    //    //    如果操作系统是Linux
+    //    if (System.getProperty("os.name").equals("Linux")) {
+    //      location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
+    //          + servletContext.getServletContextName()).getCanonicalPath();
+    //    } else {
+    //      location = new File("D:/workspace/eclipse/" + servletContext.getServletContextName())
+    //          .getCanonicalPath();
+    //    }
+
+    //    系统换行符
+    String endLine = System.getProperty("line.separator");
+    //   要写入的字符串
+    String tagString = "";
+
+    RandomAccessFile reader = new RandomAccessFile(file, "rw");
+    String line = null;
+    while ((line = reader.readLine()) != null) {
+      if (line.indexOf("</tags>") >= 0) {
+        reader.seek(reader.getFilePointer() - 8);
+        reader.write(endLine.getBytes());
+        for (String tag : tags) {
+          tagString = " <tag name=\"" + tag + "\"></tag>" + endLine;
+          reader.write(tagString.getBytes());
+        }
+        reader.write("</tags>".getBytes());
+
+        break;
+      }
+    }
+    reader.close();
+  }
 }

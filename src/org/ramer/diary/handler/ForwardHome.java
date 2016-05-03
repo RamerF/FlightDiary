@@ -84,14 +84,19 @@ public class ForwardHome {
     //重置标识信息
     map.put("inOtherPage", inOtherPage);
     map.put("inTopicPage", inTopicPage);
+    @SuppressWarnings("unchecked")
+    Page<Topic> oldTopics = (Page<Topic>) map.get("topics");
     try {
       page = Integer.parseInt(pageNum);
       if (page < 1) {
         page = 1;
+      } else if (oldTopics != null && page > oldTopics.getTotalPages()) {
+        page = oldTopics.getTotalPages();
       }
     } catch (Exception e) {
       throw new IllegalAccessException("非法参数");
     }
+
     //获取分页分享
     Page<Topic> topics = topicService.getTopicsPage(page, TOPICPAGESIZE);
     map.put("topics", topics);
@@ -271,7 +276,7 @@ public class ForwardHome {
     //    去除重复的标签
     StringBuilder stringBuilder = new StringBuilder();
     for (String string : tags) {
-      stringBuilder.append(string + ",");
+      stringBuilder.append(string + ";");
     }
     String[] strings = stringBuilder.toString().split(";");
     //    使用这个方法得到的只是一个ArrayList代理，因此里面的某些方法如： add(),remove() 无法使用
