@@ -59,6 +59,15 @@ public class TopicService {
   }
 
   /**
+   * 获取五个标签，并根据出现的次数排序
+   * @return 所有标签的集合
+   */
+  public List<String> getTagsLimit() {
+    List<String> cities = topicRepository.getOrderedTagsLimit();
+    return cities;
+  }
+
+  /**
    * 按时间顺序获取所有分享的分页数据
    * @param page 当前页面
    * @param size 每一页的记录数

@@ -120,7 +120,7 @@ public class Publish {
     List<User> followUsers = followService.getFollowUser(user);
     //通知关注用户消息
     String message = "<a href='/" + session.getServletContext().getServletContextName()
-        + "/user/topic/" + topic.getId() + "'>您关注的 " + user.getName() + " 分享了一个新的旅行日记 </a>";
+        + "/user/topic/" + topic.getId() + "' class='readPrivMess'>我发表了新的动态，猛戳链接过去瞟一眼  </a>";
     for (User followUser : followUsers) {
       System.out.println("通知用户: " + followUser.getId());
       notifyService.notifyFollowUser(user, followUser, message);

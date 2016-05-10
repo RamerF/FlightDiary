@@ -1,6 +1,3 @@
-/*
- *
- */
 package org.ramer.diary.domain;
 
 import java.util.Date;
@@ -12,18 +9,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-// TODO: Auto-generated Javadoc
 /**
  * 用户通知.
  *
  * @author ramer
  */
 @Entity
-public class Notifying {
+public class Notify {
 
   /** The id. */
   @Id
@@ -41,12 +37,12 @@ public class Notifying {
   private Date date;
 
   /** The user. */
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user", nullable = false)
   private User user;
 
   /** The notified user. */
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "notified_user", nullable = false)
   private User notifiedUser;
 
@@ -163,13 +159,13 @@ public class Notifying {
   }
 
   /**
-   * Instantiates a new notifying.
+   * Instantiates a new notify.
    */
-  public Notifying() {
+  public Notify() {
   }
 
   /**
-   * Instantiates a new notifying.
+   * Instantiates a new notify.
    *
    * @param id the id
    * @param content the content
@@ -178,7 +174,7 @@ public class Notifying {
    * @param notifiedUser the notified user
    * @param hasCheck the has check
    */
-  public Notifying(Integer id, String content, Date date, User user, User notifiedUser,
+  public Notify(Integer id, String content, Date date, User user, User notifiedUser,
       String hasCheck) {
     this.id = id;
     this.content = content;

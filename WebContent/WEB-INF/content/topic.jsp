@@ -16,6 +16,7 @@
 <script src="${pageContext.request.contextPath}/js/ramer/topic.js"></script>
 <script type="text/javascript">
 	$(function() {
+	  path = "${pageContext.request.contextPath}";
 		/* 记录滚动条的位置 */
 		/* 获取滚动条的位置 */
 		var scrollCookie = Cookies.get("scrollCookie_topic"
@@ -37,8 +38,13 @@
 </script>
 </head>
 <body>
+    <!--  返回-->
     <div class="return_link">
         <img alt="error" src="${pageContext.request.contextPath}/pictures/back.png" id="back">
+    </div>
+    <!--  返回主页-->
+   <div class="return_home">
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/home.png" id="home">
     </div>
     <div class="user_info_panel">
         <div class="head"><a
@@ -68,20 +74,20 @@
             </span> <span> <a id="showFollowPanel" href="#"> 他/她关注的<i
                         class="icon-arrow-down"></i>
                 </a>
-            </span> <span> <a href="javascript:void(0)" id="notifying"><i
+            </span> <span> <a href="javascript:void(0)" id="notify"><i
                         class="icon-envelope"></i></a>
             </span></div>
     </div>
     </div>
     <!-- 私信面板 -->
-    <div class="notifying_panel" id="notifying_panel">
+    <div class="notify_panel" id="notify_panel">
         <form
         action="${pageContext.request.contextPath}/user/personal/sendPrivMess"
         method="post" enctype="multipart/form-data" id="sendPrivMessForm">
             <textarea id="privMessContent" rows="7" cols="30"
-            class="notifying_content" name="content"></textarea> <br> <input
+            class="notify_content" name="content"></textarea> <br> <input
             type="submit" value="发送私信" id="sendPrivMess"> <input
-            type="reset" value="收起" class="hiddenNotifying">
+            type="reset" value="收起" class="hiddenNotify">
     </form>
     </div>
     <!-- 关注面板 -->

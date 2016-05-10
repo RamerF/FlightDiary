@@ -76,6 +76,14 @@ public interface TopicRepository extends PagingAndSortingRepository<Topic, Integ
   List<String> getOrderedTags();
 
   /**
+   * 获取五个热门标签,并按照出现的次数排序
+   * @return 非空标签的集合
+   */
+  @Query(value = "select tags from (select tags,count(tags) as n from topic where tags!='' group by"
+      + " tags) as t order by t.n desc limit 5", nativeQuery = true)
+  List<String> getOrderedTagsLimit();
+
+  /**
    * 通过标签获取分享.
    *
    * @param tags the tags

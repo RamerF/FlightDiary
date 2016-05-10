@@ -293,7 +293,7 @@ div#addTime {
 }
 
 .lastPage {
-/*  display: table; */
+ /*  display: table; */
  display: none;
  width: 50%;
  float: left;
@@ -311,28 +311,50 @@ div#addTime {
 }
 
 .tag_panel {
- min-width: 80px;
- line-height: 2em;
- width: 7%;
- position: fixed;
- left: 0%;
- margin-top: 120px;
  z-index: 10;
+ position: absolute;
  padding: 10px;
  line-height: 2em;
- /*     box-shadow: 0px 1px 10px #E2E1E1; */
  border: 1px solid #4DABF5;
- display: table;
+ transition:all 2s;
+ background: #FFFFFF;
+ 
+ margin-top: 120px;
+ height: 180px;
+ overflow: hidden;
+ border-bottom: none;
 }
 
-form#tagForm {
- display: none;
+.tag_panel_new {
+ z-index: 10;
+ position: absolute;
+ padding: 10px;
+ line-height: 2em;
+ border: 1px solid #4DABF5;
+ transition:all 2s;
+ background: #FFFFFF;
+ 
+ margin: -125px 0 0 -300px;
+ overflow: hidden;
+ width: 600px;
+ left: 50%;
+ top: 50%;
+ height: 250px;
+ transform: scale(.2);
 }
 
 .tagname {
  text-align: center;
  margin-bottom: 10px;
 }
+
+
+
+
+form#tagForm {
+ display: none;
+}
+
 
 a {
  position: relative;
@@ -351,6 +373,7 @@ a:hover::before {
  position: absolute;
  opacity: 1;
  transform: scale(1) rotate(0deg) translateX(0px) translateY(0px);
- color: #FFFFFF;
-// text-shadow: 0px 0px 0px rgb(0, 0, 0);
+ color: #FFFFFF; //
+ text-shadow: 0px 0px 0px rgb(0, 0, 0);
 }
+

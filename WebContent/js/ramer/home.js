@@ -121,6 +121,65 @@ $(function(){
       return false;
     }
   });
+  /* 记录滚动条的位置 */
+  /* 获取滚动条的位置 */
+  var scrollCookie = Cookies.get("scrollCookie_home");
+  if(scrollCookie != null && scrollCookie != ""){
+    $("html,body").animate({
+      scrollTop : scrollCookie + "px"
+    }, 1000);
+  }
+  else{
+    Cookies.set("scrollCookie_home", $(document).scrollTop("1px"));
+  }
+  var scroll = 0;
+  var interval = null;
+  // 滚动条滚动时记录滚动条高度,判断滚动条是否停止滚动，滑动到底部翻页
+  $(window).scroll(function(){
+    Cookies.set("scrollCookie_home", $(document).scrollTop());
+    if(interval == null){
+      interval = setInterval(checkScroll, 1000);
+    }
+    scroll = $(document).scrollTop();
+    // 滑块位置
+    var scrollTop = $(this).scrollTop();
+    // 文本总高度
+    var scrollHeight = $(document).height();
+    // 滑块本身高度
+    var windowHeight = $(this).height();
+    // 滚动到顶部
+    if(scrollTop == "0"){
+      // 询问框
+      layer.confirm('想看看上一页？', {
+        btn : [ '恩', '不了' ]
+      }, function(){
+        $("#lastPage")[0].click();
+      }, function(){
+      });
+      return false;
+    }
+
+    // 滚动到底部
+    if(scrollTop + windowHeight == scrollHeight){
+      // 询问框
+      layer.confirm('想看看下一页？', {
+        btn : [ '恩', '不了' ]
+      }, function(){
+        $("#nextPage")[0].click();
+      }, function(){
+      });
+      return false;
+    }
+  });
+  // 测试滚动条是否滚动
+  function checkScroll(){
+    if($(document).scrollTop() == scroll){
+      clearTimeout(interval);
+      interval = null;
+      $("::-webkit-scrollbar").css("display", "none");
+      // alert("停止滚动");
+    }
+  }
 
   // 注销
   $("#logOff").click(function(){
@@ -163,4 +222,62 @@ $(function(){
       $("#preview").html('<img	class="preview_pic"	src="' + this.result + '">');
     })
   });
+
+  // 显示更多标签
+  $("html").click(function(e){
+    $(".more").removeClass("moreNew");
+    $(".more").text("更多");
+    $(".more").addClass("moreAm");
+    $(".more").css("display", "table");
+
+    $("#showData").removeClass("showdata");
+    $("#showData ul").addClass("tag_panel");
+    $("#showData ul li").addClass("tagname");
+    $("#showData ul li a").addClass("tag");
+    e.stopPropagation();
+  });
+  $(".more").click(function(e){
+    $("#showData").addClass("showdata");
+    $(".showdata").css("display", "block");
+    $(".more").removeClass("moreAm");
+    $(".more").addClass("moreNew");
+    $(".showdata ul").removeClass("tag_panel");
+    $(".showdata ul li").removeClass("tagname");
+    $(".showdata ul li a").removeClass("tag");
+    $(this).text("");
+    e.stopPropagation();
+    return false;
+  });
+  $(".more").on("animationend", function(){
+    // 设置5倍按钮的高度
+    var height = getNumber(".showdata", "height");
+    console.log("height = " + height);
+    $(this).css("height", height / 5 - 16 + 2 + "px");
+    console.log(getNumber(".more", "left"));
+    console.log(getNumber(".more", "margin-left"));
+
+    // 定位数据div的左边
+    var left = getNumber(this, "left");
+    var moreWidth = getNumber(this, "width");
+    console.log("left = " + left);
+    console.log("morewidth = " + moreWidth);
+    var showdataleft = (left - moreWidth * 5 / 2) + 10;
+    console.log("showdataleft = " + showdataleft);
+    $(".showdata").css("left", showdataleft + "px");
+
+    // 定位数据div的顶部
+    var top = getNumber(".more", "top");
+    console.log("top = " + top);
+    $(".showdata").css("top", (top - 39 - 1) + "px");
+    var showdatatop = getNumber(".showdata", "top");
+    console.log("showdatatop = " + showdatatop);
+    console.log("showdatatop = " + $(".showdata").css("top"));
+
+    $(".showdata").css("opacity", "1");
+  });
+  function getNumber(cssSelector, property){
+    var propertyStr = $(cssSelector).css(property);
+    var propertyNum = propertyStr.substring(0, propertyStr.indexOf("p"));
+    return propertyNum;
+  }
 })

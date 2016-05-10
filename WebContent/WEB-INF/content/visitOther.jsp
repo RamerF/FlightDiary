@@ -7,20 +7,27 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="${pageContext.request.contextPath}/css/default.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/visitOther.css" rel="stylesheet" />
-    <script src="${pageContext.request.contextPath}/js/jquery-2.1.4.min.js">
-    </script>
-    <script src="${pageContext.request.contextPath}/js/layer/layer.js">
-    </script>
-    <script src="${pageContext.request.contextPath}/js/ramer/visitOther.js">
-    </script>
+    <script src="${pageContext.request.contextPath}/js/jquery-2.1.4.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
+  <script type="text/javascript">
+  $(function(){
+      path = "${pageContext.request.contextPath}";
+  })
+</script>
+    <script src="${pageContext.request.contextPath}/js/ramer/visitOther.js"></script>
     <title>
       Personal Center
     </title>
   </head>
   <body>
+    <!--  返回-->
     <div class="return_link" >
         <img alt="error" src="${pageContext.request.contextPath}/pictures/back.png" id="back">
     </div>
+    <!--  返回主页-->
+<div class="return_home">
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/home.png" id="home">
+</div>
     <div class="user_info_panel">
       <div class="head">
         <a>
@@ -58,7 +65,7 @@
               </a>
             </span>
             <span>
-              <a href="javascript:void(0)" id="notifying">
+              <a href="javascript:void(0)" id="notify">
                 <i class="icon-envelope">
                 </i>
               </a>
@@ -68,15 +75,15 @@
       </div>
 
       <!-- 私信面板 -->
-      <div class="notifying_panel" id="notifying_panel">
+      <div class="notify_panel" id="notify_panel">
         <form 
             action="${pageContext.request.contextPath}/user/personal/sendPrivMess"
             method="post"
             enctype="multipart/form-data"
             id="sendPrivMessForm">
-          <textarea id="privMessContent" rows="7" cols="30" class="notifying_content" name="content"></textarea>
+          <textarea id="privMessContent" rows="7" cols="30" class="notify_content" name="content"></textarea>
           <input type="submit" value="发送私信" id="sendPrivMess">
-          <input type="reset" value="收起" class="hiddenNotifying">
+          <input type="reset" value="收起" class="hiddenNotify">
         </form>
       </div>
 

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
-import org.ramer.diary.domain.Notifying;
+import org.ramer.diary.domain.Notify;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.UserNotLoginException;
@@ -41,8 +41,6 @@ public class PersonalMiddle {
    */
   @RequestMapping("/user/personal")
   public String personalMiddle(User user, Map<String, Object> map, HttpSession session) {
-    //    inOtherPage = false;
-    //    inTopicPage = false;
 
     session.setAttribute("inOtherPage", false);
     session.setAttribute("inTopicPage", false);
@@ -53,11 +51,14 @@ public class PersonalMiddle {
     user = userService.getById(user.getId());
     System.out.println("个人中心");
     String hasCheck = "false";
-    Set<Notifying> notifyings = notifyService.getNotifyings(user, hasCheck);
-    user.setNotifyings(notifyings);
-    System.out.println(" 用户 " + user.getId() + " 收到 " + notifyings.size() + "	条消息");
+    Set<Notify> notifies = notifyService.getNotifies(user, hasCheck);
+    hasCheck = "true";
+    Set<Notify> readedNotifies = notifyService.getNotifies(user, hasCheck);
+    user.setNotifies(notifies);
+    user.setReadedNotifies(readedNotifies);
+    System.out.println(" 用户 " + user.getId() + " 收到 " + notifies.size() + "	条消息");
     map.put("user", user);
-    map.put("notifyingCount", notifyings.size());
+    map.put("notifyCount", notifies.size());
     return "personal";
   }
 

@@ -123,7 +123,7 @@ public class FlightDiaryTest {
   }
 
   @Test
-  public void testGetAllCities() {
+  public void testGetAllTags() {
     List<String> tags = topicService.getAllTags();
     System.out.println("标签名 :  ");
     for (String tag : tags) {

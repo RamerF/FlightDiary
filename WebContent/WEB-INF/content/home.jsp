@@ -20,69 +20,87 @@
 <script type="text/javascript">
 $(function() {
     path = "${pageContext.request.contextPath}";
-    /* 记录滚动条的位置 */
-    /* 获取滚动条的位置 */
-    var scrollCookie = Cookies.get("scrollCookie_home");
-    if(scrollCookie != null && scrollCookie != ""){
-      $("html,body").animate({
-        scrollTop : scrollCookie + "px"
-      }, 1000);
-    }
-    else{
-      Cookies.set("scrollCookie_home", $(document).scrollTop("1px"));
-    }
-    var scroll = 0;
-    var interval = null;
-    // 滚动条滚动时记录滚动条高度,判断滚动条是否停止滚动，滑动到底部翻页
-    $(window).scroll(function(){
-      Cookies.set("scrollCookie_home", $(document).scrollTop());
-      if(interval == null){
-        interval = setInterval(checkScroll, 1000);
-      }
-      scroll = $(document).scrollTop();
-      //滑块位置
-      var scrollTop = $(this).scrollTop();
-      //文本总高度
-      var scrollHeight = $(document).height();
-      //滑块本身高度
-      var windowHeight = $(this).height();
-      //滚动到顶部
-      if(scrollTop =="0"){
-      //询问框
-        layer.confirm('想看看上一页？', {
-          btn: ['恩','不了'] 
-        }, function(){
-         $("#lastPage")[0].click();
-        }, function(){
-        });
-        return false;
-      }
-   
-      //滚动到底部
-      if(scrollTop + windowHeight == scrollHeight){
-        //询问框
-          layer.confirm('想看看下一页？', {
-            btn: ['恩','不了'] 
-          }, function(){
-           $("#nextPage")[0].click();
-          }, function(){
-          });
-          return false;
-      }
-    });
-    // 测试滚动条是否滚动
-    function checkScroll(){
-      if($(document).scrollTop() == scroll){
-        clearTimeout(interval);
-        interval = null;
-        $("::-webkit-scrollbar").css("display", "none");
-        // alert("停止滚动");
-      }
-    }
 })
 </script>
-<script src="${pageContext.request.contextPath}/js/ramer/home.js"></script>
 <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
+<script src="${pageContext.request.contextPath}/js/ramer/home.js"></script>
+<style type="text/css">
+.more {
+ position: absolute;
+ top: 300px;
+ padding: 10px;
+ background: #009f95;
+ transition: all 1s;
+ z-index:10000;
+ width: 122px;
+ color:rgba(255,255,255,.5);
+ text-align: center;
+}
+
+.moreAm{
+ animation: ramerAnimateTwo 1s linear;
+}
+
+.moreNew {
+ margin-left: -50px;
+ width: 120px;
+ animation: ramerAnimate 1s linear;
+ transform: scale(5); 
+ left: 50%;
+ top: 50%;
+ box-shadow: 0px 0px 30px rgb(0, 159, 149);
+}
+
+
+.showdata {
+background:none;
+ opacity: 0; 
+ color:#FFFFFF;
+ overflow: hidden;
+ position: absolute;
+ top: 40%;
+ left: 40px;
+ padding: 10px;
+ width: 600px;
+ transition: all .5s;
+ z-index: 10001;
+}
+
+.showdata ul {
+ width: :100%;
+ overflow: hidden;
+}
+
+.showdata ul li {
+ padding: 10px;
+ list-style: none;
+ float: left;
+}
+.showdata a{
+  color: #FFFFFF;
+}
+
+@keyframes ramerAnimateTwo{
+0%{
+ top:50%;
+ left:50%;
+}
+100%{
+ top:300px;
+ left: 0%;
+}
+}
+@keyframes ramerAnimate{
+0%{
+ left: 0;
+ top:300px;
+}
+100%{
+ left:50%;
+ top:50%;
+}
+}
+</style>
 </head>
 <body>
 <!-- 标题面板 -->
@@ -263,15 +281,18 @@ $(function() {
 </c:if>
 <!-- 显示热门标签 -->
 <c:if test="${showPopularTags eq 'true' }">
-    <div class="tag_panel" id="tagPanel">
+<div class="" id="showData">
+    <ul class="tag_panel" id="tagPanel">
         <c:forEach items="${tags }" var="tag">
-            <div class="tagname">
-                <a href="${pageContext.request.contextPath}/home/tag/${tag}" class="tag">
+            <li class="tagname">
+                <a href="${pageContext.request.contextPath}/home/tag/${tag}" class="tag" data-toggle="${tag}">
                     ${tag}
                 </a>
-            </div>
+            </li>
          </c:forEach>
+    </ul>
     </div>
+    <a class="more" data-toggle="更多" id="showMore">更多</a>
     <!-- 通过标签获取分享表单 -->
     <form action="${pageContext.request.contextPath}/home/tag" id="tagForm">
       <input type="text" name = "tag" id="tagName">

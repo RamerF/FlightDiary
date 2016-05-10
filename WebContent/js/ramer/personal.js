@@ -59,6 +59,12 @@ $(function(){
     history.back();
     return false;
   })
+  // 返回主页
+  $("#home").click(function(){
+    console.log("返回主页");
+    location.href = path + "/home";
+    return false;
+  })
 
   // 显示私信
   $("#showPrivMess").click(function(){
@@ -72,14 +78,161 @@ $(function(){
   // 显示私信
   // 读私信
   $(".readPrivMess").click(function(){
-    var id = $(this).children(".notifyId").val();
-    var url = $(this).attr("href");
-    $("#sendPrivMessForm").attr("aciton", url);
-    $("#notifyId").attr("value", id);
-    $("#sendPrivMessForm").submit();
-    return false;
+    var id = $(this).siblings(".notifyId").val();
+    console.log("id = " + id);
+    var url = path + "/user/personal/notify/readPrivMess";
+    var args = {
+      "notifyId" : id
+    }
+    $.get(url, args, function(data){
+      console.log("标记为已读");
+    });
   });
   // 读私信
+  // 私信面板右键dom
+  var rightNav = "";
+  rightNav += "<ul class='rightNav'>";
+  rightNav += "<li><a href='" + path + "/notify/delete' id='deleteNotify'>删除</a></li>";
+  rightNav += "<hr>";
+  rightNav += "<li><a href='" + path + "/home' id='readPrivMess'>标记为已读</a></li>";
+  rightNav += "</ul>";
+  $(".privMessPanel").append(rightNav);
+  $(".rightNav").css({
+    "width" : "100px",
+    "background" : "#fff",
+    "position" : "fixed",
+    "border" : "1px solid #bababa",
+    "padding" : "5px 0 0 0",
+    "margin" : "0",
+    "z-index" : "1001",
+    "font-weight" : "normal",
+    "display" : "none"
+  });
+  $(".rightNav li").css({
+    "height" : "23px",
+    "line-height" : "23px",
+    "font-size" : "0.8em",
+    "list-style" : "none",
+    "padding" : "0",
+    "margin" : "0 0 4px 0",
+    "text-decoration" : "none"
+  }).mouseover(function(){
+    $(this).css("background", "#4281f4").find("a,small").css("color", "#fff");
+  }).mouseleave(function(){
+    $(this).css("background", "none").find("a").css("color", "#111").find("small").css("color", "#a6a6a6");
+  });
+  $(".rightNav li a").css({
+    "display" : "block",
+    "padding" : "0 25px",
+    "margin" : "0",
+    "color" : "#111",
+    "text-decoration" : "none",
+    "font-size" : "0.75em",
+    "cursor" : "pointer"
+  });
+  $(".rightNav li a small").css({
+    "color" : "#a6a6a6",
+    "font-size" : "1em",
+    "float" : "right",
+    "line-height" : "23px",
+    "font-weight" : "300"
+  });
+  $(".rightNav hr").css({
+    "border" : "none",
+    "border-bottom" : "1px solid #e9e9e9",
+    "background" : "none",
+    "margin" : "3px 0 5px 0"
+  });
+  $(".notify").bind("contextmenu", function(e){
+    var pointX = (e.pageX) - ($(window).scrollLeft()),pointY = (e.pageY) - ($(window).scrollTop());
+    $(".rightNav").css("display", "block");
+    if(pointX + 600 >= $(window).width()){
+      $(".rightNav").css({
+        "right" : $(window).width() - pointX + "px",
+        "left" : "auto"
+      });
+    }
+    else{
+      $(".rightNav").css({
+        "left" : pointX + "px",
+        "right" : "auto"
+      });
+    }
+    if($(window).height() - pointY <= $(".rightNav").height()){
+      $(".rightNav").css({
+        "bottom" : $(window).height() - pointY + "px",
+        "top" : "auto"
+      });
+    }
+    else{
+      $(".rightNav").css({
+        "top" : pointY + "px",
+        "bottom" : "auto"
+      });
+    }
+
+    var spanNode = $(this);
+    // 删除消息
+    $("#deleteNotify").click(function(){
+      // 隐藏右键菜单
+      $(".rightNav").css("display", "none");
+      layer.confirm("你正在删除一条消息？", {
+        btn : [ '恩', '留着' ]
+      }, function(){
+        console.log("notifyId : " + $(spanNode).children(".notifyId").val());
+        console.log("notifiedUserId : " + $(spanNode).children(".notifiedUserId").val());
+        var url = path + "/user/personal/notify/delete";
+        $.post(url, {
+          "notifyId" : $(spanNode).children(".notifyId").val(),
+          "notifiedUserId" : $(spanNode).children(".notifiedUserId").val()
+        }, function(result){
+          $("div#layui-layer-shade8").remove();
+          $("div#layui-layer8").remove();
+          if(result == "success"){
+            layer.msg("删除成功", {
+              time : 1500
+            });
+            if($(spanNode).siblings().length <= 0){
+              $(spanNode).parent().append("<span>暂时还没收到消息</span>");
+            }
+            $(spanNode).remove();
+            // 将未读消息数 - 1
+            var count = $(".notifyCount").children("sup").text();
+            console.log(~~count);
+            $(".notifyCount").children("sup").text((~~count - 1) > 0 ? (~~count - 1) : 0);
+            console.log("删除成功 ： " + result);
+          }
+        });
+      }, function(){
+      })
+      return false;
+    });
+    // 标记为已读
+    $("#readPrivMess").click(function(){
+      // 隐藏右键菜单
+      $(".rightNav").css("display", "none");
+      var url = path + "/user/personal/notify/readPrivMess";
+      var args = {
+        "notifyId" : $(spanNode).children(".notifyId").val()
+      }
+      $.get(url, args, function(data){
+        console.log("标记为已读");
+      });
+      // 将未读消息数 - 1
+      var count = $(".notifyCount").children("sup").text();
+      console.log(~~count);
+      $(".notifyCount").children("sup").text((~~count - 1) > 0 ? (~~count - 1) : 0);
+      // 取消新消息标识
+      $(spanNode).children(".newNotify").remove();
+
+      return false;
+    });
+
+    return false;
+  }).click(function(){
+    $(".rightNav").css("display", "none");
+  })
+
   /* 显示用户收藏 */
   $("#showFavouritePanel").click(function(){
     if($("#favouritePanel").is(":hidden")){
@@ -234,4 +387,5 @@ $(function(){
       $("#preview2").html('<img class="preview_pic" src="' + this.result + '">');
     });
   });
+
 })

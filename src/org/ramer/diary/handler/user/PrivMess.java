@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ramer.diary.domain.Notifying;
+import org.ramer.diary.domain.Notify;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.IllegalAccessException;
@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
@@ -60,14 +61,14 @@ public class PrivMess {
     }
     User notifiedUser = new User();
     notifiedUser = (User) session.getAttribute("other");
-    System.out.println("被通知用户 = " + notifiedUser);
-    Notifying notifying = new Notifying();
-    notifying.setUser(user);
-    notifying.setNotifiedUser(notifiedUser);
-    notifying.setContent(content);
-    notifying.setDate(new Date());
-    notifying.setHasCheck("false");
-    boolean flag = notifyService.sendPrivMess(notifying);
+    //System.out.println("被通知用户 = " + notifiedUser);
+    Notify notify = new Notify();
+    notify.setUser(user);
+    notify.setNotifiedUser(notifiedUser);
+    notify.setContent(content);
+    notify.setDate(new Date());
+    notify.setHasCheck("false");
+    boolean flag = notifyService.sendPrivMess(notify);
     response.setCharacterEncoding("utf-8");
     if (!flag) {
       System.out.println("消息发送失败");
@@ -79,18 +80,18 @@ public class PrivMess {
   }
 
   /**
-   * 用户阅读消息.
+   * 用户查看消息.
    *
    * @param notifyId 信息UID
    * @param map the map
    * @param session the session
    * @return 重定向到个人主页
    */
-  @RequestMapping("/user/personal/readPrivMess")
+  @RequestMapping("/user/personal/notify/readPrivMess")
   public String readPrivMess(@RequestParam("notifyId") String notifyId, Map<String, Object> map,
       HttpSession session) {
-    System.out.println("读取私信 : " + notifyId);
-    Notifying notifying = new Notifying();
+    System.out.println("读取通知 : " + notifyId);
+    Notify notify = new Notify();
     Integer notify_id = -1;
     try {
       notify_id = Integer.parseInt(notifyId);
@@ -98,10 +99,10 @@ public class PrivMess {
       throw new IllegalAccessException("数据格式有误");
     }
     if (notify_id > 0) {
-      notifying.setId(notify_id);
-      notifying = notifyService.getNotifyingById(notifying);
-      notifying.setHasCheck("true");
-      boolean flag = notifyService.updateNotifying(notifying);
+      notify.setId(notify_id);
+      notify = notifyService.getNotifyById(notify);
+      notify.setHasCheck("true");
+      boolean flag = notifyService.updateNotify(notify);
       if (!flag) {
         throw new SystemWrongException();
       }
@@ -109,6 +110,47 @@ public class PrivMess {
       throw new IllegalAccessException("数据格式有误");
     }
     return "redirect:/user/personal";
+  }
+
+  /**
+   * 删除消息/通知
+   *
+   * @param notifyId the notify id
+   * @param notifiedUserId the notified user id
+   * @param map the map
+   * @param session the session
+   * @return the string
+   */
+  @RequestMapping("/user/personal/notify/delete")
+  @ResponseBody
+  public String delete(@RequestParam("notifyId") String notifyId,
+      @RequestParam("notifiedUserId") String notifiedUserId, Map<String, Object> map,
+      HttpSession session) {
+    System.out.println("删除消息 : " + notifyId);
+    Notify notify = new Notify();
+    Integer notify_id = -1;
+    Integer notified_user_id = -1;
+    try {
+      notify_id = Integer.parseInt(notifyId);
+      notified_user_id = Integer.parseInt(notifiedUserId);
+    } catch (Exception e) {
+      throw new IllegalAccessException("数据格式有误");
+    }
+    if (notify_id > 0) {
+      notify.setId(notify_id);
+      notify = notifyService.getNotifyById(notify);
+      User notifiedUser = new User();
+      notifiedUser.setId(notified_user_id);
+      notify = notifyService.getByIdAndNotifiedUserId(notify_id, notifiedUser);
+      if (notify != null) {
+        if (!notifyService.delete(notify)) {
+          throw new SystemWrongException();
+        }
+      }
+    } else {
+      throw new IllegalAccessException("数据格式有误");
+    }
+    return "success";
   }
 
 }

@@ -38,7 +38,11 @@
 <!--  返回-->
 <div class="return_link">
         <img alt="error" src="${pageContext.request.contextPath}/pictures/back.png" id="back">
-    </div>
+</div>
+<!--  返回主页-->
+<div class="return_home">
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/home.png" id="home">
+</div>
 <!-- 用户信息面板 -->
 <div class="user_panel">
     <div class="head">
@@ -56,19 +60,19 @@
             <span> 微博: ${!empty user.weiboNum ? user.weiboNum : "无"}</span>
             <!-- 用户通知 -->
             <span>
-                <c:if test="${!empty user.notifyings }">
+                <c:if test="${!empty user.notifies || !empty user.readedNotifies }">
                     <a href="javascript:void(0)" id="showPrivMess">
                         <i class="icon-envelope"></i>
-                        <small class="notifyingCount">
-                            <sup>${notifyingCount}</sup>
+                        <small class="notifyCount">
+                            <sup>${notifyCount}</sup>
                         </small>
                     </a>
                 </c:if>
-                <c:if test="${empty user.notifyings}">
+                <c:if test="${empty user.notifies && empty user.readedNotifies}">
                     <a href="javascript:void(0)" id="showPrivMessNo">
                         <i class="icon-envelope-empty"></i>
-                        <small class="notifyingCount">
-                            <sup>${notifyingCount}</sup>
+                        <small class="notifyCount">
+                            <sup>${notifyCount}</sup>
                         </small>
                     </a>
                 </c:if>
@@ -97,24 +101,33 @@
 
 <!-- 私信面板 -->
 <div class="privMessPanel" id="privMessPanel">
- <c:forEach items="${user.notifyings}" var="notify">
-  <span>
-   <a href="${pageContext.request.contextPath}/user/personal/readPrivMess" class="readPrivMess">
-    <input type="hidden" value="${notify.id}" name="notifyId" class="notifyId">
-    ${notify.user.name } : ${notify.content}
+ <c:forEach items="${user.notifies}" var="notify">
+  <span class="unreadNotify notify">
+   <input type="hidden" value="${notify.id}" name="notifyId" class="notifyId">
+   <input type="hidden" value="${notify.notifiedUser.id}" name="notifiedUserId" class="notifiedUserId">
+   <a href="${pageContext.request.contextPath}/user/personal/${notify.user.id}"class="notifyUser">
+    ${notify.user.name } : 
+   </a>
+   ${notify.content}
     <sub>
       <fmt:formatDate value="${notify.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
+    </sub>
+    <img alt="error" src="${pageContext.request.contextPath }/pictures/new.png" class="newNotify">
+  </span>
+ </c:forEach>
+ <c:forEach items="${user.readedNotifies}" var="readedNotify">
+  <span class="notify">
+   <input type="hidden" value="${readedNotify.id}" name="notifyId" class="notifyId">
+   <input type="hidden" value="${readedNotify.notifiedUser.id}" name="notifiedUserId" class="notifiedUserId">
+   <a href="${pageContext.request.contextPath}/user/personal/notify/readPrivMess" class="readPrivMess">
+    ${readedNotify.user.name } : ${readedNotify.content}
+    <sub>
+      <fmt:formatDate value="${readedNotify.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
     </sub>
    </a>
   </span>
  </c:forEach>
 </div>
-<!-- 私信表单 -->
-<form
-        action="${pageContext.request.contextPath}/user/personal/readPrivMess"
-        method="post" id="sendPrivMessForm">
-    <input type="hidden" name="notifyId" id="notifyId">
-</form>
 
 <!-- 更新用户头像面板 -->
 <div class="update_head_panel">
@@ -128,6 +141,7 @@
         <input type="reset" value="收起" class="hiddenUpdateHeadPanel">
     </form>
 </div>
+
 <!-- 关注面板 -->
 <div class="follow_panel clearfix" id="followPanel">
     <c:if test="${empty user.follows }">
@@ -148,6 +162,7 @@
         </c:forEach>
     </c:if>
 </div>
+
 <!-- 收藏面板 -->
 <div class="favourite_panel" id="favouritePanel">
     <c:if test="${empty user.favourites }">
@@ -168,6 +183,7 @@
         </c:forEach>
     </c:if>
 </div>
+
 <!-- 发表分享面板 -->
 <div id="topic_panel" class="topic_panel">
     <form action="${pageContext.request.contextPath}/publish"

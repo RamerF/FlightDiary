@@ -2,7 +2,9 @@
 
 .return_link {
  opacity: .7;
- width: 48px; height : 48px; position : fixed;
+ width: 48px;
+ height: 48px;
+ position: fixed;
  background: none;
  margin: 10% auto auto 5%;
  position: fixed;
@@ -20,7 +22,8 @@
  left: 100%;
  top: -100%;
  width: 53px;
- height: 48px; opacity : 0;
+ height: 48px;
+ opacity: 0;
  content: "返回";
  transition: all .6s;
  opacity: 0;
@@ -32,6 +35,38 @@
 
 .return_link:hover {
  opacity: .5
+}
+
+.return_home {
+ opacity: .7;
+ width: 48px;
+ height: 48px;
+ position: fixed;
+ background: none;
+ margin: 15% auto auto 5%;
+}
+
+.return_home::before {
+ background: url("../pictures/bubble.png") no-repeat;
+ background-position: 2px -2px;
+ position: absolute;
+ color: rgba(0, 0, 0, 1);
+ padding: 10px;
+ left: 100%;
+ top: -100%;
+ width: 53px;
+ height: 48px;
+ content: "主页";
+ transition: all .6s;
+ opacity: 0;
+}
+
+.return_home:hover::before {
+ opacity: .8;
+}
+
+.return_home:hover {
+ opacity: .5;
 }
 
 .user_info_panel {
@@ -74,7 +109,7 @@
  border-radius: 40px;
 }
 
-.notifying_panel {
+.notify_panel {
  box-shadow: 3px 3px 8px #D8D7D7;
  text-align: center;
  width: 640px;
@@ -82,7 +117,7 @@
  margin: 10px auto 0px;
 }
 
-.notifying_content {
+.notify_content {
  width: 640px;
  height: 117px;
  outline: none;

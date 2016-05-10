@@ -2,25 +2,24 @@
 
 .return_link {
  opacity: .7;
- width: 48px; height : 48px; position : fixed;
+ width: 48px;
+ height: 48px;
+ position: fixed;
  background: none;
  margin: 10% auto auto 5%;
  position: fixed;
- height: 48px;
 }
 
 .return_link::before {
  background: url("../pictures/bubble.png") no-repeat;
  background-position: 2px -2px;
- display: -webkit-inline-box;
- height: 50px;
  position: absolute;
- color: rgba(0, 0, 0,1);
+ color: rgba(0, 0, 0, 1);
  padding: 10px;
  left: 100%;
  top: -100%;
  width: 53px;
- height: 48px; opacity : 0;
+ height: 48px;
  content: "返回";
  transition: all .6s;
  opacity: 0;
@@ -31,6 +30,38 @@
 }
 
 .return_link:hover {
+ opacity: .5;
+}
+
+.return_home {
+ opacity: .7;
+ width: 48px;
+ height: 48px;
+ position: fixed;
+ background: none;
+ margin: 15% auto auto 5%;
+}
+
+.return_home::before {
+ background: url("../pictures/bubble.png") no-repeat;
+ background-position: 2px -2px;
+ position: absolute;
+ color: rgba(0, 0, 0, 1);
+ padding: 10px;
+ left: 100%;
+ top: -100%;
+ width: 53px;
+ height: 48px;
+ content: "主页";
+ transition: all .6s;
+ opacity: 0;
+}
+
+.return_home:hover::before {
+ opacity: .8;
+}
+
+.return_home:hover {
  opacity: .5;
 }
 
@@ -63,11 +94,10 @@
 }
 
 .name {
- text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px,
-  rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px
-  0px, rgba(133, 145, 143, .1) 3px 3px 0px, rgba(133, 145, 143, .1) 4px
-  4px 0px, rgba(133, 145, 143, .1) 5px 5px 0px, rgba(133, 145, 143, .1)
-  6px 6px 0px, rgba(133, 145, 143, .1) 7px 7px 0px,
+ text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px
+  1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px, rgba(133, 145, 143, .1) 3px 3px
+  0px, rgba(133, 145, 143, .1) 4px 4px 0px, rgba(133, 145, 143, .1) 5px 5px 0px,
+  rgba(133, 145, 143, .1) 6px 6px 0px, rgba(133, 145, 143, .1) 7px 7px 0px,
   rgba(133, 145, 143, .1) 8px 8px 0px;
  font-size: 25px;
 }
@@ -89,25 +119,31 @@ span.username {
  padding-right: 10px;
 }
 
-.notifyingCount {
+.notifyCount {
  margin-left: -5px;
 }
 
 .privMessPanel {
  box-shadow: 3px 3px 8px #D8D7D7;
- text-align: center;
+ /*  text-align: center; */
  width: 640px;
  display: none;
  margin: 20px auto;
 }
 
-a.readPrivMess {
- border-bottom: 1px solid #84908E;
-}
-
 .privMessPanel span {
  padding: 10px;
  display: block;
+}
+
+.notify {
+ margin-left: 10px;
+}
+
+.newNotify {
+ background: url("/FlightDiary/pictures/new.png") no-repeat;
+ width: 16px;
+ height: 16px;
 }
 
 .update_head_panel {
@@ -196,7 +232,7 @@ input#upPic {
 }
 
 input.input_tags {
- width: 260px;
+ width: 210px;
  margin-top: 14px;
  margin-right: 0px;
 }

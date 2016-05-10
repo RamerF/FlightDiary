@@ -3,9 +3,9 @@ package org.ramer.diary.service;
 import java.util.Date;
 import java.util.Set;
 
-import org.ramer.diary.domain.Notifying;
+import org.ramer.diary.domain.Notify;
 import org.ramer.diary.domain.User;
-import org.ramer.diary.repository.NotifyingRepository;
+import org.ramer.diary.repository.NotifyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotifyService {
 
   @Autowired
-  private NotifyingRepository notifyingRepository;
+  private NotifyRepository notifyRepository;
 
   /**
    * 获取指定的消息
@@ -23,20 +23,21 @@ public class NotifyService {
    * @return 满足hasCheck条件的所有消息
    */
   @Transactional(readOnly = true)
-  public Set<Notifying> getNotifyings(User user, String hasCheck) {
-    Set<Notifying> notifyings = notifyingRepository.getByNotifiedUserAndHasCheck(user, hasCheck);
-    return notifyings;
+  public Set<Notify> getNotifies(User user, String hasCheck) {
+    Set<Notify> notifies = notifyRepository.getByNotifiedUserAndHasCheckOrderByDateDesc(user,
+        hasCheck);
+    return notifies;
   }
 
   /**
    * 通过消息UID获取消息
-   * @param notifying 消息
+   * @param notify 消息
    * @return 返回一个消息
    */
   @Transactional(readOnly = true)
-  public Notifying getNotifyingById(Notifying notifying) {
-    Notifying n = notifyingRepository.getById(notifying.getId());
-    return n == null ? new Notifying() : n;
+  public Notify getNotifyById(Notify notify) {
+    Notify n = notifyRepository.getById(notify.getId());
+    return n == null ? new Notify() : n;
   }
 
   /**
@@ -46,7 +47,7 @@ public class NotifyService {
    */
   @Transactional(readOnly = true)
   public int getNotifiedNumber(User user) {
-    int number = notifyingRepository.getCountByNotifiedUser(user);
+    int number = notifyRepository.getCountByNotifiedUser(user);
     return number > 0 ? number : 0;
   }
 
@@ -57,25 +58,25 @@ public class NotifyService {
    */
   @Transactional
   public boolean notifyFollowUser(User user, User followUser, String message) {
-    Notifying notifying = new Notifying();
-    notifying.setContent(message);
-    notifying.setDate(new Date());
-    notifying.setHasCheck("false");
-    notifying.setNotifiedUser(followUser);
-    notifying.setUser(user);
-    notifyingRepository.saveAndFlush(notifying);
+    Notify notify = new Notify();
+    notify.setContent(message);
+    notify.setDate(new Date());
+    notify.setHasCheck("false");
+    notify.setNotifiedUser(followUser);
+    notify.setUser(user);
+    notifyRepository.saveAndFlush(notify);
     return true;
 
   }
 
   /**
    * 发送私信
-   * @param notifying 消息
+   * @param notify 消息
    * @return 发送成功返回true
    */
   @Transactional
-  public boolean sendPrivMess(Notifying notifying) {
-    Notifying n = notifyingRepository.saveAndFlush(notifying);
+  public boolean sendPrivMess(Notify notify) {
+    Notify n = notifyRepository.saveAndFlush(notify);
     if (n == null) {
       return false;
     }
@@ -84,14 +85,38 @@ public class NotifyService {
 
   /**
    * 更新消息状态,将消息置为已读状态
-   * @param notifying 消息
+   * @param notify 消息
    * @return 执行成功返回true
    */
   @Transactional
-  public boolean updateNotifying(Notifying notifying) {
-    Notifying n = notifyingRepository.saveAndFlush(notifying);
+  public boolean updateNotify(Notify notify) {
+    Notify n = notifyRepository.saveAndFlush(notify);
     System.out.println(n.getHasCheck());
     return n == null ? false : true;
+  }
+
+  /**
+   * 删除消息.
+   *
+   * @param notify the notify
+   * @return true, if successful
+   */
+  @Transactional
+  public boolean delete(Notify notify) {
+    notifyRepository.delete(notify);
+    return true;
+  }
+
+  /**
+   * 通过id和被通知用户id获取消息.
+   *
+   * @param notify_id the notify_id
+   * @param notified_user_id the notified_user_id
+   * @return 消息
+   */
+  @Transactional(readOnly = true)
+  public Notify getByIdAndNotifiedUserId(Integer notify_id, User notified_user) {
+    return notifyRepository.getByIdAndNotifiedUser(notify_id, notified_user);
   }
 
 }

@@ -5,6 +5,13 @@ $(function(){
     history.back();
     return false;
   })
+  // 返回主页
+  $("#home").click(function(){
+    console.log("返回主页");
+    location.href = path + "/home";
+    return false;
+  })
+
   // 发送私信
   $("#sendPrivMess").click(function(){
     var url = $("#sendPrivMessForm").attr("action");
@@ -15,17 +22,18 @@ $(function(){
       layer.msg(data, {
         time : 1500
       });
-      $("#notifying_panel").hide(1000);
+      $("#privMessContent").val("");
+      $("#notify_panel").hide(1000);
     })
     return false;
   });
 
   // 展开私信面板
-  $("#notifying").click(function(){
-    $("#notifying_panel").toggle(1000);
+  $("#notify").click(function(){
+    $("#notify_panel").toggle(1000);
   });
-  $(".hiddenNotifying").click(function(){
-    $("#notifying_panel").hide(1000);
+  $(".hiddenNotify").click(function(){
+    $("#notify_panel").hide(1000);
   });
 
   /* 显示关注的用户 */
