@@ -30,8 +30,11 @@ public class UserService {
    */
   @Transactional(readOnly = true)
   public Pagination<User> getTopPeople(int page, int size) {
-    List<User> users = userRepository.getByIdJoinTopicUserId();
-    Pagination<User> pageUser = new Pagination<>(users, page, size);
+    page -= 1;
+    int start = page * size;
+    List<User> users = userRepository.getByIdJoinTopicUserId(start, size);
+    int count = (int) userRepository.count();
+    Pagination<User> pageUser = new Pagination<>(users, page, size, count);
     return pageUser;
   }
 

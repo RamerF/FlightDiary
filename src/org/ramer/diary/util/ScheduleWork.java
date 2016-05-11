@@ -58,7 +58,7 @@ public class ScheduleWork implements ApplicationListener<ContextRefreshedEvent> 
 
       ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
       // execute every ten seconds
-      long oneDay = 50 * 60 * 1000;
+      long oneDay = 30 * 60 * 1000;
 
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
       // start now

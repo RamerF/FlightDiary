@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
  * @author ramer
  *
  */
-@SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
+@SessionAttributes(value = { "user", "topics", "topicCount" }, types = { User.class, Topic.class })
 @Controller
 public class ForwardHome {
   @Autowired
@@ -78,12 +78,10 @@ public class ForwardHome {
     System.out.println(session.getServletContext().getResource("pictures").getPath());
     System.out.println("pagesize = " + TOPICPAGESIZE);
     int page = 1;
-    //    inOtherPage = false;
-    //    inTopicPage = false;
-
     //重置标识信息
     map.put("inOtherPage", inOtherPage);
     map.put("inTopicPage", inTopicPage);
+    //当页面页号属于人为构造时，用于判断页号是否存在
     @SuppressWarnings("unchecked")
     Page<Topic> oldTopics = (Page<Topic>) map.get("topics");
     try {
@@ -94,11 +92,13 @@ public class ForwardHome {
         page = oldTopics.getTotalPages();
       }
     } catch (Exception e) {
-      throw new IllegalAccessException("非法参数");
+      page = 1;
     }
 
     //获取分页分享
     Page<Topic> topics = topicService.getTopicsPage(page, TOPICPAGESIZE);
+    //记录最新的topicid，用于判断是否有新动态
+    map.put("topicCount", topicService.getCount());
     map.put("topics", topics);
     if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");
@@ -138,12 +138,7 @@ public class ForwardHome {
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
       Map<String, Object> map, HttpSession session) {
     System.out.println("热门主页");
-
     int page = 1;
-
-    //    inOtherPage = false;
-    //    inTopicPage = false;
-
     session.setAttribute("inOtherPage", false);
     session.setAttribute("inTopicPage", false);
     try {
@@ -246,8 +241,6 @@ public class ForwardHome {
       HttpSession session, Map<String, Object> map) throws UnsupportedEncodingException {
     System.out.println("热门标签主页");
     int page = 1;
-    //    inOtherPage = false;
-    //    inTopicPage = false;
 
     session.setAttribute("inOtherPage", false);
     session.setAttribute("inTopicPage", false);
@@ -257,7 +250,7 @@ public class ForwardHome {
         page = 1;
       }
     } catch (Exception e) {
-      throw new IllegalAccessException("数据格式有误");
+      page = 1;
     }
     if (UserUtils.checkLogin(session)) {
       User user = (User) session.getAttribute("user");

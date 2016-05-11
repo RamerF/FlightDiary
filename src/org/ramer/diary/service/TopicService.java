@@ -58,14 +58,14 @@ public class TopicService {
     return cities;
   }
 
-  /**
-   * 获取五个标签，并根据出现的次数排序
-   * @return 所有标签的集合
-   */
-  public List<String> getTagsLimit() {
-    List<String> cities = topicRepository.getOrderedTagsLimit();
-    return cities;
-  }
+  //  /**
+  //   * 获取五个标签，并根据出现的次数排序
+  //   * @return 所有标签的集合
+  //   */
+  //  public List<String> getTagsLimit() {
+  //    List<String> tags = topicRepository.getOrderedTagsLimit();
+  //    return tags;
+  //  }
 
   /**
    * 按时间顺序获取所有分享的分页数据
@@ -93,7 +93,7 @@ public class TopicService {
   @Transactional(readOnly = true)
   public Page<Topic> getTopicsPageOrderByFavourite(int page, int size) {
     //页号从零开始
-    page = page - 1;
+    page -= 1;
     //按热度排序
     Order order = new Order(Direction.DESC, "upCounts");
     Sort sort = new Sort(order);
@@ -110,12 +110,15 @@ public class TopicService {
    * @return 分享的分页数据
    */
   @Transactional(readOnly = true)
-  public Pagination<Topic> getTopicsPageByTags(String tags, int page, int size) {
-    List<Topic> topics = topicRepository.getByTags(tags);
+  public Pagination<Topic> getTopicsPageByTags(String tag, int page, int size) {
+    page -= 1;
+    int count = (int) getCountByTag(tag);
+    int start = page * size;
+    List<Topic> topics = topicRepository.getByTagsLimit(tag, start, size);
     if (topics.size() <= 0) {
-      return new Pagination<>(new ArrayList<Topic>(), page, size);
+      return new Pagination<>(new ArrayList<Topic>(), page, size, count);
     }
-    Pagination<Topic> pageTopic = new Pagination<>(topics, page, size);
+    Pagination<Topic> pageTopic = new Pagination<>(topics, page, size, count);
     return pageTopic;
   }
 
@@ -163,6 +166,25 @@ public class TopicService {
   public int getTopicNumber(User user) {
     int number = topicRepository.getCountByUser(user);
     return number > 0 ? number : 0;
+  }
+
+  /**
+   * 获取动态的总数.
+   *
+   * @return 动态总数
+   */
+  @Transactional(readOnly = true)
+  public long getCount() {
+    return topicRepository.count();
+  }
+
+  /**
+   * 获取相应标签的动态的总数.
+   *
+   * @return 动态总数
+   */
+  public long getCountByTag(String tag) {
+    return topicRepository.getCountByTag(tag);
   }
 
 }

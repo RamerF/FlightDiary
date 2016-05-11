@@ -105,6 +105,9 @@ public class Publish {
 
     //    考虑到用户输入的各种问题，先处理tag才能保存
     if (tags.contains("；")) {
+      //如果;在开头或结尾直接去掉
+      tags = tags.startsWith(";") ? tags.substring(1) : tags;
+      tags = tags.endsWith(";") ? tags.substring(0, tags.length() - 1) : tags;
       tags = tags.replace("；", ";");
     }
     topic.setTags(tags);

@@ -8,6 +8,8 @@ import javax.servlet.http.HttpSession;
 
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.service.NotifyService;
+import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.MailUtils;
@@ -16,7 +18,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * 用户控制器：验证邮箱和用户名，更新前获取用户.
@@ -28,6 +33,10 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class UserHandler {
   @Autowired
   UserService userService;
+  @Autowired
+  NotifyService notifyService;
+  @Autowired
+  TopicService topicService;
 
   /**
    * 验证用户名.
@@ -92,6 +101,39 @@ public class UserHandler {
     }
     System.out.println("邮箱已存在");
     response.getWriter().write("exist");
+  }
+
+  /**
+   * 获取实时动态.
+   *
+   * @param session the session
+   * @param user the user
+   * @return 新动态总数
+   * @throws JsonProcessingException the json processing exception
+   */
+  @RequestMapping("/user/realTimeTopic")
+  @ResponseBody
+  public String realTimeTopic(HttpSession session) throws JsonProcessingException {
+    long count = topicService.getCount();
+    long OldCount = (int) session.getAttribute("topicCount");
+    System.out.println((count - OldCount));
+    return String.valueOf((count - OldCount));
+  }
+
+  /**
+   * 获取实时通知.
+   *
+   * @param session the session
+   * @param user the user
+   * @return 通知数
+   * @throws JsonProcessingException the json processing exception
+   */
+  @RequestMapping("/user/realTimeNotify")
+  @ResponseBody
+  public String realTimeNotify(HttpSession session) throws JsonProcessingException {
+    User user = (User) session.getAttribute("user");
+    Integer number = notifyService.getNotifiedNumber(user);
+    return String.valueOf(number);
   }
 
 }

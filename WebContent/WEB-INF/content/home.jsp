@@ -35,6 +35,7 @@ $(function() {
  width: 122px;
  color:rgba(255,255,255,.5);
  text-align: center;
+ cursor: pointer;
 }
 
 .moreAm{
@@ -67,6 +68,7 @@ background:none;
 }
 
 .showdata ul {
+ line-height: 1.2em;
  width: :100%;
  overflow: hidden;
 }
@@ -116,6 +118,7 @@ background:none;
   <div class="category">
     <span>
       <a href="${pageContext.request.contextPath}/home" data-toggle="默认">默认</a>
+      <span id="newTopic" style="position: absolute;margin: 0px;" ></span>
     </span> / 
     <span>
         <a href="${pageContext.request.contextPath}/home/orderbyUpCounts" data-toggle="热门">热门</a>
@@ -138,9 +141,14 @@ background:none;
         <a href="javascript:void(0);" id="saySomething" class="share_link ">给我一个分享平台</a>
       </span>
      <span class="username" id="showProfile">${user.name}</span>
-      <span class="logoff">
-       <a href="${pageContext.request.contextPath}/logOff" id="logOff">注销</a>
-      </span>
+     <c:if test="${notifiedNumber gt 0}">
+      <span id="newTopic" 
+        style="position: absolute;margin: 0px;padding: 0px;margin-left: -33px;"
+        class="newTopic"></span>
+     </c:if>
+     <span class="logoff">
+      <a href="${pageContext.request.contextPath}/logOff" id="logOff">注销</a>
+     </span>
     </div>
   </c:if>
   <c:if test="${empty user.id || user.id le 0}">
@@ -233,14 +241,14 @@ background:none;
 <!-- 存储当前页号 -->
 <input id="number" type="hidden" value="${topics.number}">
 <!-- 页码面板 -->
-<div class="page_panel">
-    <div class="lastPage">
+<ul class="page_panel">
+    <li class="lastPage">
       <a href="?pageNum=${topics.number + 1 - 1}" id="lastPage">上一页</a>&nbsp;&nbsp;
-    </div>
-    <div class="nextPage">
+    </li>
+    <li class="nextPage">
       <a href="?pageNum=${topics.number + 1 + 1}" id="nextPage">下一页</a>
-    </div>
-</div>
+    </li>
+</ul>
 </c:if>
 <!-- 显示达人 -->
 <c:if test="${showTopPeople eq 'true' }">
@@ -268,16 +276,16 @@ background:none;
 <!-- 存储记录的总页数 -->
 <input id="totalPages" type="hidden" value="${topPeoples.totalPages }">
 <!-- 存储当前页号 -->
-<input id="number" type="hidden" value="${topPeoples.number - 1}">
+<input id="number" type="hidden" value="${topPeoples.number}">
 <!-- 分页 -->
-<div class="page_panel">
-    <div class="lastPage">
-      <a href="?pageNum=${topPeoples.number - 1}" id="lastPage">上一页</a>&nbsp;&nbsp;
-    </div>
-    <div class="nextPage">
-      <a href="?pageNum=${topPeoples.number  + 1}" id="nextPage">下一页</a>
-    </div>
-</div>
+<ul class="page_panel">
+    <li class="lastPage">
+      <a href="?pageNum=${topPeoples.number + 1 - 1}" id="lastPage">上一页</a>&nbsp;&nbsp;
+    </li>
+    <li class="nextPage">
+      <a href="?pageNum=${topPeoples.number + 1 + 1}" id="nextPage">下一页</a>
+    </li>
+</ul>
 </c:if>
 <!-- 显示热门标签 -->
 <c:if test="${showPopularTags eq 'true' }">
@@ -292,7 +300,7 @@ background:none;
          </c:forEach>
     </ul>
     </div>
-    <a class="more" data-toggle="更多" id="showMore">更多</a>
+    <span class="more" data-toggle="更多" id="showMore">更多</span>
     <!-- 通过标签获取分享表单 -->
     <form action="${pageContext.request.contextPath}/home/tag" id="tagForm">
       <input type="text" name = "tag" id="tagName">
@@ -320,15 +328,26 @@ background:none;
              </c:forEach>
         </ul>
     </div>
+    <!-- 存储记录的总页数 -->
+    <input id="totalPages" type="hidden" value="${tagTopics.totalPages }">
+    <!-- 存储当前页号 -->
+    <input id="number" type="hidden" value="${tagTopics.number}">
     <!-- 分页 -->
-    <div class="page_panel">
-      <div class="lastPage">
-        <a href="?pageNum=${topPeoples.number - 1}" id="lastPage">上一页</a>&nbsp;&nbsp;
-      </div>
-      <div class="nextPage">
-        <a href="?pageNum=${topPeoples.number  + 1}" id="nextPage">下一页</a>
-      </div>
-    </div>
+    <ul class="page_panel">
+      <li class="lastPage">
+        <a href="?pageNum=${tagTopics.number + 1 - 1}" id="lastPage">
+          <img alt="error" src="${pageContext.request.contextPath}/pictures/previous.png" id="back">
+        </a>
+      </li>
+      <li class="nextPage">
+        <a href="?pageNum=${tagTopics.number + 1 + 1}" id="nextPage">
+          <img alt="error" src="${pageContext.request.contextPath}/pictures/next.png" id="back">
+        </a>
+      </li>
+      <li>
+        <a id="removeScrollPage">禁止滚动翻页</a>
+      </li>
+    </ul>
 </c:if>
 <input type="hidden" id="positionVal">
 <script src="${pageContext.request.contextPath}/js/masonry.pkgd.min.js"></script>

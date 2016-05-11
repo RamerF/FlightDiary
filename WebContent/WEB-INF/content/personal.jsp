@@ -15,8 +15,8 @@
 <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
 <script type="text/javascript">
  $(function() {
-     /* 指定标签信息的xml文件,全局变量 */
-     path = "${pageContext.request.contextPath}";
+  /* 指定标签信息的xml文件,全局变量 */
+  path = "${pageContext.request.contextPath}";
   /* 记录滚动条的位置 */
   /* 获取滚动条的位置 */
   var scrollCookie = Cookies.get("scrollCookie_personal" +"${user.id}");

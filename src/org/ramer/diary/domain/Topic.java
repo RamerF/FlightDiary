@@ -1,5 +1,6 @@
 package org.ramer.diary.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +27,12 @@ import javax.persistence.TemporalType;
  */
 @Cacheable
 @Entity
-public class Topic {
+public class Topic implements Serializable {
+
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
   /** UID. */
   @Id

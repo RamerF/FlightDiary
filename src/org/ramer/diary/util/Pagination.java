@@ -1,6 +1,5 @@
 package org.ramer.diary.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,12 +49,12 @@ public class Pagination<T> {
   //  用于存放满足条件的用户信息
   private List<T> content;
 
-  public Pagination(List<T> ts, int page, int size) {
-    setTotalNumber(ts.size());
+  public Pagination(List<T> ts, int page, int size, int count) {
+    setTotalNumber(count);
     setPageSize(size);
     setTotalPages();
     setNumber(page);
-    setContent(getSpecificaion(ts, number, size));
+    setContent(ts);
   }
 
   public List<T> getContent() {
@@ -75,7 +74,7 @@ public class Pagination<T> {
    * @param number
    */
   public void setNumber(int number) {
-    this.number = (number <= 0 || totalPages <= 0) ? 1 : number >= totalPages ? totalPages : number;
+    this.number = (number <= 0 || totalPages <= 0) ? 0 : number >= totalPages ? totalPages : number;
   }
 
   public int getNumber() {
@@ -136,29 +135,6 @@ public class Pagination<T> {
 
   public int getTotalPages() {
     return totalPages;
-  }
-
-  /**
-   * 将获取到的不连续的信息,临时放入到数组中,再赋值指定的记录给集合
-   * @param ts
-   * @param page
-   * @param size
-   * @return 存放指定记录的集合
-   */
-  private List<T> getSpecificaion(List<T> ts, int page, int size) {
-    List<T> tempList = new ArrayList<>();
-    @SuppressWarnings("unchecked")
-    T[] tArray = (T[]) ts.toArray();
-    if (tArray.length > 0) {
-      page = page - 1;
-      int remainder = totalNumber % pageSize;
-      int result = (int) Math.floor(totalNumber * 1.0 / pageSize);
-      int n = remainder == 0 || page < result ? (page + 1) * size : tArray.length;
-      for (int i = page * size; i < n; i++) {
-        tempList.add(tArray[i]);
-      }
-    }
-    return tempList;
   }
 
 }

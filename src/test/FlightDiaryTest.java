@@ -122,6 +122,9 @@ public class FlightDiaryTest {
     }
   }
 
+  /**
+   * 获取所有标签.
+   */
   @Test
   public void testGetAllTags() {
     List<String> tags = topicService.getAllTags();
@@ -132,6 +135,11 @@ public class FlightDiaryTest {
     System.out.println("----------------------\n" + "第一个标签 :  " + tags.iterator().next());
   }
 
+  /**
+   * ;分割标签.
+   *
+   * @throws Exception the exception
+   */
   @Test
   public void testSplitTags() throws Exception {
     String tag1 = "纪实";
@@ -157,7 +165,20 @@ public class FlightDiaryTest {
     }
     for (String string : tagslist) {
       System.out.println("-------------------" + string);
-
     }
+
+  }
+
+  /**
+   * 去除前后的;.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testSplitTags2() throws Exception {
+    String tagStr = ";UI;";
+    tagStr = tagStr.startsWith(";") ? tagStr.substring(1) : tagStr;
+    tagStr = tagStr.endsWith(";") ? tagStr.substring(0, tagStr.length() - 1) : tagStr;
+    System.out.println(tagStr);
   }
 }

@@ -1,4 +1,21 @@
 $(function(){
+  // 实时动态
+  if($(".user_panel").is(":visible")){
+    var topicUrl = path + "/user/realTimeTopic";
+    var notifyUrl = path + "/user/realTimeNotify";
+    var realTimeContent = setInterval(function(){
+      $.get(topicUrl, null, function(newTopicCount){
+        console.log(~~newTopicCount);
+        if(~~newTopicCount >= 0){
+          // 新动态标识
+          $("#newTopic").addClass("newTopic");
+        }
+      });
+      $.get(notifyUrl, null, function(notifyCount){
+        console.log(notifyCount);
+      });
+    }, 60 * 1000);
+  }
   // 获取地理位置
   if(navigator.geolocation){
     navigator.geolocation
@@ -68,7 +85,7 @@ $(function(){
 
       });
 
-  // 由于路径中含有中文时的问题，使用ajax提交标签
+  // 由于路径中含有中文时的问题，使用form提交标签
   $(".tag").click(function(){
     var url = $(this).attr("href");
     // var prefix = url.substring(0, url.lastIndexOf("/"));
@@ -108,6 +125,14 @@ $(function(){
       return false;
     }
     Cookies.set("scrollCookie_home", "1");
+    console.log("浏览器地址 ： " + location);
+    // 如果是标签分页，需要带标签参数
+    if(location.toString().indexOf("tag=") > 0){
+      var url = location.toString();
+      var tag = url.substring(location.toString().indexOf("tag="));
+      console.log("标签 ： " + tag);
+      $(this).attr("href", $(this).attr("href") + "&" + tag);
+    }
   });
   // 下一页
   $("#nextPage").click(function(){
@@ -119,6 +144,13 @@ $(function(){
         time : 1800
       });
       return false;
+    }
+    // 如果是标签分页，需要带标签参数
+    if(location.toString().indexOf("tag=") > 0){
+      var url = location.toString();
+      var tag = url.substring(location.toString().indexOf("tag="));
+      console.log("标签 ： " + tag);
+      $(this).attr("href", $(this).attr("href") + "&" + tag);
     }
   });
   /* 记录滚动条的位置 */
@@ -184,6 +216,8 @@ $(function(){
   // 注销
   $("#logOff").click(function(){
     Cookies.set("scrollCookie_home", "1");
+    // 移除新动态标识
+    $("#newTopic").removeClass("src", "newTopic");
   });
   /* 文本域自适应 */
   $(".topic_content").TextAreaExpander(117, 250);
@@ -222,20 +256,25 @@ $(function(){
       $("#preview").html('<img	class="preview_pic"	src="' + this.result + '">');
     })
   });
+  // 取消显示更多标签
+  $("html").click(function(e){
+    console.log($("#showData").size() == 0);
+    if($(".more").css("top") != "300px" && $("#showData").size() > 0){
+      $(".more").removeClass("moreNew");
+      $(".more").text("更多");
+      $(".more").addClass("moreAm");
+      $(".more").css("display", "table");
+
+      $("#showData").removeClass("showdata");
+      $("#showData ul").addClass("tag_panel");
+      $("#showData ul li").addClass("tagname");
+      $("#showData ul li a").addClass("tag");
+      e.stopPropagation();
+      return false;
+    }
+  });
 
   // 显示更多标签
-  $("html").click(function(e){
-    $(".more").removeClass("moreNew");
-    $(".more").text("更多");
-    $(".more").addClass("moreAm");
-    $(".more").css("display", "table");
-
-    $("#showData").removeClass("showdata");
-    $("#showData ul").addClass("tag_panel");
-    $("#showData ul li").addClass("tagname");
-    $("#showData ul li a").addClass("tag");
-    e.stopPropagation();
-  });
   $(".more").click(function(e){
     $("#showData").addClass("showdata");
     $(".showdata").css("display", "block");
@@ -248,6 +287,7 @@ $(function(){
     e.stopPropagation();
     return false;
   });
+  // 动画完成后，相关定位
   $(".more").on("animationend", function(){
     // 设置5倍按钮的高度
     var height = getNumber(".showdata", "height");
@@ -280,4 +320,10 @@ $(function(){
     var propertyNum = propertyStr.substring(0, propertyStr.indexOf("p"));
     return propertyNum;
   }
+  // 移除滚动翻页事件
+  $("#removeScrollPage").click(function(){
+    $(window).unbind("scroll");
+    $(window).scroll(function(){
+    });
+  });
 })
