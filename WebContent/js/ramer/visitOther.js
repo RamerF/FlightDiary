@@ -153,4 +153,35 @@ $(function(){
     $(".reply_double_form").hide(1000);
   });
 
+  // 上一页
+  $("#lastPage").click(function(){
+    var number = new Number($("#number").val()) + 1 - 1;
+    if(number < 1){
+      layer.msg("报告主人,上一页已结婚  (^v^)", {
+        time : 1800
+      });
+      return false;
+    }
+    Cookies.set("scrollCookie_personal" + userid, "1");
+    console.log("浏览器地址 ： " + location);
+    // 如果是标签分页，需要带标签参数
+    if(location.toString().indexOf("tag=") > 0){
+      var url = location.toString();
+      var tag = url.substring(location.toString().indexOf("tag="));
+      console.log("标签 ： " + tag);
+      $(this).attr("href", $(this).attr("href") + "&" + tag);
+    }
+  });
+  // 下一页
+  $("#nextPage").click(function(){
+    var totalPages = $("#totalPages").val();
+    var number = new Number($("#number").val()) + 2;
+    Cookies.set("scrollCookie_personal" + userid, "1");
+    if(number > totalPages){
+      layer.msg("报告主人,下一页已结婚  (^v^)", {
+        time : 1800
+      });
+      return false;
+    }
+  });
 })

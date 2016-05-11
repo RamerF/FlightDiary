@@ -13,7 +13,6 @@
 <script src="${pageContext.request.contextPath}/js/jquery-2.1.4.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/modernizr.custom.js"></script>
 <script src="${pageContext.request.contextPath}/js/js.cookie.js"></script>
-<!-- 瀑布流导入 -->
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/home.css" >
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/balloon.min.css" >
 <script src="${pageContext.request.contextPath}/js/TextAreaExpander.js"></script>
@@ -243,10 +242,17 @@ background:none;
 <!-- 页码面板 -->
 <ul class="page_panel">
     <li class="lastPage">
-      <a href="?pageNum=${topics.number + 1 - 1}" id="lastPage">上一页</a>&nbsp;&nbsp;
+      <a href="?pageNum=${topics.number + 1 - 1}" id="lastPage">
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/previous.png" >
+      </a>
     </li>
     <li class="nextPage">
-      <a href="?pageNum=${topics.number + 1 + 1}" id="nextPage">下一页</a>
+      <a href="?pageNum=${topics.number + 1 + 1}" id="nextPage">
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/next.png" >
+      </a>
+    </li>
+    <li>
+      <a id="removeScrollPage">禁止滚动翻页</a>
     </li>
 </ul>
 </c:if>
@@ -280,10 +286,17 @@ background:none;
 <!-- 分页 -->
 <ul class="page_panel">
     <li class="lastPage">
-      <a href="?pageNum=${topPeoples.number + 1 - 1}" id="lastPage">上一页</a>&nbsp;&nbsp;
+      <a href="?pageNum=${topPeoples.number + 1 - 1}" id="lastPage">
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/previous.png" >
+      </a>
     </li>
     <li class="nextPage">
-      <a href="?pageNum=${topPeoples.number + 1 + 1}" id="nextPage">下一页</a>
+      <a href="?pageNum=${topPeoples.number + 1 + 1}" id="nextPage">
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/next.png" >
+      </a>
+    </li>
+    <li>
+      <a id="removeScrollPage">禁止滚动翻页</a>
     </li>
 </ul>
 </c:if>
@@ -336,12 +349,12 @@ background:none;
     <ul class="page_panel">
       <li class="lastPage">
         <a href="?pageNum=${tagTopics.number + 1 - 1}" id="lastPage">
-          <img alt="error" src="${pageContext.request.contextPath}/pictures/previous.png" id="back">
+          <img alt="error" src="${pageContext.request.contextPath}/pictures/previous.png" >
         </a>
       </li>
       <li class="nextPage">
         <a href="?pageNum=${tagTopics.number + 1 + 1}" id="nextPage">
-          <img alt="error" src="${pageContext.request.contextPath}/pictures/next.png" id="back">
+          <img alt="error" src="${pageContext.request.contextPath}/pictures/next.png" >
         </a>
       </li>
       <li>

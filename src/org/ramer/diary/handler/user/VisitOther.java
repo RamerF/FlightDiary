@@ -16,9 +16,12 @@ import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
@@ -26,7 +29,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
  * @author ramer
  *
  */
-@SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
+@SessionAttributes(value = { "user", "topics", "topicsPage" }, types = { User.class, Topic.class })
 @Controller
 public class VisitOther {
 
@@ -40,6 +43,9 @@ public class VisitOther {
   private FavouriteService favouriteService;
   @Autowired
   private FollowService followService;
+  //分享页面大小
+  @Value("#{diaryProperties['personal.topic.page.size']}")
+  private int TOPICPAGESIZE;
 
   /**
    * 访问他人主页.
@@ -50,27 +56,47 @@ public class VisitOther {
    * @return 引导到他人主页
    */
   @RequestMapping("/user/personal/{id}")
-  public String visitOtherPage(@PathVariable("id") Integer id, Map<String, Object> map,
-      HttpSession session) {
+  public String visitOtherPage(@PathVariable("id") Integer id,
+      @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
+      Map<String, Object> map, HttpSession session) {
     User user = (User) session.getAttribute("user");
-    if (user != null && id == user.getId()) {
-      //获取点赞信息
-      System.out.println("访问个人空间");
-      List<Integer> praises = praiseToList(user, user, session);
-      session.setAttribute("praises", praises);
-      map.put("user", userService.getById(id));
-      return "redirect:/user/personal";
+    int page = 1;
+    //当页面页号属于人为构造时，用于判断页号是否存在
+    @SuppressWarnings("unchecked")
+    Page<Topic> oldTopics = (Page<Topic>) session.getAttribute("topicsPage");
+    try {
+      page = Integer.parseInt(pageNum);
+      if (page < 1) {
+        page = 1;
+      } else if (oldTopics != null && page > oldTopics.getTotalPages()) {
+        page = oldTopics.getTotalPages();
+      }
+    } catch (Exception e) {
+      page = 1;
     }
-    //    inOtherPage = true;
+    Page<Topic> topicsPage = topicService.getTopicsPageByUserId(userService.getById(id), page,
+        TOPICPAGESIZE);
+    System.out.println("----------分享------------");
+    for (Topic topic : topicsPage.getContent()) {
+      System.out.println(topic.getId());
+    }
+    map.put("topicsPage", topicsPage);
 
     session.setAttribute("inOtherPage", true);
     User other = userService.getById(id);
     if (other == null) {
       throw new UserNotExistException("您访问的用户不存在");
     }
-    System.out.println(other.getTopics().iterator().next().getDate());
     if (UserUtils.checkLogin(session)) {
       System.out.println("已登录,写入信息");
+      if (id == user.getId()) {
+        //获取点赞信息
+        System.out.println("访问个人空间");
+        List<Integer> praises = praiseToList(user, user, session);
+        session.setAttribute("praises", praises);
+        map.put("user", userService.getById(id));
+        return "personal";
+      }
       //获取收藏信息
       List<Integer> favourites = favouriteToList(user, other, session);
       //获取点赞信息

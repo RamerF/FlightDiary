@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -27,12 +29,13 @@ public interface TopicRepository extends PagingAndSortingRepository<Topic, Integ
   int getCountByUser(@Param("user") User user);
 
   /**
-   * 通过用户id,获取topic
-   * @param user
-   * @param id
+   * 通过用户id,获取topic.
+   *
+   * @param user the user
+   * @param pageable 分页参数
    * @return 返回分享的集合topics
    */
-  List<Topic> getByUserOrderByDateAsc(User user);
+  Page<Topic> getByUserOrderByDateAsc(User user, Pageable pageable);
 
   /**
    * 通过分享id,获取topic

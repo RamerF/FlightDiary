@@ -17,18 +17,7 @@
  $(function() {
   /* 指定标签信息的xml文件,全局变量 */
   path = "${pageContext.request.contextPath}";
-  /* 记录滚动条的位置 */
-  /* 获取滚动条的位置 */
-  var scrollCookie = Cookies.get("scrollCookie_personal" +"${user.id}");
-  if (scrollCookie != null && scrollCookie !="") {
-   $("html,body").animate({
-    scrollTop : scrollCookie + "px"
-   }, 1000);
-  } else
-   Cookies.set("scrollCookie_personal"+"${user.id}", $(document).scrollTop("0px"));
-  $(window).scroll(function() {
-   Cookies.set("scrollCookie_personal"+"${user.id}", $(document).scrollTop());
-  });
+  userid = "${user.id}";
  })
 </script>
 <script src="${pageContext.request.contextPath}/js/ramer/personal.js"></script>
@@ -213,13 +202,13 @@
     </form>
 </div>
 <!-- 显示个人分享 -->
-<c:if test="${empty user.topics}">
+<c:if test="${empty topicsPage.content}">
     <div class="no_topic">
         <strong>你还没有发布分享,现在开始记录你的生活吧 !</strong>
     </div>
 </c:if>
-<c:if test="${!empty user.topics}">
-    <c:forEach items="${user.topics}" var="topic">
+<c:if test="${!empty topicsPage.content}">
+    <c:forEach items="${topicsPage.content}" var="topic">
         <div class="show_topic">
             <div class="side">
                 <div class="day">
@@ -327,6 +316,26 @@
         </div>
     </c:forEach>
 </c:if>
+
+<!-- 存储记录的总页数 -->
+<input id="totalPages" type="hidden" value="${topicsPage.totalPages }">
+<!-- 存储当前页号 -->
+<input id="number" type="hidden" value="${topicsPage.number}">
+<!-- 分页 -->
+<ul class="page_panel">
+  <li class="lastPage">
+    <a href="?pageNum=${topicsPage.number + 1 - 1}" id="lastPage">
+      <img alt="error" src="${pageContext.request.contextPath}/pictures/previous.png" >
+    </a>
+  </li>
+  <li class="nextPage">
+    <a href="?pageNum=${topicsPage.number + 1 + 1}" id="nextPage">
+      <img alt="error" src="${pageContext.request.contextPath}/pictures/next.png" >
+    </a>
+  </li>
+</ul>
+
 <input type="hidden" id="positionVal">
+
 </body>
 </html>

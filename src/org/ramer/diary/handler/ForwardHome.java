@@ -83,7 +83,7 @@ public class ForwardHome {
     map.put("inTopicPage", inTopicPage);
     //当页面页号属于人为构造时，用于判断页号是否存在
     @SuppressWarnings("unchecked")
-    Page<Topic> oldTopics = (Page<Topic>) map.get("topics");
+    Page<Topic> oldTopics = (Page<Topic>) session.getAttribute("topics");
     try {
       page = Integer.parseInt(pageNum);
       if (page < 1) {

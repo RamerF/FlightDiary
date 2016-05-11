@@ -160,6 +160,7 @@
  font-size: 20px;
  margin: 0 auto;
  background: none;
+ text-align: center;
 }
 
 .show_topic {
@@ -269,4 +270,25 @@
 
 .main {
  margin-left: 110px;
+}
+
+.page_panel {
+ width: 108px;
+ float: left;
+ position: fixed;
+ top: 126px;
+ right: 0;
+ margin: 20px;
+ text-align: center;
+}
+
+ul.page_panel li {
+ cursor: pointer;
+ padding: 10px;
+ list-style: none;
+ opacity: 0.5;
+}
+
+#removeScrollPage{
+ cursor: pointer;
 }

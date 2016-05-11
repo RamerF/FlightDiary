@@ -323,7 +323,6 @@ $(function(){
   // 移除滚动翻页事件
   $("#removeScrollPage").click(function(){
     $(window).unbind("scroll");
-    $(window).scroll(function(){
-    });
+    return false;
   });
 })

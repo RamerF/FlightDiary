@@ -21,6 +21,7 @@ import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -180,5 +181,20 @@ public class FlightDiaryTest {
     tagStr = tagStr.startsWith(";") ? tagStr.substring(1) : tagStr;
     tagStr = tagStr.endsWith(";") ? tagStr.substring(0, tagStr.length() - 1) : tagStr;
     System.out.println(tagStr);
+  }
+
+  /**
+   * 测试特殊参数获取分页数据.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testGetPageByUserIdOrderByDateDesc() throws Exception {
+    User user = new User();
+    user.setId(1);
+    Page<Topic> topics = topicService.getTopicsPageByUserId(user, 2, 10);
+    for (Topic topic : topics.getContent()) {
+      System.out.println(topic.getId());
+    }
   }
 }

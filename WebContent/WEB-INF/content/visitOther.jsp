@@ -3,30 +3,32 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link href="${pageContext.request.contextPath}/css/default.css" rel="stylesheet" />
-    <link href="${pageContext.request.contextPath}/css/visitOther.css" rel="stylesheet" />
-    <script src="${pageContext.request.contextPath}/js/jquery-2.1.4.min.js"></script>
-    <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
-  <script type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="${pageContext.request.contextPath}/css/default.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/css/visitOther.css" rel="stylesheet" />
+<script src="${pageContext.request.contextPath}/js/jquery-2.1.4.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
+<script src="${pageContext.request.contextPath}/js/js.cookie.js"></script>
+<script type="text/javascript">
   $(function(){
       path = "${pageContext.request.contextPath}";
+      userid = "${other.id}";
   })
 </script>
-    <script src="${pageContext.request.contextPath}/js/ramer/visitOther.js"></script>
-    <title>
-      Personal Center
-    </title>
-  </head>
-  <body>
-    <!--  返回-->
-    <div class="return_link" >
-        <img alt="error" src="${pageContext.request.contextPath}/pictures/back.png" id="back">
-    </div>
-    <!--  返回主页-->
+<script src="${pageContext.request.contextPath}/js/ramer/visitOther.js"></script>
+  <title>
+    Personal Center
+  </title>
+</head>
+<body>
+<!--  返回-->
+<div class="return_link" >
+    <img alt="error" src="${pageContext.request.contextPath}/pictures/back.png" id="back">
+</div>
+<!--  返回主页-->
 <div class="return_home">
-        <img alt="error" src="${pageContext.request.contextPath}/pictures/home.png" id="home">
+    <img alt="error" src="${pageContext.request.contextPath}/pictures/home.png" id="home">
 </div>
     <div class="user_info_panel">
       <div class="head">
@@ -117,15 +119,15 @@
       </div>
 
       <!-- 显示他的分享 -->
-      <c:if test="${empty other.topics}">
+      <c:if test="${empty topicsPage.content}">
         <div class="no_topic">
           <strong>
             他还没有发布任何分享
           </strong>
         </div>
       </c:if>
-      <c:if test="${!empty other.topics}">
-        <c:forEach items="${other.topics}" var="topic">
+      <c:if test="${!empty topicsPage.content}">
+        <c:forEach items="${topicsPage.content}" var="topic">
           <div class="show_topic">
             <div class="side">
               <div class="day">
@@ -255,5 +257,23 @@
           </div>
         </c:forEach>
       </c:if>
+      
+<!-- 存储记录的总页数 -->
+<input id="totalPages" type="hidden" value="${topicsPage.totalPages }">
+<!-- 存储当前页号 -->
+<input id="number" type="hidden" value="${topicsPage.number}">
+<!-- 分页 -->
+<ul class="page_panel">
+  <li class="lastPage">
+    <a href="?pageNum=${topicsPage.number + 1 - 1}" id="lastPage">
+      <img alt="error" src="${pageContext.request.contextPath}/pictures/previous.png" >
+    </a>
+  </li>
+  <li class="nextPage">
+    <a href="?pageNum=${topicsPage.number + 1 + 1}" id="nextPage">
+      <img alt="error" src="${pageContext.request.contextPath}/pictures/next.png" >
+    </a>
+  </li>
+</ul>
   </body>
 </html>

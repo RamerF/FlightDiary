@@ -58,15 +58,6 @@ public class TopicService {
     return cities;
   }
 
-  //  /**
-  //   * 获取五个标签，并根据出现的次数排序
-  //   * @return 所有标签的集合
-  //   */
-  //  public List<String> getTagsLimit() {
-  //    List<String> tags = topicRepository.getOrderedTagsLimit();
-  //    return tags;
-  //  }
-
   /**
    * 按时间顺序获取所有分享的分页数据
    * @param page 当前页面
@@ -123,13 +114,19 @@ public class TopicService {
   }
 
   /**
-   * 通过用户UID获取所有分享
+   * 通过用户UID获取所有分享.
+   *
    * @param user 用户
+   * @param page 页号
+   * @param size 每页大小
    * @return 返回该用户的所有分享
    */
   @Transactional(readOnly = true)
-  public List<Topic> getTopicsByUserId(User user) {
-    return topicRepository.getByUserOrderByDateAsc(user);
+  public Page<Topic> getTopicsPageByUserId(User user, int page, int size) {
+    //页号从零开始
+    page -= 1;
+    Pageable pageable = new PageRequest(page, size);
+    return topicRepository.getByUserOrderByDateAsc(user, pageable);
   }
 
   /**
