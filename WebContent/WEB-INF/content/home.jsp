@@ -140,6 +140,7 @@ background:none;
         <a href="javascript:void(0);" id="saySomething" class="share_link ">给我一个分享平台</a>
       </span>
      <span class="username" id="showProfile">${user.name}</span>
+     <span id="newNotify" style="position: absolute;margin: 0px;margin-left: -30px;" ></span>
      <c:if test="${notifiedNumber gt 0}">
       <span id="newTopic" 
         style="position: absolute;margin: 0px;padding: 0px;margin-left: -33px;"

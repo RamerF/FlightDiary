@@ -115,8 +115,8 @@ public class UserHandler {
   @ResponseBody
   public String realTimeTopic(HttpSession session) throws JsonProcessingException {
     long count = topicService.getCount();
-    long OldCount = (int) session.getAttribute("topicCount");
-    System.out.println((count - OldCount));
+    long OldCount = (long) session.getAttribute("topicCount");
+    System.out.println("新动态：" + (count - OldCount));
     return String.valueOf((count - OldCount));
   }
 
@@ -133,6 +133,7 @@ public class UserHandler {
   public String realTimeNotify(HttpSession session) throws JsonProcessingException {
     User user = (User) session.getAttribute("user");
     Integer number = notifyService.getNotifiedNumber(user);
+    System.out.println("新通知：" + number);
     return String.valueOf(number);
   }
 

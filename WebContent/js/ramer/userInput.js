@@ -266,7 +266,7 @@ $(function(){
         })
         return false;
       }
-      return false;
+
     }
 
     $("#_form").submit();

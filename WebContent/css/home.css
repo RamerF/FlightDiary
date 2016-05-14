@@ -45,11 +45,9 @@
 }
 
 .newTopic {
- margin: 0px;
  background: url("/FlightDiary/pictures/new.png") no-repeat;
  width: 16px;
  height: 16px;
- position: absolute;
 }
 
 .signup {
@@ -304,11 +302,12 @@ ul.page_panel li {
  opacity: 0.5;
 }
 
-#removeScrollPage{
+#removeScrollPage {
  cursor: pointer;
 }
 
 .tag_panel {
+ min-width: 122px;
  z-index: 10;
  position: absolute;
  padding: 10px;

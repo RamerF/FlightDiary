@@ -5,14 +5,18 @@ $(function(){
     var notifyUrl = path + "/user/realTimeNotify";
     var realTimeContent = setInterval(function(){
       $.get(topicUrl, null, function(newTopicCount){
-        console.log(~~newTopicCount);
-        if(~~newTopicCount >= 0){
-          // 新动态标识
-          $("#newTopic").addClass("newTopic");
-        }
+        console.log("新动态：" + ~~newTopicCount);
+        if(~~newTopicCount > 0)
+        // 新动态标识
+        $("#newTopic").addClass("newTopic");
+
       });
-      $.get(notifyUrl, null, function(notifyCount){
-        console.log(notifyCount);
+      $.get(notifyUrl, null, function(newNotifyCount){
+        console.log("新通知：" + newNotifyCount);
+        if(~~newNotifyCount > 0){
+          // 新通知
+          $("#newNotify").addClass("newTopic");
+        }
       });
     }, 60 * 1000);
   }

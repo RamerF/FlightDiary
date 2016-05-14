@@ -57,7 +57,7 @@ public class AddComment {
       throw new UserNotLoginException("要先登录,才能评论哦 !");
     }
     System.out.println("-----用户评论-----");
-    System.out.println(content);
+    System.out.println("评论内容：" + content);
     User user = (User) map.get("user");
     Topic topic = new Topic();
     Comment comment = new Comment();
@@ -69,10 +69,6 @@ public class AddComment {
     comment.setDate(new Date());
     commentService.comment(comment);
     //在他人主页
-    User tUser = (User) session.getAttribute("other");
-    System.out.println("other:" + tUser.getName());
-    Topic topic2 = (Topic) session.getAttribute("topic");
-    System.out.println("topic:" + topic2.getContent());
     if ((boolean) session.getAttribute("inOtherPage")) {
       User other = (User) session.getAttribute("other");
       System.out.println("在他人主页评论");

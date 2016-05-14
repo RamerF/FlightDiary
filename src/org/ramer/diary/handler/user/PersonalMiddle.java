@@ -77,7 +77,7 @@ public class PersonalMiddle {
       if (page < 1) {
         page = 1;
       } else if (oldTopics != null && page > oldTopics.getTotalPages()) {
-        page = oldTopics.getTotalPages();
+        page = oldTopics.getTotalPages() > 0 ? oldTopics.getTotalPages() : 1;
       }
     } catch (Exception e) {
       page = 1;
