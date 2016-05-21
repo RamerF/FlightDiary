@@ -27,6 +27,22 @@ $(function(){
     alert("浏览器不支持位置信息获取");
   }
 
+  // 添加用户当前位置
+  $("#addPosition").click(function(){
+    // 保存用户输入
+    var text = $(".topic_content").val();
+    $(".topic_content").val(text + "  " + $("#positionVal").val());
+  });
+
+  // 添加当前时间
+  $("#addTime").click(
+      function(){
+        var text = $(".topic_content").val();
+        $(".topic_content").val(
+            text + "  " + new Date().getFullYear() + "." + (new Date().getMonth() + 1) + "." + new Date().getDate());
+
+      });
+
   // 从xml文件获取标签列表
   var optionTag = document.getElementById("optionTag");
   /* 指定标签信息的xml文件,全局变量 */

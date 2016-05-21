@@ -256,6 +256,16 @@ div#addTime {
  text-align: center;
 }
 
+.tags_panel {
+ line-height: 1.5em;
+ letter-spacing: 0.1em;
+ text-overflow: ellipsis;
+ overflow: hidden;
+ white-space: nowrap;
+ width: 90%;
+ margin: 0px auto;
+}
+
 .name {
  position: relative;
  top: 0px;

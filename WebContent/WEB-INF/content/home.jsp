@@ -19,6 +19,7 @@
 <script type="text/javascript">
 $(function() {
     path = "${pageContext.request.contextPath}";
+    scrollInPage = "${scrollInPage}";
 })
 </script>
 <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
@@ -219,6 +220,12 @@ background:none;
         <c:forEach items="${topics.content}" var="t">
             <li>
                 <div class="user_mess textshadow">
+                  <div class="tags_panel">
+                     <c:forEach items="${t.tags}" var="tag">
+                       <i class="icon-tags"></i>
+                       <span class="tags">${tag}</span>
+                     </c:forEach>
+                  </div>
                   <a href="${pageContext.request.contextPath}/user/topic/${t.id}">
                     <img src="${pageContext.request.contextPath}/${t.picture}" alt="error" />
                   </a>
@@ -253,7 +260,12 @@ background:none;
       </a>
     </li>
     <li>
-      <a id="removeScrollPage">禁止滚动翻页</a>
+      <c:if test="${scrollInPage eq true}">
+       <a id="removeScrollPage">禁止滚动翻页</a>
+     </c:if>
+     <c:if test="${scrollInPage ne true}" >
+       <a id="removeScrollPage">开启滚动翻页</a>
+     </c:if>
     </li>
 </ul>
 </c:if>
@@ -297,7 +309,12 @@ background:none;
       </a>
     </li>
     <li>
-      <a id="removeScrollPage">禁止滚动翻页</a>
+     <c:if test="${scrollInPage eq true}">
+       <a id="removeScrollPage">禁止滚动翻页</a>
+     </c:if>
+     <c:if test="${scrollInPage ne true}" >
+       <a id="removeScrollPage">开启滚动翻页</a>
+     </c:if>
     </li>
 </ul>
 </c:if>
@@ -359,11 +376,17 @@ background:none;
         </a>
       </li>
       <li>
-        <a id="removeScrollPage">禁止滚动翻页</a>
+        <c:if test="${scrollInPage eq true}">
+       <a id="removeScrollPage">禁止滚动翻页</a>
+     </c:if>
+     <c:if test="${scrollInPage ne true}" >
+       <a id="removeScrollPage">开启滚动翻页</a>
+     </c:if>
       </li>
     </ul>
 </c:if>
 <input type="hidden" id="positionVal">
+
 <script src="${pageContext.request.contextPath}/js/masonry.pkgd.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/imagesloaded.js"></script>
 <script src="${pageContext.request.contextPath}/js/classie.js"></script>

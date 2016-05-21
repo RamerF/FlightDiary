@@ -35,7 +35,7 @@ public interface TopicRepository extends PagingAndSortingRepository<Topic, Integ
    * @param pageable 分页参数
    * @return 返回分享的集合topics
    */
-  Page<Topic> getByUserOrderByDateAsc(User user, Pageable pageable);
+  Page<Topic> getByUserOrderByDateDesc(User user, Pageable pageable);
 
   /**
    * 通过分享id,获取topic

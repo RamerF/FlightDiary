@@ -130,6 +130,7 @@
 }
 
 .follow_panel {
+ text-align: center;
  display: none;
  margin: 0px auto 20px;
  padding: 10px;

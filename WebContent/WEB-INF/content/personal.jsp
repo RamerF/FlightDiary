@@ -227,6 +227,12 @@
                         <p class="desc" style="height: 35px;"></p>
                     </c:if>
                     <div class="text">${topic.content }</div>
+                    <div class="tags_panel">
+                     <c:forEach items="${topic.tags}" var="tag">
+                       <i class="icon-tags"></i>
+                       <span class="tags">${tag}</span>
+                     </c:forEach>
+                    </div>
                 </div>
             </div>
             <hr class="h_line">

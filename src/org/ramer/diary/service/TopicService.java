@@ -126,7 +126,7 @@ public class TopicService {
     //页号从零开始
     page -= 1;
     Pageable pageable = new PageRequest(page, size);
-    return topicRepository.getByUserOrderByDateAsc(user, pageable);
+    return topicRepository.getByUserOrderByDateDesc(user, pageable);
   }
 
   /**

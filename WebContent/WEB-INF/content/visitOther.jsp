@@ -138,13 +138,21 @@
             </div>
             <div class="main">
               <div class="content">
-                <div class="img">
-                  <img alt="error" src="${pageContext.request.contextPath}/${topic.picture}" class="topic_pic">
-                  <p class="desc">
-                  </p>
-                </div>
-                <div class="text">
-                  ${topic.content }
+                <c:if test="${!empty topic.picture }">
+                    <div class="img">
+                        <img alt="error" src="${pageContext.request.contextPath}/${topic.picture}" class="topic_pic">
+                    </div>
+                    <p class="desc"></p>
+                </c:if>
+                <c:if test="${empty topic.picture }">
+                    <p class="desc" style="height: 35px;"></p>
+                </c:if>
+                <div class="text">${topic.content }</div>
+                <div class="tags_panel">
+                 <c:forEach items="${topic.tags}" var="tag">
+                   <i class="icon-tags"></i>
+                   <span class="tags">${tag}</span>
+                 </c:forEach>
                 </div>
               </div>
             </div>

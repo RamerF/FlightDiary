@@ -34,7 +34,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
  * @author ramer
  *
  */
-@SessionAttributes(value = { "user", "topics", "topicCount" }, types = { User.class, Topic.class })
+@SessionAttributes(value = { "user", "topics", "topicCount", "scrollInPage" }, types = { User.class,
+    Topic.class })
 @Controller
 public class ForwardHome {
   @Autowired
@@ -60,6 +61,9 @@ public class ForwardHome {
   //达人页面大小
   @Value("#{diaryProperties['topPeople.page.size']}")
   private int PEOPLEPAGESIZE;
+  //是否支持滚动翻页
+  @Value("#{diaryProperties['page.scroll']}")
+  private boolean scrollInPage;
 
   /**
    * 主页.
@@ -74,6 +78,11 @@ public class ForwardHome {
   public String home(
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
       Map<String, Object> map, HttpSession session) throws IOException {
+    //初始化滚动翻页
+    if (session.getAttribute("scrollInPage") == null) {
+      session.setAttribute("scrollInPage", scrollInPage);
+    }
+
     System.out.println("主页");
     System.out.println(session.getServletContext().getResource("pictures").getPath());
     System.out.println("pagesize = " + TOPICPAGESIZE);
@@ -137,6 +146,11 @@ public class ForwardHome {
   public String homeTopicOrderByUpcounts(
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
       Map<String, Object> map, HttpSession session) {
+    //初始化滚动翻页
+    if (session.getAttribute("scrollInPage") == null) {
+      session.setAttribute("scrollInPage", scrollInPage);
+    }
+
     System.out.println("热门主页");
     int page = 1;
     session.setAttribute("inOtherPage", false);
@@ -186,6 +200,11 @@ public class ForwardHome {
   public String homeTopPeople(
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
       Map<String, Object> map, HttpSession session) {
+    //初始化滚动翻页
+    if (session.getAttribute("scrollInPage") == null) {
+      session.setAttribute("scrollInPage", scrollInPage);
+    }
+
     System.out.println("达人主页");
     int page = 1;
     try {
@@ -239,6 +258,11 @@ public class ForwardHome {
       @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
       @RequestParam(value = "tag", required = false, defaultValue = "default") String tag,
       HttpSession session, Map<String, Object> map) throws UnsupportedEncodingException {
+    //初始化滚动翻页
+    if (session.getAttribute("scrollInPage") == null) {
+      session.setAttribute("scrollInPage", scrollInPage);
+    }
+
     System.out.println("热门标签主页");
     int page = 1;
 

@@ -82,7 +82,7 @@ public class AddFollow {
     }
     User user = (User) session.getAttribute("user");
     User followedUser = new User();
-    followedUser = (topic == null) ? (User) session.getAttribute("other") : topic.getUser();
+    followedUser = (topic.getId() == null) ? (User) session.getAttribute("other") : topic.getUser();
     System.out.println("被关注用户: " + followedUser.getName());
     // 虽然在访问他人的主页时,topic没有显示写入到map中,但是在页面EL和foreach迭代输出的时候,产生了topic,
     //springmvc会将此topic封装,因此这里的topic是最后一个被迭代的topic对象

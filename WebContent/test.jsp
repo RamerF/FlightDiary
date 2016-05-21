@@ -21,8 +21,10 @@ body,html,div,a{
  transition: all 1s;
  background: #000;
  opacity:.4;
+ z-index:1000;
 }
 .moreAm{
+height:auto;
  animation: myAnimateTwo 1s linear;
 }
 
@@ -86,6 +88,7 @@ top:50%;
       $(".more").removeClass("moreNew");
       $(".more").addClass("moreAm");
       $(".more").text("更多");
+      $(".more").css("height","auto");
       $(".showdata").css("opacity","0");
     });
     $(".more").click(function(e){

@@ -170,52 +170,6 @@ $(function(){
   }
   var scroll = 0;
   var interval = null;
-  // 滚动条滚动时记录滚动条高度,判断滚动条是否停止滚动，滑动到底部翻页
-  $(window).scroll(function(){
-    Cookies.set("scrollCookie_home", $(document).scrollTop());
-    if(interval == null){
-      interval = setInterval(checkScroll, 1000);
-    }
-    scroll = $(document).scrollTop();
-    // 滑块位置
-    var scrollTop = $(this).scrollTop();
-    // 文本总高度
-    var scrollHeight = $(document).height();
-    // 滑块本身高度
-    var windowHeight = $(this).height();
-    // 滚动到顶部
-    if(scrollTop == "0"){
-      // 询问框
-      layer.confirm('想看看上一页？', {
-        btn : [ '恩', '不了' ]
-      }, function(){
-        $("#lastPage")[0].click();
-      }, function(){
-      });
-      return false;
-    }
-
-    // 滚动到底部
-    if(scrollTop + windowHeight == scrollHeight){
-      // 询问框
-      layer.confirm('想看看下一页？', {
-        btn : [ '恩', '不了' ]
-      }, function(){
-        $("#nextPage")[0].click();
-      }, function(){
-      });
-      return false;
-    }
-  });
-  // 测试滚动条是否滚动
-  function checkScroll(){
-    if($(document).scrollTop() == scroll){
-      clearTimeout(interval);
-      interval = null;
-      $("::-webkit-scrollbar").css("display", "none");
-      // alert("停止滚动");
-    }
-  }
 
   // 注销
   $("#logOff").click(function(){
@@ -324,9 +278,78 @@ $(function(){
     var propertyNum = propertyStr.substring(0, propertyStr.indexOf("p"));
     return propertyNum;
   }
+  console.log("支持滚动翻页： " + (scrollInPage == "true"));
+  if(scrollInPage == "true"){
+    // 滚动条滚动时记录滚动条高度,判断滚动条是否停止滚动，滑动到底部翻页
+    $(window).scroll(scrollPage);
+  }
+
   // 移除滚动翻页事件
   $("#removeScrollPage").click(function(){
-    $(window).unbind("scroll");
+    // 如果支持滚动翻页，禁止
+    if(scrollInPage == "true"){
+      $(this).text("开启滚动翻页");
+      $(window).unbind("scroll");
+      var url = path + "/scrollInPage",args = {
+        "scrollInPage" : "false"
+      }
+      $.post(url, args, null);
+    }
+    else{
+      $(this).text("禁止滚动翻页");
+      $(window).scroll(scrollPage);
+      var url = path + "/scrollInPage",args = {
+        "scrollInPage" : "true"
+      }
+      $.post(url, args, null);
+    }
     return false;
   });
+
+  function scrollPage(){
+    Cookies.set("scrollCookie_home", $(document).scrollTop());
+    if(interval == null){
+      interval = setInterval(checkScroll, 1000);
+    }
+    scroll = $(document).scrollTop();
+    // 滑块位置
+    var scrollTop = $(this).scrollTop();
+    // 文本总高度
+    var scrollHeight = $(document).height();
+    // 滑块本身高度
+    var windowHeight = $(this).height();
+    // 滚动到顶部
+    if(scrollTop == "0"){
+      // 询问框
+      layer.confirm('想看看上一页？', {
+        btn : [ '恩', '不了' ]
+      }, function(){
+        $("#lastPage")[0].click();
+      }, function(){
+      });
+      return false;
+    }
+
+    // 滚动到底部
+    if(scrollTop + windowHeight == scrollHeight){
+      // 询问框
+      layer.confirm('想看看下一页？', {
+        btn : [ '恩', '不了' ]
+      }, function(){
+        $("#nextPage")[0].click();
+      }, function(){
+      });
+      return false;
+    }
+  }
+  // 测试滚动条是否滚动
+  function checkScroll(){
+    if($(document).scrollTop() == scroll){
+      clearTimeout(interval);
+      interval = null;
+      $("::-webkit-scrollbar").css("display", "none");
+      // alert("停止滚动");
+    }
+  }
+
 })

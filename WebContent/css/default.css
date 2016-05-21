@@ -15,26 +15,24 @@
  clear: both;
 }
 
-html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre,
- code, form, fieldset, legend, input, textarea, p, blockquote, th, td {
+html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form,
+ fieldset, legend, input, textarea, p, blockquote, th, td {
  margin: 0px;
  padding: 0px;
- font-family: Helvetica, Tahoma, Arial, "Hiragino	Sans	GB",
-  "Hiragino	Sans	GB	W3", "Microsoft	YaHei", STXihei, STHeiti, Heiti,
-  SimSun, sans-serif;
+ font-family: Helvetica, Tahoma, Arial, "Hiragino	Sans	GB", "Hiragino	Sans	GB	W3",
+  "Microsoft	YaHei", STXihei, STHeiti, Heiti, SimSun, sans-serif;
  font-size: 100%;
  color: rgba(61, 80, 76, 0.63);
 }
 
 body {
- text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px,
-  rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px
-  0px, rgba(133, 145, 143, .1) 3px 3px 0px, rgba(133, 145, 143, .1) 4px
-  4px 0px, rgba(133, 145, 143, .1) 5px 5px 0px, rgba(133, 145, 143, .1)
-  6px 6px 0px, rgba(133, 145, 143, .1) 7px 7px 0px,
+ text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px
+  1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px, rgba(133, 145, 143, .1) 3px 3px
+  0px, rgba(133, 145, 143, .1) 4px 4px 0px, rgba(133, 145, 143, .1) 5px 5px 0px,
+  rgba(133, 145, 143, .1) 6px 6px 0px, rgba(133, 145, 143, .1) 7px 7px 0px,
   rgba(133, 145, 143, .1) 8px 8px 0px;
  background: #FFFFFF;
-  transition: all .6s;
+ transition: all .6s;
 }
 
 div {
@@ -166,7 +164,10 @@ input:-webkit-autofill {
 .icon-search {
  background-position: -48px 0
 }
-
+/* 标签图标 */
+.icon-tags {
+ background-position: -25px -48px;
+}
 /*	修改浏览器滚动条样式*/
 ::-webkit-scrollbar {
  width: 5px;

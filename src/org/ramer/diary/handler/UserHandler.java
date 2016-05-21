@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
- * 用户控制器：验证邮箱和用户名，更新前获取用户.
+ * 用户控制器：验证邮箱和用户名，更新前获取用户，实时动态和通知，滚动翻页.
  *
  * @author ramer
  */
@@ -135,6 +135,24 @@ public class UserHandler {
     Integer number = notifyService.getNotifiedNumber(user);
     System.out.println("新通知：" + number);
     return String.valueOf(number);
+  }
+
+  /**
+   * 滚动翻页.
+   *
+   * @param session the session
+   * @param response the response
+   * @param scrollInPageStr the scroll in page str
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  @RequestMapping("/scrollInPage")
+  public void scrollInPage(HttpSession session, HttpServletResponse response,
+      @RequestParam(value = "scrollInPage", required = false, defaultValue = "false") String scrollInPageStr)
+      throws IOException {
+    response.setCharacterEncoding("UTF-8");
+    boolean scrollInPage = Boolean.parseBoolean(scrollInPageStr);
+    session.setAttribute("scrollInPage", scrollInPage);
+    response.getWriter().write("scrollInpage: " + scrollInPage);
   }
 
 }
