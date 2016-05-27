@@ -266,6 +266,10 @@ div#addTime {
  margin: 0px auto;
 }
 
+.tags{
+ cursor:pointer;
+}
+
 .name {
  position: relative;
  top: 0px;

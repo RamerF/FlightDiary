@@ -392,6 +392,14 @@ textarea.topic_content {
  width: 508px;
 }
 
+form#tagForm {
+ display: none;
+}
+
+.tags {
+ cursor: pointer;
+}
+
 .h_line {
  margin-top: 10px;
  border-color: rgba(61, 80, 76, 0.63);
@@ -474,6 +482,6 @@ ul.page_panel li {
  opacity: 0.5;
 }
 
-#removeScrollPage{
+#removeScrollPage {
  cursor: pointer;
 }

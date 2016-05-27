@@ -98,6 +98,12 @@ public interface TopicRepository extends PagingAndSortingRepository<Topic, Integ
   List<Topic> getByTagsLimit(@Param("tags") String tags, @Param("start") int start,
       @Param("size") int size);
 
+  /**
+   * 获取标签的总数.
+   *
+   * @param tags the tags
+   * @return the count by tag
+   */
   @Query(value = "select count(id) from Topic where tags like %:tags%")
   long getCountByTag(@Param("tags") String tags);
 }

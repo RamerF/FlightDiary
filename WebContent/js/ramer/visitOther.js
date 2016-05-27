@@ -184,4 +184,12 @@ $(function(){
       return false;
     }
   });
+
+  // 通过标签查询分享，分享标签
+  $(".tags").click(function(){
+    var tag = $(this).text();
+    $("#tagName").attr("value", encodeURI(tag));
+    $("#tagForm").submit();
+    return false;
+  });
 })

@@ -135,6 +135,11 @@ background:none;
     <input type="text" name="tag" placeholder="输入关键词" class="querytopic">
     <i class="icon-search search"></i>
   </div>
+  <!-- 通过标签获取分享表单 -->
+  <form action="${pageContext.request.contextPath}/home/tag" id="tagForm">
+    <input type="text" name = "tag" id="tagName">
+  </form>
+  
   <c:if test="${user.id gt 0}">
     <div class="user_panel">
       <span>
@@ -277,8 +282,10 @@ background:none;
             <li>
                 <div class="user_mess">
                   <a href="${pageContext.request.contextPath}/user/personal/${u.id}">
-                    <img src="${pageContext.request.contextPath}/${u.head}" alt="error" 
+                  <c:forEach items="${u.topics}" begin="0" end="0" var="head">
+                    <img src="${pageContext.request.contextPath}/${head.picture}" alt="error" 
                       onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'"/>
+                      </c:forEach>
                   </a>
                   <div class="name_panel">
                     <a href="${pageContext.request.contextPath}/user/personal/${u.id}">
@@ -332,10 +339,6 @@ background:none;
     </ul>
     </div>
     <span class="more" data-toggle="更多" id="showMore">更多</span>
-    <!-- 通过标签获取分享表单 -->
-    <form action="${pageContext.request.contextPath}/home/tag" id="tagForm">
-      <input type="text" name = "tag" id="tagName">
-    </form>
     <!-- 显示分享 -->
     <div class="container">
         <ul class="grid effect-2" id="grid">

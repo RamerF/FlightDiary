@@ -273,6 +273,14 @@
  margin-left: 110px;
 }
 
+form#tagForm {
+ display: none;
+}
+
+.tags {
+ cursor: pointer;
+}
+
 .page_panel {
  width: 108px;
  float: left;

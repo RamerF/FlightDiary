@@ -111,9 +111,17 @@ $(function(){
     }
   });
 
-  // 通过标签查询分享
+  // 通过标签查询分享,搜索框
   $(".querytopic").change(function(){
     var tag = $(this).val();
+    $("#tagName").attr("value", encodeURI(tag));
+    $("#tagForm").submit();
+    return false;
+  });
+
+  // 通过标签查询分享，分享标签
+  $(".tags").click(function(){
+    var tag = $(this).text();
     $("#tagName").attr("value", encodeURI(tag));
     $("#tagForm").submit();
     return false;

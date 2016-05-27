@@ -148,12 +148,17 @@
                     <p class="desc" style="height: 35px;"></p>
                 </c:if>
                 <div class="text">${topic.content }</div>
+                <!-- 标签分享 -->
                 <div class="tags_panel">
                  <c:forEach items="${topic.tags}" var="tag">
                    <i class="icon-tags"></i>
                    <span class="tags">${tag}</span>
                  </c:forEach>
                 </div>
+                <!-- 通过标签获取分享表单 -->
+                <form action="${pageContext.request.contextPath}/home/tag" id="tagForm">
+                  <input type="text" name = "tag" id="tagName">
+                </form>
               </div>
             </div>
 

@@ -436,6 +436,14 @@ $(function(){
     }
   });
 
+  // 通过标签查询分享，分享标签
+  $(".tags").click(function(){
+    var tag = $(this).text();
+    $("#tagName").attr("value", encodeURI(tag));
+    $("#tagForm").submit();
+    return false;
+  });
+
   /* 记录滚动条的位置 */
   /* 获取滚动条的位置 */
   var scrollCookie = Cookies.get("scrollCookie_personal" + userid);
