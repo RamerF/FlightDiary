@@ -5,7 +5,9 @@ package org.ramer.diary.service;
 
 import java.util.List;
 
+import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.repository.FeedBackRepository;
 import org.ramer.diary.repository.UserRepository;
 import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.Pagination;
@@ -21,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
   @Autowired
   private UserRepository userRepository;
+  @Autowired
+  private FeedBackRepository feedBackRepository;
 
   /**
    * 获取用户,按分享的数量排序
@@ -114,4 +118,17 @@ public class UserService {
     return userRepository.getByEmail(email);
   }
 
+  /**
+   * 用户反馈.
+   *
+   * @param feedBack 反馈信息
+   */
+  @Transactional(readOnly = false)
+  public boolean feedback(FeedBack feedBack) {
+    FeedBack f = feedBackRepository.saveAndFlush(feedBack);
+    if (f == null) {
+      return false;
+    }
+    return true;
+  }
 }

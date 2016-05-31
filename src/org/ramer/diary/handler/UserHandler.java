@@ -1,11 +1,13 @@
 package org.ramer.diary.handler;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.NotifyService;
@@ -155,4 +157,33 @@ public class UserHandler {
     response.getWriter().write("scrollInpage: " + scrollInPage);
   }
 
+  /**
+   * 用户反馈.
+   *
+   * @param session the session
+   * @param response the response
+   * @param OS the os
+   * @param Browser the browser
+   * @param content the content
+   * @throws IOException
+   */
+  @RequestMapping(value = "/user/feedback", method = RequestMethod.POST)
+  public void feedback(HttpSession session, HttpServletResponse response,
+      @RequestParam("OS") String os, @RequestParam("Browser") String browser,
+      @RequestParam("content") String content) throws IOException {
+    response.setCharacterEncoding("UTF-8");
+    FeedBack feedBack = new FeedBack();
+    feedBack.setDate(new Date());
+    feedBack.setUser((User) session.getAttribute("user"));
+    feedBack.setHasCheck("false");
+    content = content + " 系统信息： " + os + " 浏览器： " + browser;
+    feedBack.setContent(content);
+    boolean flag = userService.feedback(feedBack);
+    if (flag) {
+      response.getWriter().write("反馈成功");
+      return;
+    } else {
+      response.getWriter().write("系统繁忙，请稍后再试");
+    }
+  }
 }

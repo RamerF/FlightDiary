@@ -109,8 +109,8 @@ background:none;
 <div class="top"> 
   <div  class="title textshadow" >Diary</div>
   <div class="about">
-      <span><a href="#" class="textshadow">关于</a></span> / 
-      <span><a href="#" class="textshadow">反馈</a></span>
+      <span><a href="${pageContext.request.contextPath}/about.jsp" class="textshadow">关于</a></span> / 
+      <span><a href="${pageContext.request.contextPath}/feedback.jsp" class="textshadow">反馈</a></span>
   </div>
 </div>
 <!-- 分类面板 -->

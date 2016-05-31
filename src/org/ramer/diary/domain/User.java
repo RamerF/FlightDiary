@@ -1,5 +1,6 @@
 package org.ramer.diary.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,12 @@ import javax.persistence.Transient;
  * @author ramer
  */
 @Entity
-public class User {
+public class User implements Serializable {
+
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
   /** UID. */
   @Id
