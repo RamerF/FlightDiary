@@ -254,7 +254,7 @@ $(function(){
         };
         $.post(url, args, function(message){
           if(message == "success"){
-            location.href = "http://localhost:8080" + path + "/home";
+            location.href = "http://" + window.location.host + path + "/home";
             return false;
           }
           else{

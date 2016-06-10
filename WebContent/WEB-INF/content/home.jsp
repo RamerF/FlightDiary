@@ -139,7 +139,6 @@ background:none;
   <form action="${pageContext.request.contextPath}/home/tag" id="tagForm">
     <input type="text" name = "tag" id="tagName">
   </form>
-  
   <c:if test="${user.id gt 0}">
     <div class="user_panel">
       <span>

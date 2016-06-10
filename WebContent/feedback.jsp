@@ -49,7 +49,7 @@ $(function() {
           <option value="Mac">Mac</option>
         </select>
        </div>
-       <input type="submit" value="提交反馈" id="feedback"">
+       <input type="submit" value="提交反馈" id="feedback">
      </form>
     </div>
   </div>

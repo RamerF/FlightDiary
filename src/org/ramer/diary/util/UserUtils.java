@@ -45,8 +45,29 @@ public class UserUtils {
       System.out.println("\t已登录");
       return true;
     }
+    session.setAttribute("user", new User());
     System.out.println("\t未登录");
     return false;
+
   }
 
+  /**
+   * 检测用户是否异地登录.
+   *
+   * @param session the session
+   * @return 已登录返回true,否则返回false
+   */
+  public static boolean multiLogin(HttpSession session, User user) {
+    System.out.println("登录检测");
+
+    if (session.getId().equals(user.getSessionid())) {
+      System.out.println("\t已登录");
+      return true;
+
+    }
+    session.setAttribute("user", new User());
+    System.out.println("\t未登录");
+    return false;
+
+  }
 }

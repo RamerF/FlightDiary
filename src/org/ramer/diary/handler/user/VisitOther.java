@@ -87,7 +87,8 @@ public class VisitOther {
     if (other == null) {
       throw new UserNotExistException("您访问的用户不存在");
     }
-    if (UserUtils.checkLogin(session)) {
+    if (UserUtils.checkLogin(session) && UserUtils.multiLogin(session,
+        userService.getById(((User) session.getAttribute("user")).getId()))) {
       System.out.println("已登录,写入信息");
       if (id == user.getId()) {
         //获取点赞信息
@@ -133,7 +134,8 @@ public class VisitOther {
     System.out.println("-----查看分享-----");
     Topic topic = topicService.getTopicById(topic_id);
     User user = (User) session.getAttribute("user");
-    if (UserUtils.checkLogin(session)) {
+    if (UserUtils.checkLogin(session) && UserUtils.multiLogin(session,
+        userService.getById(((User) session.getAttribute("user")).getId()))) {
       System.out.println("已登录,写入信息");
       //获取收藏信息
       List<Integer> favourites = favouriteToList(user, topic.getUser(), session);
@@ -159,7 +161,8 @@ public class VisitOther {
    * @return list中存储的是当前用户收藏的所有,当前被浏览用户,的分享的id.
    */
   public List<Integer> favouriteToList(User user, User other, HttpSession session) {
-    if (!UserUtils.checkLogin(session)) {
+    if (!UserUtils.checkLogin(session) || !UserUtils.multiLogin(session,
+        userService.getById(((User) session.getAttribute("user")).getId()))) {
       return new ArrayList<>();
     }
     List<Integer> list = favouriteService.getFavouriteTopicIds(user, other);
@@ -170,8 +173,17 @@ public class VisitOther {
     return list;
   }
 
+  /**
+   * 将指定用户点赞信息存储到list中.
+   *
+   * @param user the user
+   * @param other the other
+   * @param session the session
+   * @return list中存储的是当前用户点过赞的所有,当前被浏览用户,的分享的id.
+   */
   public List<Integer> praiseToList(User user, User other, HttpSession session) {
-    if (!UserUtils.checkLogin(session)) {
+    if (!UserUtils.checkLogin(session) || !UserUtils.multiLogin(session,
+        userService.getById(((User) session.getAttribute("user")).getId()))) {
       return new ArrayList<>();
     }
     List<Integer> list = praiseService.getPraiseTopicIds(user, other);

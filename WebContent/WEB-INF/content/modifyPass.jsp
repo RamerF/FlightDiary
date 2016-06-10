@@ -34,10 +34,10 @@
     action="${pageContext.request.contextPath}/user/modifyPassword"
     method="post" id="modifyPassForm">
     <span>原始密码: </span>
-    <input type="text" name="oldPassword">
+    <input type="password" name="oldPassword">
     <br>
     <span>新密码: </span>
-    <input type="text" name="newPassword">
+    <input type="password" name="newPassword">
     <br>
     <input type="submit" value="确认">
     <input type="reset" value="取消">

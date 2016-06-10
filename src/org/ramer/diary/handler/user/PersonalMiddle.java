@@ -56,6 +56,10 @@ public class PersonalMiddle {
     session.setAttribute("inOtherPage", false);
     session.setAttribute("inTopicPage", false);
     if (!UserUtils.checkLogin(session)) {
+      User u = userService.getById(((User) session.getAttribute("user")).getId());
+      if (!UserUtils.multiLogin(session, u)) {
+        throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
+      }
       throw new UserNotLoginException("您的登录已过期,请重新登录");
     }
     // 避免懒加载异常,重新获取user

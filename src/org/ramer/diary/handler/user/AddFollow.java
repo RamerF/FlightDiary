@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.FollowService;
+import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,8 @@ public class AddFollow {
 
   @Autowired
   private FollowService followService;
+  @Autowired
+  private UserService userService;
 
   /**
    * 添加关注.
@@ -43,6 +46,11 @@ public class AddFollow {
     System.out.println("添加关注");
     response.setCharacterEncoding("UTF-8");
     if (!UserUtils.checkLogin(session)) {
+      User u = userService.getById(((User) session.getAttribute("user")).getId());
+      if (!UserUtils.multiLogin(session, u)) {
+        response.getWriter().write("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
+        return;
+      }
       System.out.println("用户未登录");
       response.getWriter().write("主人说没登录不能关注哒");
       return;
@@ -76,6 +84,11 @@ public class AddFollow {
     System.out.println("取消关注");
     response.setCharacterEncoding("UTF-8");
     if (!UserUtils.checkLogin(session)) {
+      User u = userService.getById(((User) session.getAttribute("user")).getId());
+      if (!UserUtils.multiLogin(session, u)) {
+        response.getWriter().write("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
+        return;
+      }
       System.out.println("用户未登录");
       response.getWriter().write("请先登录再继续操作");
       return;

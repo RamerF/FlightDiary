@@ -15,6 +15,7 @@ import org.ramer.diary.exception.SystemWrongException;
 import org.ramer.diary.exception.UserNotLoginException;
 import org.ramer.diary.service.CommentService;
 import org.ramer.diary.service.TopicService;
+import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,8 @@ public class AddComment {
   private CommentService commentService;
   @Autowired
   private TopicService topicService;
+  @Autowired
+  private UserService userService;
 
   /**
    * 发表用户评论.
@@ -54,6 +57,10 @@ public class AddComment {
       HttpServletResponse response) throws IOException {
     System.out.println("用户评论");
     if (!UserUtils.checkLogin(session)) {
+      User user = userService.getById(((User) session.getAttribute("user")).getId());
+      if (!UserUtils.multiLogin(session, user)) {
+        throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人，请及时修改密码 !");
+      }
       throw new UserNotLoginException("要先登录,才能评论哦 !");
     }
     System.out.println("-----用户评论-----");

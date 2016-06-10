@@ -36,6 +36,7 @@ public class Login {
   @RequestMapping(value = "/user/login")
   @ResponseBody
   public String userLogin(User user, Map<String, Object> map, HttpSession session) {
+    user.setSessionid(session.getId());
     System.out.println("登录");
     String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
     if (user.getName().matches(regex)) {

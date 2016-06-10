@@ -109,7 +109,8 @@ public class ForwardHome {
     //记录最新的topicid，用于判断是否有新动态
     map.put("topicCount", topicService.getCount());
     map.put("topics", topics);
-    if (UserUtils.checkLogin(session)) {
+    if (UserUtils.checkLogin(session) && UserUtils.multiLogin(session,
+        userService.getById(((User) session.getAttribute("user")).getId()))) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
       int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -166,7 +167,8 @@ public class ForwardHome {
     //获取分页分享
     Page<Topic> topics = topicService.getTopicsPageOrderByFavourite(page, TOPICPAGESIZE);
     map.put("topics", topics);
-    if (UserUtils.checkLogin(session)) {
+    if (UserUtils.checkLogin(session) && UserUtils.multiLogin(session,
+        userService.getById(((User) session.getAttribute("user")).getId()))) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
       int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -178,7 +180,8 @@ public class ForwardHome {
       map.put("topicNumber", topicNumber);
       map.put("followedNumber", followedNumber);
     }
-
+    User user = (User) session.getAttribute("user");
+    System.out.println("--------------------------------------" + user.getId());
     //清除访问的临时用户信息
     map.remove("other");
     map.remove("topic");
@@ -218,7 +221,8 @@ public class ForwardHome {
     //    获取达人的分页信息
     Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLEPAGESIZE);
     map.put("topPeoples", topPeoples);
-    if (UserUtils.checkLogin(session)) {
+    if (UserUtils.checkLogin(session) && UserUtils.multiLogin(session,
+        userService.getById(((User) session.getAttribute("user")).getId()))) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
       int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -276,7 +280,8 @@ public class ForwardHome {
     } catch (Exception e) {
       page = 1;
     }
-    if (UserUtils.checkLogin(session)) {
+    if (UserUtils.checkLogin(session) && UserUtils.multiLogin(session,
+        userService.getById(((User) session.getAttribute("user")).getId()))) {
       User user = (User) session.getAttribute("user");
       //获取用户统计数据
       int notifiedNumber = notifyService.getNotifiedNumber(user);

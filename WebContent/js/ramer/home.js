@@ -18,7 +18,7 @@ $(function(){
           $("#newNotify").addClass("newTopic");
         }
       });
-    }, 60 * 1000);
+    }, 10 * 1000);
   }
   // 获取地理位置
   if(navigator.geolocation){

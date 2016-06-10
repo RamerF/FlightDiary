@@ -85,6 +85,10 @@ public class User implements Serializable {
   @Column(length = 11)
   private String telephone;
 
+  /** The sessionid. */
+  @Column
+  private String sessionid;
+
   // 一对多策略
   /** 分享. */
   // 按时间降序排列
@@ -111,6 +115,14 @@ public class User implements Serializable {
    * 空构造器
    */
   public User() {
+  }
+
+  public void setSessionid(String sessionid) {
+    this.sessionid = sessionid;
+  }
+
+  public String getSessionid() {
+    return sessionid;
   }
 
   public Set<Notify> getReadedNotifies() {

@@ -1,10 +1,11 @@
 h2{
   text-align: center;
-  text-transform: uppercase;
+/*   text-transform: uppercase; */
+  font-family: sans-serif;
 }
 .container {
 text-indent: 2em;
-    width: 78%;
+    width: 77%;
     margin: 4% auto;
     line-height: 1.5em;
     font-size: 16px;

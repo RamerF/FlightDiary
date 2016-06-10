@@ -13,6 +13,7 @@ import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.IllegalAccessException;
 import org.ramer.diary.exception.SystemWrongException;
 import org.ramer.diary.service.NotifyService;
+import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,8 @@ public class PrivMess {
 
   @Autowired
   private NotifyService notifyService;
+  @Autowired
+  private UserService userService;
 
   /**
    * 发送私信.
@@ -49,7 +52,8 @@ public class PrivMess {
       throws IOException {
     System.out.println("发送私信");
     response.setCharacterEncoding("utf-8");
-    if (!UserUtils.checkLogin(session)) {
+    if (!UserUtils.checkLogin(session) || !UserUtils.multiLogin(session,
+        userService.getById(((User) session.getAttribute("user")).getId()))) {
       response.getWriter().write("需要先登录才能说悄悄话哦");
       System.out.println("未登录");
       return;

@@ -11,6 +11,7 @@ import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.UserNotLoginException;
 import org.ramer.diary.service.PraiseService;
+import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,8 @@ public class AddPraise {
 
   @Autowired
   private PraiseService praiseService;
+  @Autowired
+  private UserService userService;
 
   /**
    * 用户点赞.
@@ -47,6 +50,11 @@ public class AddPraise {
     response.setCharacterEncoding("utf-8");
     User user = (User) map.get("user");
     if (!UserUtils.checkLogin(session)) {
+      User u = userService.getById(((User) session.getAttribute("user")).getId());
+      if (!UserUtils.multiLogin(session, u)) {
+        response.getWriter().write("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
+        return;
+      }
       response.getWriter().write("麻麻说没登录不能点赞哒 !");
       return;
     }
@@ -80,6 +88,10 @@ public class AddPraise {
     System.out.println("取消点赞");
     response.setCharacterEncoding("utf-8");
     if (!UserUtils.checkLogin(session)) {
+      User u = userService.getById(((User) session.getAttribute("user")).getId());
+      if (!UserUtils.multiLogin(session, u)) {
+        throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
+      }
       throw new UserNotLoginException("没登录的哦");
     }
     Topic topic = new Topic();

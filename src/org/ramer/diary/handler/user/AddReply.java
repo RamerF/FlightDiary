@@ -15,6 +15,7 @@ import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.IllegalAccessException;
 import org.ramer.diary.exception.UserNotLoginException;
 import org.ramer.diary.service.ReplyService;
+import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,8 @@ public class AddReply {
 
   @Autowired
   private ReplyService replyService;
+  @Autowired
+  private UserService userService;
 
   /**
    * 回复评论.
@@ -55,6 +58,10 @@ public class AddReply {
       @RequestParam("content") String content, User user, HttpSession session,
       HttpServletResponse response, Map<String, Object> map) throws IOException {
     if (!UserUtils.checkLogin(session)) {
+      User u = userService.getById(((User) session.getAttribute("user")).getId());
+      if (!UserUtils.multiLogin(session, u)) {
+        throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
+      }
       throw new UserNotLoginException("您还未登录,或登录已过期,请登录");
     }
     Integer comment_id = 0;

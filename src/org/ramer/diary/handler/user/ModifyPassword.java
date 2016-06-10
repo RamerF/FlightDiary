@@ -45,6 +45,10 @@ public class ModifyPassword {
   @RequestMapping(value = "/user/forwardModifyPassword", method = RequestMethod.GET)
   public String forwardModifyPassword(Map<String, Object> map, HttpSession session) {
     if (!UserUtils.checkLogin(session)) {
+      User u = userService.getById(((User) session.getAttribute("user")).getId());
+      if (!UserUtils.multiLogin(session, u)) {
+        throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
+      }
       throw new UserNotLoginException("您还未登录或登录已过期");
     }
     System.out.println("引导到修改用户密码页面");
