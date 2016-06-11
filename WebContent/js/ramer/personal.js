@@ -224,7 +224,7 @@ $(function(){
       return false;
     });
     // 标记为已读
-    $("#readPrivMess").click(function(){
+    $("#readPrivMess").click(function(e){
       // 隐藏右键菜单
       $(".rightNav").css("display", "none");
       var url = path + "/user/personal/notify/readPrivMess";
@@ -240,7 +240,7 @@ $(function(){
       $(".notifyCount").children("sup").text((~~count - 1) > 0 ? (~~count - 1) : 0);
       // 取消新消息标识
       $(spanNode).children(".newNotify").remove();
-
+      e.stopPropagation();
       return false;
     });
 
@@ -334,6 +334,22 @@ $(function(){
     });
     return false;
   });
+  /* 删除提示 */
+  $(".trash").click(function(e){
+    var flag = confirm("你正在执行删除？");
+    if(!flag) return false;
+    // layer.confirm('你正在执行删除？', {
+    // btn : [ '恩', '留着' ]
+    // // 按钮
+    // }, function(){
+    // $(this)[0].click();
+    //
+    // }, function(){
+    // return false;
+    // });
+    // return false;
+  });
+
   /* 显示分享面板 */
   $("#saySomething").click(function(){
     if($("#topic_panel").is(":visible")){
@@ -455,5 +471,16 @@ $(function(){
   else Cookies.set("scrollCookie_personal" + userid, $(document).scrollTop("0px"));
   $(window).scroll(function(){
     Cookies.set("scrollCookie_personal" + userid, $(document).scrollTop());
+  });
+
+  // 点击更新头像
+  $("input[type='submit']").click(function(event){
+    // 判断是否选择图片
+    if($("input[name='picture']").val() == ""){
+      layer.msg("请选择一张图片", {
+        time : 1800
+      });
+      return false;
+    }
   });
 })

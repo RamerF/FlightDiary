@@ -64,6 +64,7 @@ $(function() {
               <img id="preview" class="preview" alt="error" onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/noPic.png'"
                 src="${pageContext.request.contextPath}/${user.head}">
           </span>
+          <input type="hidden" name="checkFile" id="checkFile">
           <input type="text" class="picName" placeholder="请选择一张图片">
           <input type="file" class="userHead" id="userHead" name="picture" /> 
           

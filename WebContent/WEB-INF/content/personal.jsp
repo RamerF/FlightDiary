@@ -108,7 +108,7 @@
   <span class="notify">
    <input type="hidden" value="${readedNotify.id}" name="notifyId" class="notifyId">
    <input type="hidden" value="${readedNotify.notifiedUser.id}" name="notifiedUserId" class="notifiedUserId">
-   <a href="${pageContext.request.contextPath}/user/personal/notify/readPrivMess" class="readPrivMess">
+   <a href="${pageContext.request.contextPath}/user/personal/${readedNotify.user.id}" class="readPrivMess">
     ${readedNotify.user.name } : ${readedNotify.content}
     <sub>
       <fmt:formatDate value="${readedNotify.date}" pattern="HH:mm:ss yyyy-MM-dd"/>

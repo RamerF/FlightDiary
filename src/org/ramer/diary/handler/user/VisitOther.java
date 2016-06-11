@@ -133,6 +133,9 @@ public class VisitOther {
     //  查看分享
     System.out.println("-----查看分享-----");
     Topic topic = topicService.getTopicById(topic_id);
+    if (topic == null || topic.getId() < 0) {
+      throw new UserNotExistException("您访问的页面已经乘坐2333···号灰船逃离这个星球了 -.-!");
+    }
     User user = (User) session.getAttribute("user");
     if (UserUtils.checkLogin(session) && UserUtils.multiLogin(session,
         userService.getById(((User) session.getAttribute("user")).getId()))) {

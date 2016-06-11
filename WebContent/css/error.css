@@ -1,19 +1,19 @@
 @CHARSET "UTF-8";
 
 .return_link {
-	position: fixed;
-	background: none;
-	margin: 40px auto -10px 30px;
+ position: fixed;
+ background: none;
+ margin: 40px auto -10px 30px;
 }
 
 .errorMessage {
-	background: #FFFFFF;
-	color: rgba(255, 52, 52, 0.72);
-	/*  width: 600px; */
-	font-size: 2em;
-	text-align: center;
-	margin: 60px auto;
-	padding: 10px;
-	line-height: 2em;
-	box-shadow: 0px 0px 20px rgba(154, 151, 151, 0.28);
+ background: #FFFFFF;
+ /* 	color: rgba(255, 52, 52, 0.72); */
+ /*  width: 600px; */
+ font-size: 2em;
+ text-align: center;
+ margin: 60px auto;
+ padding: 10px;
+ line-height: 2em;
+ box-shadow: 0px 0px 20px rgba(154, 151, 151, 0.28);
 }

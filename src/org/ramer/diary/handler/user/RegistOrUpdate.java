@@ -46,7 +46,7 @@ public class RegistOrUpdate {
     if (id != null) {
       System.out.println("更新前获取user");
       System.out.println("id = " + id);
-      User user = this.userService.getById(id);
+      User user = userService.getById(id);
       map.put("user", user);
     }
   }
@@ -64,9 +64,10 @@ public class RegistOrUpdate {
   //  由于需要上传文件form 带有属性enctype="multipart/form-data",因此无法使用PUT请求
   @RequestMapping(value = "/user", method = RequestMethod.POST)
   public String newOrUpdate(User user, @RequestParam("picture") MultipartFile file,
-      HttpSession session, Map<String, Object> map) {
+      HttpSession session, Map<String, Object> map, @RequestParam("checkFile") String checkFile) {
+
     //  如果是更新,用户ID不为空
-    if (this.userService.getByName(user.getName()) != null && user.getId() == null) {
+    if (userService.getByName(user.getName()) != null && user.getId() == null) {
       throw new UserExistException("用户名已存在,注册失败");
     }
     //如果是注册需要加密密码，而更新是不允许修改密码的
@@ -92,15 +93,17 @@ public class RegistOrUpdate {
         e.printStackTrace();
       }
     } else {
-      user.setHead("pictures/userHead.jpg");
+      checkFile = checkFile.substring(checkFile.indexOf("/", 2));
+      System.out.println("------------------------------" + checkFile);
+      user.setHead(checkFile);
     }
     //    判断邮箱是否存在，如果存在说明以后未修改，不不要加密
-    if (this.userService.getByEmail(user.getEmail()) == null) {
+    if (userService.getByEmail(user.getEmail()) == null) {
       user.setEmail(Encrypt.execEncrypt(user.getEmail(), true));
     }
     Integer id = user.getId();
-    if (this.userService.newOrUpdate(user).getId() > 0) {
-      user = this.userService.login(user);
+    if (userService.newOrUpdate(user).getId() > 0) {
+      user = userService.login(user);
       if (user.getId() == null) {
         throw new SystemWrongException("系统出错了,操作被取消,请返回重新操作");
       }

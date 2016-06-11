@@ -5,6 +5,10 @@ $(function(){
 
   /* 更新用户 */
   if($("#userId").val() != null){
+    $("title").text("更新用户信息");
+    $("input[type='submit']").removeAttr("disabled", "disabled");
+    $("input[type='submit']").css("opacity", "1");
+
     $("#regPanel").css("display", "block");
     $(".update_panel").css("display", "block");
     $("#forgetPass").css("display", "none");
@@ -57,6 +61,14 @@ $(function(){
       if(inputStr.indexOf("*") >= 0 && valueStr == email){
         $("input[name='email']").val(email);
       }
+      console.log("文件是否为空 ： " + $("input[name='picture']").val());
+      // 判断图片是否修改
+      if($("input[name='picture']").val() == ""){
+        console.log("文件是否为空 ： " + $("input[name='picture']").val());
+        if($("#preview").attr("src").indexOf("pictures") > 0){
+          $("#checkFile").val($("#preview").attr("src"));
+        }
+      }
       // event.stopPropagation();
       // $("#_form").submit();
       // return false;
@@ -80,6 +92,7 @@ $(function(){
         $("#email").focus(function(){
           $(".nav_color").css("width", "35%");
         });
+        $("title").text("注册");
         // 修改标题
         $("#title").text("注册");
         // 修改提交文本
@@ -115,6 +128,7 @@ $(function(){
       }
       // 如果切换后注册界面不存在,即用户正在登录
       if($("#regPanel").is(":hidden")){
+        $("title").text("登陆");
         // 修改标题
         $("#title").text("登录");
         // 修改提交文本
