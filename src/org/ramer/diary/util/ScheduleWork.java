@@ -1,16 +1,18 @@
 package org.ramer.diary.util;
 
+import org.ramer.diary.service.TopicService;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.ramer.diary.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -48,18 +50,17 @@ public class ScheduleWork implements ApplicationListener<ContextRefreshedEvent> 
 
   @Autowired
   TopicService topicService;
-  @Value("#{diaryProperties['tags.xml.position']}")
-  private String file;
+  @Value("#{diaryProperties['tags.xml']}")
+  private String files;
 
   @Override
   public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 
     if (contextRefreshedEvent.getApplicationContext().getParent() == null) {
-
       ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
       // execute every ten seconds
       //      long oneDay = 30 * 60 * 1000;
-      long oneDay = 30 * 1000;
+      long oneDay = 60 * 1000;
 
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
       // start now
@@ -71,32 +72,15 @@ public class ScheduleWork implements ApplicationListener<ContextRefreshedEvent> 
         System.out.println("----------start update tags-----------");
         // tags in database
         System.out.println(topicService);
+        String file = System.getProperty("flightdiary.root") + files;
         System.out.println(file);
         List<String> tags = topicService.getAllTags();
-        // remove duplicate
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String string : tags) {
-          stringBuilder.append(string + ";");
-        }
-        String[] strings = stringBuilder.toString().split(";");
-        // Arrays.asList will return a proxy with doesn't implement add() and remove(),so create a list.
-        List<String> tagslist = Arrays.asList(strings);
-        tagslist = new ArrayList<>(tagslist);
-        for (int i = 0; i < tagslist.size(); i++) {
-          for (int j = i + 1; j < tagslist.size(); j++) {
-            if (tagslist.get(i).equals(tagslist.get(j))) {
-              tagslist.remove(j);
-              j--;
-            }
-          }
-        }
-        // tags no duplicate.
-        tags = tagslist;
+        Set<String> tagslist = new HashSet<>(tags);
         System.out.println("tags in database： ");
-        for (String string : tags) {
+        for (String string : tagslist) {
           System.out.println("\t" + string);
         }
-        List<String> tagsInFile = new ArrayList<>();
+        Set<String> tagsInFile = new HashSet<>();
         try {
           // read tags in local file
           tagsInFile = FileUtils.readTag(file);

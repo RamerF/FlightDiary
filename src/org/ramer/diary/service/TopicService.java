@@ -1,12 +1,13 @@
 package org.ramer.diary.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.repository.TopicRepository;
 import org.ramer.diary.util.Pagination;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,6 +54,7 @@ public class TopicService {
    * 获取所有的标签，并根据出现的次数排序
    * @return 所有标签的集合
    */
+  @Transactional(readOnly = true)
   public List<String> getAllTags() {
     List<String> cities = topicRepository.getOrderedTags();
     return cities;
@@ -180,6 +182,7 @@ public class TopicService {
    *
    * @return 动态总数
    */
+  @Transactional(readOnly = true)
   public long getCountByTag(String tag) {
     return topicRepository.getCountByTag(tag);
   }

@@ -1,0 +1,23 @@
+@CHARSET "UTF-8";
+
+body {
+	background: #EDEDEF;
+}
+
+.return_link {
+	position: fixed;
+	background: none;
+	margin: 40px auto -10px 30px;
+}
+
+.succMessage {
+	line-height: 2em;
+	background: #FFFFFF;
+	color: rgba(25, 52, 52, 0.72);
+	/*  width: 600px; */
+	font-size: 2em;
+	text-align: center;
+	margin: 60px auto;
+	padding: 10px;
+	box-shadow: 0px 0px 20px rgba(154, 151, 151, 0.28);
+}

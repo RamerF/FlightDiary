@@ -16,7 +16,7 @@
    expression="org.springframework.web.bind.annotation.ControllerAdvice" />
  </context:component-scan>
  <!-- 定时任务 -->
- <bean class="org.ramer.diary.util.ScheduleWork"></bean>
+<!--  <bean class="org.ramer.diary.util.ScheduleWork"></bean> -->
  <!-- 异常处理 -->
  <bean
   class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">

@@ -1,5 +1,8 @@
 package org.ramer.diary.util;
 
+import org.ramer.diary.domain.Topic;
+import org.ramer.diary.domain.User;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,21 +11,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
-import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 文件操作工具类，包含常用的静态方法：
@@ -92,7 +95,7 @@ public class FileUtils {
   public static String saveFile(MultipartFile file, HttpSession session, boolean head, boolean chn)
       throws IOException {
     String separator = File.separator;
-    String location = "";
+    String location;
     //    如果操作系统是Linux
     if (System.getProperty("os.name").equals("Linux")) {
       location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
@@ -163,25 +166,15 @@ public class FileUtils {
    * @return 返回tag集合
    * @throws Exception the exception
    */
-  public static List<String> readTag(String file) throws Exception {
-    //    String separator = File.separator;
-    //    String location = "";
-    //    //    如果操作系统是Linux
-    //    if (System.getProperty("os.name").equals("Linux")) {
-    //      location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
-    //          + servletContext.getServletContextName()).getCanonicalPath();
-    //    } else {
-    //      location = new File("D:/workspace/eclipse/" + servletContext.getServletContextName())
-    //          .getCanonicalPath();
-    //    }
+  public static Set<String> readTag(String file) throws Exception {
 
-    List<String> tagsList = new ArrayList<>();
+    Set<String> tagsList = new HashSet<>();
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
     InputStream inputStream = new FileInputStream(file);
     Document document = builder.parse(inputStream);
     NodeList tagsNode = document.getElementsByTagName("tag");
-    for (int i = 0; i < tagsNode.getLength(); i++) {
+    for (int i = 0; i < tagsNode.getLength() - 1; i++) {
       Node item = tagsNode.item(i);
       Element element = (Element) item;
       String name = element.getAttribute("name");
@@ -198,18 +191,6 @@ public class FileUtils {
    * @throws Exception the exception
    */
   public static void writeTag(List<String> tags, String file) throws Exception {
-    //
-    //    String separator = File.separator;
-    //    String location = "";
-    //    //    如果操作系统是Linux
-    //    if (System.getProperty("os.name").equals("Linux")) {
-    //      location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
-    //          + servletContext.getServletContextName()).getCanonicalPath();
-    //    } else {
-    //      location = new File("D:/workspace/eclipse/" + servletContext.getServletContextName())
-    //          .getCanonicalPath();
-    //    }
-
     //    系统换行符
     String endLine = System.getProperty("line.separator");
     //   要写入的字符串
@@ -222,11 +203,10 @@ public class FileUtils {
         reader.seek(reader.getFilePointer() - 8);
         reader.write(endLine.getBytes());
         for (String tag : tags) {
-          tagString = " <tag name=\"" + tag + "\"></tag>" + endLine;
+          tagString = "    <tag name=\"" + tag + "\" />" + endLine;
           reader.write(tagString.getBytes());
         }
         reader.write("</tags>".getBytes());
-
         break;
       }
     }
