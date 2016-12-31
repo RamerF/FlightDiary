@@ -5,6 +5,7 @@ import org.ramer.diary.service.TopicService;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ScheduleWork implements ApplicationListener<ContextRefreshedEvent> 
 
   @Autowired
   TopicService topicService;
-  @Value("#{diaryProperties['tags.xml']}")
+  @Value("#{diaryProperties['tags.xml.position']}")
   private String files;
 
   @Override
@@ -60,7 +61,7 @@ public class ScheduleWork implements ApplicationListener<ContextRefreshedEvent> 
       ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
       // execute every ten seconds
       //      long oneDay = 30 * 60 * 1000;
-      long oneDay = 60 * 1000;
+      long oneDay = 30 * 1000;
 
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
       // start now
@@ -71,13 +72,18 @@ public class ScheduleWork implements ApplicationListener<ContextRefreshedEvent> 
       executor.scheduleAtFixedRate(() -> {
         System.out.println("----------start update tags-----------");
         // tags in database
-        System.out.println(topicService);
         String file = System.getProperty("flightdiary.root") + files;
         System.out.println(file);
         List<String> tags = topicService.getAllTags();
-        Set<String> tagslist = new HashSet<>(tags);
+        //    去除重复的标签
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String string : tags) {
+          stringBuilder.append(string + ";");
+        }
+        tags = CollectionsUtils.removeSame(Arrays.asList(stringBuilder.toString().split(";")));
+
         System.out.println("tags in database： ");
-        for (String string : tagslist) {
+        for (String string : tags) {
           System.out.println("\t" + string);
         }
         Set<String> tagsInFile = new HashSet<>();

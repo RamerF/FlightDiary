@@ -1,14 +1,5 @@
 package org.ramer.diary.handler;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
@@ -18,8 +9,18 @@ import org.ramer.diary.service.FollowService;
 import org.ramer.diary.service.NotifyService;
 import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
+import org.ramer.diary.util.CollectionsUtils;
 import org.ramer.diary.util.Pagination;
 import org.ramer.diary.util.UserUtils;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -300,20 +301,8 @@ public class ForwardHome {
     for (String string : tags) {
       stringBuilder.append(string + ";");
     }
-    String[] strings = stringBuilder.toString().split(";");
-    //    使用这个方法得到的只是一个ArrayList代理，因此里面的某些方法如： add(),remove() 无法使用
-    //    解决方法就是使用Iterator或者转换为ArrayList
-    List<String> tagslist = Arrays.asList(strings);
-    tagslist = new ArrayList<>(tagslist);
-    for (int i = 0; i < tagslist.size(); i++) {
-      for (int j = i + 1; j < tagslist.size(); j++) {
-        if (tagslist.get(i).equals(tagslist.get(j))) {
-          tagslist.remove(j);
-          j--;
-        }
-      }
-    }
-    tags = tagslist;
+    tags = CollectionsUtils.removeSame(Arrays.asList(stringBuilder.toString().split(";")));
+
     Pagination<Topic> tagTopics;
     //    取得第一个标签的分享数据
     if (tag.equals("default")) {

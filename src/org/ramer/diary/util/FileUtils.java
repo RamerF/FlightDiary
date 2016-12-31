@@ -174,7 +174,7 @@ public class FileUtils {
     InputStream inputStream = new FileInputStream(file);
     Document document = builder.parse(inputStream);
     NodeList tagsNode = document.getElementsByTagName("tag");
-    for (int i = 0; i < tagsNode.getLength() - 1; i++) {
+    for (int i = 0; i < tagsNode.getLength(); i++) {
       Node item = tagsNode.item(i);
       Element element = (Element) item;
       String name = element.getAttribute("name");
