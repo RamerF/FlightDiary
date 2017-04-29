@@ -60,7 +60,7 @@ $RECYCLE.BIN/
 WebContent/pictures//
 ~
 bin/*
-.settings/*
+#.settings/*
 .project
 .springBeans
 .classpath

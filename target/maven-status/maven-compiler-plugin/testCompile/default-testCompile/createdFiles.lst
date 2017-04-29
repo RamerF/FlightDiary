@@ -1,0 +1,7 @@
+org\ramer\diary\TestMergeTags.class
+org\ramer\diary\FlightDiaryTest.class
+org\ramer\diary\TimeTest.class
+org\ramer\diary\TestGetSeparator.class
+org\ramer\diary\MailTest.class
+org\ramer\diary\TestWriteToFile.class
+org\ramer\diary\EncryptTest.class
