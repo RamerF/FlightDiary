@@ -1,4 +1,3 @@
-rebel.xml
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -58,9 +57,10 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-pictures/*
+WebContent/pictures//
 ~
 bin/*
 .settings/*
 .project
 .springBeans
+.classpath
