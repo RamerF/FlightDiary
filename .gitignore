@@ -60,3 +60,6 @@ $RECYCLE.BIN/
 pictures/*
 ~
 bin/*
+.settings/*
+.project
+.springBeans
