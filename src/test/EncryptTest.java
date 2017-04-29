@@ -18,7 +18,8 @@ public class EncryptTest {
    */
   @Test
   public void testEncrypt() {
-    String string = "1874890499@qq.com";
+    String string = "1390635973@qq.com";
+    System.out.println("加密字符串： " + string);
     String encoded = Encrypt.execEncrypt(string, true);
     System.out.println(encoded);
   }

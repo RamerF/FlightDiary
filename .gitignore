@@ -58,8 +58,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-build
-/bin/
-/pictures/*.jpg
-.png
-.classpath
+pictures/*
+~
+bin/*

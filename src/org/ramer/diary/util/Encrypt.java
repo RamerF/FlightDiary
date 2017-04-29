@@ -13,6 +13,8 @@ import java.security.NoSuchAlgorithmException;
 public class Encrypt {
 
   /**
+   * 32位MD5加密
+   * @param isEmail 是否是邮箱
    * @param string 要加密的字符串
    * @return 返回已加密的字符串
    */
@@ -37,6 +39,7 @@ public class Encrypt {
       }
       stringBuilder.append(Integer.toHexString(val));
     }
+    
     //如果是邮箱特殊处理 
     if (isEmail) {
       //首字符 
@@ -60,6 +63,7 @@ public class Encrypt {
    */
   public static String doubleEncrypet(String string, String... emailString) {
     StringBuilder encryptString = new StringBuilder();
+    //取五位字符
     string = string.substring(10, 15);
     //如果是邮箱则该字符串有值 
     if (emailString.length > 0) {

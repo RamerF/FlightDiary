@@ -43,23 +43,17 @@ public class UserService {
   }
 
   /**
-   * 用户登录.
-   *
+   * 用户登录
    * @param user 用户
    * @return 返回登录用户信息
    */
-  @Transactional()
+  @Transactional(readOnly = true)
   public User login(User user) {
     User u = null;
     if (user.getName() != null) {
       u = userRepository.getByNameAndPassword(user.getName(), user.getPassword());
     } else {
       u = userRepository.getByEmailAndPassword(user.getEmail(), user.getPassword());
-    }
-    //    判断是否是异地登陆，绑定最新的sessionid，使之前的登陆失效
-    if (u != null && !user.getSessionid().equals(u.getSessionid())) {
-      u.setSessionid(user.getSessionid());
-      userRepository.saveAndFlush(u);
     }
     return u != null ? u : new User();
   }

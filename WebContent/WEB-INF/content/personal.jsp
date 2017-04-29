@@ -141,7 +141,8 @@
             <div class="followed_user_panel">
                 <div>
                     <a href="${pageContext.request.contextPath}/user/personal/${follow.followedUser.id}">
-                        <img class="followed_user_head" alt="error" src="${pageContext.request.contextPath}/${follow.followedUser.head }">
+                        <img class="followed_user_head" alt="error" src="${pageContext.request.contextPath}/${follow.followedUser.head }"
+                          onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'">
                     </a>
                 </div>
                 <div class="followed_user_name_panel">
