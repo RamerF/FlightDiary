@@ -64,4 +64,4 @@ bin/*
 .project
 .springBeans
 .classpath
-target/*
+/target/
