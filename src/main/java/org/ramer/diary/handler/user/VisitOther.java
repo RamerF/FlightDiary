@@ -87,6 +87,7 @@ public class VisitOther{
         if (UserUtils.checkLogin(session)) {
             System.out.println("已登录,写入信息");
             if (id == user.getId()) {
+                session.setAttribute("inOtherPage", false);
                 //获取点赞信息
                 System.out.println("访问个人空间");
                 List<Integer> praises = praiseToList(user, user, session);

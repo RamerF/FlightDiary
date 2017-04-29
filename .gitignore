@@ -57,7 +57,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-WebContent/pictures//
+/src/main/webapp/pictures/publish
 ~
 bin/*
 .settings/*
