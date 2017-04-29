@@ -30,5 +30,4 @@ public class TimeTest {
     System.out.println(date.compareTo(date2));
   }
 
-
 }

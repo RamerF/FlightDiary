@@ -1,114 +1,127 @@
 @CHARSET "UTF-8";
 
 body {
-    /*     background-image: url("/FlightDiary/pictures/loginBG.jpg"); */
-    
+ /*     background-image: url("/FlightDiary/pictures/loginBG.jpg"); */
+ 
 }
 
 .container {
-    border: 1px solid #2196F3;
-    min-width: 405px;
-    opacity: .8;
-    padding: 10px;
-    /* box-shadow: 1px 1px 10px #E4D6D6; */
-    margin: 150px auto 0 auto;
-    width: 35%;
+ border: 1px solid #2196F3;
+ min-width: 422px;
+ opacity: .8;
+ padding: 10px;
+ /* box-shadow: 1px 1px 10px #E4D6D6; */
+ margin: 150px auto 0 auto;
+ width: 35%;
 }
 
 .title {
-    text-align: center;
-    font-size: 30px;
-    margin-bottom: 10px;
-    font-size: 30px;
+ text-align: center;
+ font-size: 30px;
+ margin-bottom: 10px;
+ font-size: 30px;
 }
 
 .form {
-    margin-right: 13%;
-    text-align: right;
+ margin-right: 13%;
+ text-align: right;
 }
 
 span.label {
-    border-bottom: 1px solid #81BBED;
-    padding: 11px;
-    margin: 10px 40px;
+ border-bottom: 1px solid #81BBED;
+ padding: 11px;
+ margin: 10px 40px;
+}
+
+#showPassword {
+ background: url("../pictures/showpassword.png") no-repeat;
+ width: 35px;
+ display: table;
+ position: absolute;
+ z-index: 3;
+ height: 32px;
+ opacity: .6;
+ margin-left: 351px;
+ margin-top: -43px;
 }
 
 .reg_panel {
-    display: none;
-    text-align: right;
-    margin-right: 5px;
-    margin-bottom: 10px;
+ display: none;
+ text-align: right;
+ margin-right: 5px;
+ margin-bottom: 10px;
 }
 
 .nav_vertical {
-    position: absolute;
-    top: 151px;
-    left: 32.6%;
-    width: 452px;
-    height: 6px;
-    /*     box-shadow: 1px 1px 10px #E4D6D6; */
+ position: absolute;
+ top: 151px;
+ left: 32.6%;
+ width: 452px;
+ height: 6px;
+ /*     box-shadow: 1px 1px 10px #E4D6D6; */
 }
 
 .nav_color {
-    position: absolute;
-    top: 151px;
-    left: 32.5%;
-    background: #009688;
-    width: 0%;
-    height: 6px;
+ position: absolute;
+ top: 151px;
+ left: 32.5%;
+ background: #009688;
+ width: 0%;
+ height: 6px;
+ transition: width 1.5s ease-in-out 0s;
 }
 
 .update_panel {
-    display: none;
+ display: none;
 }
 
 .preview {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    margin-left: -3.6%;
+ position: absolute;
+ width: 40px;
+ height: 40px;
+ border-radius: 20px;
+ margin-left: -3.6%;
 }
 
 .picName {
-    cursor: pointer;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+ cursor: pointer;
+ white-space: nowrap;
+ text-overflow: ellipsis;
 }
 
 .userHead {
-    border: none;
-    /* overflow: hidden; */
-    width: 177px;
-    margin-top: 8px;
-    opacity: 0;
-    position: absolute;
-    /* margin-right: -120px; */
-    margin-left: -195px;
-    cursor: pointer;
+ border: none;
+ /* overflow: hidden; */
+ width: 177px;
+ margin-top: 8px;
+ opacity: 0;
+ position: absolute;
+ /* margin-right: -120px; */
+ margin-left: -195px;
+ cursor: pointer;
 }
 
 .radio {
-    margin-left: 50px;
+ margin-left: 50px;
 }
 
 label {
-    margin-right: 10px;
+ margin-right: 10px;
 }
 
 .label.adjustment {
-    margin-right: 10px;
+ margin-right: 10px;
 }
 
 div.forget_pass {
-    text-align: right;
-    margin: 10px;
+ text-align: right;
+ margin: 10px;
 }
 
 #message3 font {
-    margin-right: 10px;
+ margin-right: 10px;
 }
 
 .toggle {
-    margin-right: 10px;
+ margin-right: 10px;
 }

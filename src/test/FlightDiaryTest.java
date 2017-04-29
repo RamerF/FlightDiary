@@ -4,6 +4,8 @@
 package test;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -14,10 +16,12 @@ import org.junit.runner.RunWith;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -33,6 +37,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class FlightDiaryTest {
+
+  @Autowired
+  private TopicService topicService;
 
   /**
    * Test1.
@@ -105,24 +112,89 @@ public class FlightDiaryTest {
   }
 
   /**
-   * 测试通过城市和页码获取分享
+   * 测试通过标签和页码获取分享
    */
   @Test
-  public void testGetTopicPageByCity() {
-    Pagination<Topic> pageTopic = userService.getTopicsPageByCity("重庆", 2, 4);
+  public void testGetTopicPageByTags() {
+    Pagination<Topic> pageTopic = topicService.getTopicsPageByTags("重庆", 2, 4);
     List<Topic> topics = pageTopic.getContent();
     for (Topic topic : topics) {
       System.out.println("name : " + topic.getContent());
     }
   }
 
+  /**
+   * 获取所有标签.
+   */
   @Test
-  public void testGetAllCities() {
-    List<String> cities = userService.getAllCities();
-    System.out.println("城市名 :  ");
-    for (String city : cities) {
-      System.out.println("\t" + city);
+  public void testGetAllTags() {
+    List<String> tags = topicService.getAllTags();
+    System.out.println("标签名 :  ");
+    for (String tag : tags) {
+      System.out.println("\t" + tag);
     }
-    System.out.println("----------------------\n" + "第一个城市 :  " + cities.iterator().next());
+    System.out.println("----------------------\n" + "第一个标签 :  " + tags.iterator().next());
+  }
+
+  /**
+   * ;分割标签.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testSplitTags() throws Exception {
+    String tag1 = "纪实";
+    String tag2 = "纪实,旅游";
+    List<String> tags = new ArrayList<>();
+    tags.add(tag1);
+    tags.add(tag2);
+    StringBuilder stringBuilder = new StringBuilder();
+    for (String string : tags) {
+      stringBuilder.append(string + ",");
+    }
+    String[] strings = stringBuilder.toString().split(",");
+    List<String> tagslist = Arrays.asList(strings);
+    tagslist = new ArrayList<>(tagslist);
+    System.out.println("list---------------------" + tagslist);
+    for (int i = 0; i < tagslist.size(); i++) {
+      for (int j = i + 1; j < tagslist.size(); j++) {
+        if (tagslist.get(i).equals(tagslist.get(j))) {
+          tagslist.remove(j);
+          j--;
+        }
+      }
+    }
+    for (String string : tagslist) {
+      System.out.println("-------------------" + string);
+    }
+
+  }
+
+  /**
+   * 去除前后的;.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testSplitTags2() throws Exception {
+    String tagStr = ";UI;";
+    tagStr = tagStr.startsWith(";") ? tagStr.substring(1) : tagStr;
+    tagStr = tagStr.endsWith(";") ? tagStr.substring(0, tagStr.length() - 1) : tagStr;
+    System.out.println(tagStr);
+  }
+
+  /**
+   * 测试特殊参数获取分页数据.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  public void testGetPageByUserIdOrderByDateDesc() throws Exception {
+    User user = new User();
+    user.setId(1);
+    Page<Topic> topics = topicService.getTopicsPageByUserId(user, 2, 10);
+    for (Topic topic : topics.getContent()) {
+      System.out.println(topic.getId());
+    }
   }
 }

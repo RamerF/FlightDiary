@@ -1,6 +1,3 @@
-/*
- *
- */
 package org.ramer.diary.domain;
 
 import java.util.Date;

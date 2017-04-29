@@ -1,0 +1,61 @@
+@CHARSET "UTF-8";
+
+html, h1, body, table, form, input ,span, tr, td {
+    transition: all 1s;
+}
+
+body {
+    /*     background-color: url("/FlightDiary/pictures/loginBack.jpg"); */
+    background-color: #009688;
+    color: rgba(0, 0, 0, 0.74);
+    font-family: Helvetica, Tahoma, Arial, "Hiragino    Sans    GB",
+        "Hiragino    Sans    GB    W3", "Microsoft    YaHei", STXihei, STHeiti,
+        Heiti, SimSun, sans-serif;
+}
+
+input {
+    border: none;
+    outline: none;
+    padding: 2px;
+    border-bottom: 2px solid #70BBF7;
+    width: 250px;
+    margin: 20px 10px;
+    font-size: 20px;
+}
+input[type='submit'],input[type='reset']{
+    width: 100px;
+    border: none;
+    box-shadow: 1px 1px 6px #333;
+    background: #2196f3;
+    color: #fff;
+    padding: 5px;
+}
+
+.container {
+    margin: 100px auto 0px;
+    width: 500px;
+    height: 300px;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, .3), 2px 2px 6px rgba(0, 0, 0, .3);
+}
+
+div {
+    position: relative;
+    background: #fff;
+    text-align: center;
+}
+
+.title {
+    text-align: center;
+    font-size: 40px;
+    padding: 15px;
+}
+
+
+.tag {
+    outline: none;
+    padding: 10px;
+    display: table;
+    font-size: 24px;
+    position: absolute;
+    margin-left: 23%;
+}

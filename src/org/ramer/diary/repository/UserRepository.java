@@ -9,6 +9,7 @@ import org.ramer.diary.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * @author ramer
@@ -52,22 +53,6 @@ public interface UserRepository
   User getByName(String username);
 
   /**
-   * 通过已加密邮箱获取用户
-   * @param id 用户ID
-   * @param email 已加密邮箱
-   * @return
-   */
-  User getByIdAndEmail(Integer id, String email);
-
-  /**
-   * 通过已加密密码获取用户
-   * @param id 用户ID
-   * @param password 已加密密码
-   * @return
-   */
-  User getByIdAndPassword(Integer id, String password);
-
-  /**
    * 通过邮箱获取用户信息
    *
    * @param email 邮箱
@@ -76,10 +61,13 @@ public interface UserRepository
   User getByEmail(String email);
 
   /**
-   * 统计发表分享最多的用户,并联合user表查询相关信息
-   * @return
+   * 统计发表分享最多的用户,并联合user表查询相关信息.
+   *
+   * @param start 记录开始的序号
+   * @param size 每页记录大小
+   * @return 用户的分页记录
    */
   @Query(value = "select *from user join (select user,count(id) as n from topic group by user) as t on "
-      + "t.user=id order by t.n desc", nativeQuery = true)
-  List<User> getByIdJoinTopicUserId();
+      + "t.user=id order by t.n desc limit :start,:size", nativeQuery = true)
+  List<User> getByIdJoinTopicUserId(@Param("start") int start, @Param("size") int size);
 }

@@ -7,38 +7,30 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="${pageContext.request.contextPath}/css/default.css"
-		rel="stylesheet">
-<link href="${pageContext.request.contextPath}/css/personal.css"
-		rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/default.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/personal.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/balloon.min.css" >
 <script src="${pageContext.request.contextPath}/js/jquery-2.1.4.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/js.cookie.js"></script>
 <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
 <script type="text/javascript">
  $(function() {
-     /* 指定城市信息的xml文件,全局变量 */
-     requestUrl = "${pageContext.request.contextPath}/xml/city.xml";
-  /* 记录滚动条的位置 */
-  /* 获取滚动条的位置 */
-  var scrollCookie = Cookies.get("scrollCookie_personal" +"${user.id}");
-  if (scrollCookie != null && scrollCookie !="") {
-   $("html,body").animate({
-    scrollTop : scrollCookie + "px"
-   }, 1000);
-  } else
-   Cookies.set("scrollCookie_personal"+"${user.id}", $(document).scrollTop("0px"));
-  $(window).scroll(function() {
-   Cookies.set("scrollCookie_personal"+"${user.id}", $(document).scrollTop());
-  });
+  /* 指定标签信息的xml文件,全局变量 */
+  path = "${pageContext.request.contextPath}";
+  userid = "${user.id}";
  })
 </script>
 <script src="${pageContext.request.contextPath}/js/ramer/personal.js"></script>
 <title>Personal Center</title>
 </head>
 <body>
-<!--  返回主页 -->
+<!--  返回-->
 <div class="return_link">
-    <a href="${pageContext.request.contextPath}/home">返回主页</a><br>
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/back.png" id="back">
+</div>
+<!--  返回主页-->
+<div class="return_home">
+        <img alt="error" src="${pageContext.request.contextPath}/pictures/home.png" id="home">
 </div>
 <!-- 用户信息面板 -->
 <div class="user_panel">
@@ -57,19 +49,19 @@
             <span> 微博: ${!empty user.weiboNum ? user.weiboNum : "无"}</span>
             <!-- 用户通知 -->
             <span>
-                <c:if test="${!empty user.notifyings }">
+                <c:if test="${!empty user.notifies || !empty user.readedNotifies }">
                     <a href="javascript:void(0)" id="showPrivMess">
                         <i class="icon-envelope"></i>
-                        <small class="notifyingCount">
-                            <sup>${notifyingCount}</sup>
+                        <small class="notifyCount">
+                            <sup>${notifyCount}</sup>
                         </small>
                     </a>
                 </c:if>
-                <c:if test="${empty user.notifyings}">
+                <c:if test="${empty user.notifies && empty user.readedNotifies}">
                     <a href="javascript:void(0)" id="showPrivMessNo">
                         <i class="icon-envelope-empty"></i>
-                        <small class="notifyingCount">
-                            <sup>${notifyingCount}</sup>
+                        <small class="notifyCount">
+                            <sup>${notifyCount}</sup>
                         </small>
                     </a>
                 </c:if>
@@ -98,24 +90,33 @@
 
 <!-- 私信面板 -->
 <div class="privMessPanel" id="privMessPanel">
- <c:forEach items="${user.notifyings}" var="notify">
-  <span>
-   <a href="${pageContext.request.contextPath}/user/personal/readPrivMess" class="readPrivMess">
-    <input type="hidden" value="${notify.id}" name="notifyId" class="notifyId">
-    ${notify.user.name } : ${notify.content}
+ <c:forEach items="${user.notifies}" var="notify">
+  <span class="unreadNotify notify">
+   <input type="hidden" value="${notify.id}" name="notifyId" class="notifyId">
+   <input type="hidden" value="${notify.notifiedUser.id}" name="notifiedUserId" class="notifiedUserId">
+   <a href="${pageContext.request.contextPath}/user/personal/${notify.user.id}"class="notifyUser">
+    ${notify.user.name } : 
+   </a>
+   ${notify.content}
     <sub>
       <fmt:formatDate value="${notify.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
+    </sub>
+    <img alt="error" src="${pageContext.request.contextPath }/pictures/new.png" class="newNotify">
+  </span>
+ </c:forEach>
+ <c:forEach items="${user.readedNotifies}" var="readedNotify">
+  <span class="notify">
+   <input type="hidden" value="${readedNotify.id}" name="notifyId" class="notifyId">
+   <input type="hidden" value="${readedNotify.notifiedUser.id}" name="notifiedUserId" class="notifiedUserId">
+   <a href="${pageContext.request.contextPath}/user/personal/${readedNotify.user.id}" class="readPrivMess">
+    ${readedNotify.user.name } : ${readedNotify.content}
+    <sub>
+      <fmt:formatDate value="${readedNotify.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
     </sub>
    </a>
   </span>
  </c:forEach>
 </div>
-<!-- 私信表单 -->
-<form
-        action="${pageContext.request.contextPath}/user/personal/readPrivMess"
-        method="post" id="sendPrivMessForm">
-    <input type="hidden" name="notifyId" id="notifyId">
-</form>
 
 <!-- 更新用户头像面板 -->
 <div class="update_head_panel">
@@ -129,6 +130,7 @@
         <input type="reset" value="收起" class="hiddenUpdateHeadPanel">
     </form>
 </div>
+
 <!-- 关注面板 -->
 <div class="follow_panel clearfix" id="followPanel">
     <c:if test="${empty user.follows }">
@@ -150,6 +152,7 @@
         </c:forEach>
     </c:if>
 </div>
+
 <!-- 收藏面板 -->
 <div class="favourite_panel" id="favouritePanel">
     <c:if test="${empty user.favourites }">
@@ -170,37 +173,43 @@
         </c:forEach>
     </c:if>
 </div>
+
 <!-- 发表分享面板 -->
 <div id="topic_panel" class="topic_panel">
     <form action="${pageContext.request.contextPath}/publish"
         method="post" enctype="multipart/form-data">
         <input type="hidden" name="personal" value="true">
         <textarea rows="7" cols="30" class="topic_content" name="content"></textarea>
+        <div class="tool">
+         <div id="addPosition" class="add_position" data-balloon="添加当前位置" data-balloon-pos="right">
+           <img alt="" src="${pageContext.request.contextPath}/pictures/position.png">
+         </div>
+         <div id="addTime" class="add_time" data-balloon="添加当前时间" data-balloon-pos="right">
+           <img alt="" src="${pageContext.request.contextPath}/pictures/calendar.png">
+         </div>
+        </div>
         <input class="choose_pic" type="text" placeholder="请选择一张图片" id="picName">
         <input type="file" name="picture" class="choose_file" accept="image/*" id="upPic">
         <div id="preview" class="preview"></div>
-        <div class="input_city_panel">
-            <span>城市:</span>
-            <select id="country">
-                <option value="no" id="optionNodeCountry" >国家</option>
-            </select>
-            <select id="city" name="city">
-                <option value="no" id="optionNodeCity">城市</option>
-            </select>
-            <input type="text" name="city2" class="input_city" placeholder="手动输入">
-            </div>
+        <div class="input_tag_panel">
+         <span>标签：</span>
+         <select id="tags">
+          <option value="no" id="optionTag">请选择</option>
+         </select>
+         <input type="text" name="tags" class="input_tags" placeholder="标签使用;隔开" >
+        </div>
         <input type="submit" value="分享">
         <input type="reset" value="收起" class="hiddenTopic">
     </form>
 </div>
 <!-- 显示个人分享 -->
-<c:if test="${empty user.topics}">
+<c:if test="${empty topicsPage.content}">
     <div class="no_topic">
         <strong>你还没有发布分享,现在开始记录你的生活吧 !</strong>
     </div>
 </c:if>
-<c:if test="${!empty user.topics}">
-    <c:forEach items="${user.topics}" var="topic">
+<c:if test="${!empty topicsPage.content}">
+    <c:forEach items="${topicsPage.content}" var="topic">
         <div class="show_topic">
             <div class="side">
                 <div class="day">
@@ -219,6 +228,17 @@
                         <p class="desc" style="height: 35px;"></p>
                     </c:if>
                     <div class="text">${topic.content }</div>
+                    <!-- 标签面板 -->
+                    <div class="tags_panel">
+                     <c:forEach items="${topic.tags}" var="tag">
+                       <i class="icon-tags"></i>
+                       <span class="tags">${tag}</span>
+                     </c:forEach>
+                    </div>
+                    <!-- 通过标签获取分享表单 -->
+                    <form action="${pageContext.request.contextPath}/home/tag" id="tagForm">
+                      <input type="text" name = "tag" id="tagName">
+                    </form>
                 </div>
             </div>
             <hr class="h_line">
@@ -254,7 +274,6 @@
                     <input type="reset" value="收起" class="hiddenCommentForm">
                 </form>
             </div>
-            <span class="errorMessage"></span>
             <!-- 删除用户评论表单 -->
             <form action="" method="post" class="delete_comment_form">
                 <input type="hidden" name="topic" value="${topic.id}">
@@ -309,5 +328,26 @@
         </div>
     </c:forEach>
 </c:if>
+
+<!-- 存储记录的总页数 -->
+<input id="totalPages" type="hidden" value="${topicsPage.totalPages }">
+<!-- 存储当前页号 -->
+<input id="number" type="hidden" value="${topicsPage.number}">
+<!-- 分页 -->
+<ul class="page_panel">
+  <li class="lastPage">
+    <a href="?pageNum=${topicsPage.number + 1 - 1}" id="lastPage">
+      <img alt="error" src="${pageContext.request.contextPath}/pictures/previous.png" >
+    </a>
+  </li>
+  <li class="nextPage">
+    <a href="?pageNum=${topicsPage.number + 1 + 1}" id="nextPage">
+      <img alt="error" src="${pageContext.request.contextPath}/pictures/next.png" >
+    </a>
+  </li>
+</ul>
+
+<input type="hidden" id="positionVal">
+
 </body>
 </html>

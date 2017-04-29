@@ -1,9 +1,6 @@
-/*
- *
- */
-
 package org.ramer.diary.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.Transient;
 
 /**
  * 用户.
@@ -23,7 +21,12 @@ import javax.persistence.OrderBy;
  * @author ramer
  */
 @Entity
-public class User {
+public class User implements Serializable {
+
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
   /** UID. */
   @Id
@@ -40,7 +43,7 @@ public class User {
   private String says;
 
   /** 用户名. */
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String name;
 
   /** 用户别名. */
@@ -48,7 +51,7 @@ public class User {
   private String alias;
 
   /** 密码. */
-  @Column
+  @Column(nullable = false)
   private String password;
 
   /** qq号. */
@@ -60,7 +63,7 @@ public class User {
   private String weiboNum;
 
   /** 邮箱. */
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String email;
 
   /** 过期时间. */
@@ -82,6 +85,10 @@ public class User {
   @Column(length = 11)
   private String telephone;
 
+  /** The sessionid. */
+  @Column
+  private String sessionid;
+
   // 一对多策略
   /** 分享. */
   // 按时间降序排列
@@ -100,12 +107,30 @@ public class User {
   /** 通知. */
   @OrderBy(value = "date desc")
   @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "notifiedUser", fetch = FetchType.LAZY)
-  private Set<Notifying> notifyings;
+  private Set<Notify> notifies;
+  @Transient
+  private Set<Notify> readedNotifies = new HashSet<>();
 
   /**
    * 空构造器
    */
   public User() {
+  }
+
+  public void setSessionid(String sessionid) {
+    this.sessionid = sessionid;
+  }
+
+  public String getSessionid() {
+    return sessionid;
+  }
+
+  public Set<Notify> getReadedNotifies() {
+    return readedNotifies;
+  }
+
+  public void setReadedNotifies(Set<Notify> readedNotifies) {
+    this.readedNotifies = readedNotifies;
   }
 
   /**
@@ -145,21 +170,21 @@ public class User {
   }
 
   /**
-   * Sets the notifyings.
+   * Sets the notifies.
    *
-   * @param notifyings the new notifyings
+   * @param notifies the new notifies
    */
-  public void setNotifyings(Set<Notifying> notifyings) {
-    this.notifyings = notifyings;
+  public void setNotifies(Set<Notify> notifies) {
+    this.notifies = notifies;
   }
 
   /**
-   * Gets the notifyings.
+   * Gets the notifies.
    *
-   * @return the notifyings
+   * @return the notifies
    */
-  public Set<Notifying> getNotifyings() {
-    return notifyings;
+  public Set<Notify> getNotifies() {
+    return notifies;
   }
 
   /**
@@ -323,6 +348,7 @@ public class User {
   public void setName(String name) {
     this.name = name;
   }
+
   public String getPassword() {
     return password;
   }
@@ -354,6 +380,7 @@ public class User {
   public void setAddress(String address) {
     this.address = address;
   }
+
   public String getTelephone() {
     return telephone;
   }
@@ -361,6 +388,7 @@ public class User {
   public void setTelephone(String telephone) {
     this.telephone = telephone;
   }
+
   public Set<Topic> getTopics() {
     return topics;
   }
@@ -372,7 +400,8 @@ public class User {
   @Override
   public String toString() {
     return "User [id=" + id + ", name=" + name + ", topics=" + topics + ", follows=" + follows
-        + ", favourites=" + favourites + ", notifyings=" + notifyings + "]";
+        + ", favourites=" + favourites + ", notifies=" + notifies + " , readedNotifies="
+        + readedNotifies + "]";
   }
 
   @Override
@@ -387,7 +416,7 @@ public class User {
     result = prime * result + ((head == null) ? 0 : head.hashCode());
     result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
-    result = prime * result + ((notifyings == null) ? 0 : notifyings.hashCode());
+    result = prime * result + ((notifies == null) ? 0 : notifies.hashCode());
     result = prime * result + ((password == null) ? 0 : password.hashCode());
     result = prime * result + ((qqNum == null) ? 0 : qqNum.hashCode());
     result = prime * result + ((says == null) ? 0 : says.hashCode());
@@ -466,11 +495,11 @@ public class User {
     } else if (!name.equals(other.name)) {
       return false;
     }
-    if (notifyings == null) {
-      if (other.notifyings != null) {
+    if (notifies == null) {
+      if (other.notifies != null) {
         return false;
       }
-    } else if (!notifyings.equals(other.notifyings)) {
+    } else if (!notifies.equals(other.notifies)) {
       return false;
     }
     if (password == null) {
