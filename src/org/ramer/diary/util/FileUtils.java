@@ -101,11 +101,9 @@ public class FileUtils {
       location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
           + session.getServletContext().getServletContextName()).getCanonicalPath();
     } else {
-      location = new File(
-          "D:/workspace/eclipse/" + session.getServletContext().getServletContextName())
-              .getCanonicalPath();
+      location = new File(session.getServletContext().getRealPath("/")).getAbsolutePath();
     }
-    String rootdir = location + separator + "WebContent" + separator + "pictures";
+    String rootdir = location + separator + "pictures";
     User user = (User) session.getAttribute("user");
     System.out.println("用户名: " + user.getName());
     String username = user.getName();
