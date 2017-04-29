@@ -1,0 +1,12 @@
+@CHARSET "UTF-8";
+
+body {
+    background-image: url("/FlightDiary/pictures/loginBack.jpg");
+}
+.container{
+    margin: 100px auto 0px;
+    width: 500px;
+    height: 300px;
+    border: 1px solid ;
+    
+}

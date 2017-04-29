@@ -1,6 +1,3 @@
-/*
- *
- */
 package org.ramer.diary.domain;
 
 import javax.persistence.Cacheable;

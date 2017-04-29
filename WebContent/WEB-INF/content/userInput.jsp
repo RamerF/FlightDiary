@@ -12,7 +12,8 @@
 <link rel="stylesheet"
   href="${pageContext.request.contextPath}/css/userInput.css">
 <script src="${pageContext.request.contextPath}/js/jquery-2.1.4.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+<%-- <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script> --%>
+<script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
 <script type="text/javascript">
 var path = "";
 $(function() {
@@ -36,11 +37,10 @@ $(function() {
         <span class="label">用户名 : </span>
         <form:input path="name" class="username" id ="username" placeholder="用户名 / 邮箱" />
         <span id="message"></span>
-        <br>
         <c:if test="${empty user.id}">
-          <span class="label">密码 : </span>
+          <span class="label" >密码 : </span>
           <form:password path="password" id="password" class="password"/>
-          <br>
+          <div id="showPassword"></div>
         </c:if>
         <!-- 用户注册面板 -->
         <div class="reg_panel" id="regPanel">
@@ -53,32 +53,33 @@ $(function() {
          </div>
         <div class="update_panel">
           <span class="label">电话号码 : </span>
-          <form:input path="telephone" />
+          <form:input path="telephone" id="telephone"/>
          
           <br> 
           <span class="label">年龄 : </span>
-          <form:input path="age" />
+          <form:input path="age" id="age"/>
           
           <br> 
           <span class="label">
               <img id="preview" class="preview" alt="error" onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/noPic.png'"
                 src="${pageContext.request.contextPath}/${user.head}">
           </span>
+          <input type="hidden" name="checkFile" id="checkFile">
           <input type="text" class="picName" placeholder="请选择一张图片">
           <input type="file" class="userHead" id="userHead" name="picture" /> 
           
           <br>
           <span class="label">QQ : </span>
-          <form:input path="qqNum" />
+          <form:input path="qqNum" id="qqNum"/>
           
           <br>
           <span class="label">微博 : </span>
-          <form:input path="weiboNum" />
+          <form:input path="weiboNum" id="weiboNum"/>
           
           <br>
           <span class="label adjustment">性别 : </span>
-          <form:radiobutton path="sex" label="男" value="M" class="radio"></form:radiobutton>
-          <form:radiobutton path="sex" label="女" value="F" class="radio"></form:radiobutton>
+          <form:radiobutton path="sex" label="男" value="M" class="radio" ></form:radiobutton>
+          <form:radiobutton path="sex" label="女" value="F" class="radio" ></form:radiobutton>
         </div>
         
         <div class="forget_pass" id="forgetPass">
@@ -86,7 +87,6 @@ $(function() {
             <span>忘记密码</span>
           </a>
         </div>
-        <div id="message3"></div>
         <div class="toggle">
             <input type="reset" value="重置" />
             <input type="submit" value="登录" />

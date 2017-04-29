@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -27,12 +29,13 @@ public interface TopicRepository extends PagingAndSortingRepository<Topic, Integ
   int getCountByUser(@Param("user") User user);
 
   /**
-   * 通过用户id,获取topic
-   * @param user
-   * @param id
+   * 通过用户id,获取topic.
+   *
+   * @param user the user
+   * @param pageable 分页参数
    * @return 返回分享的集合topics
    */
-  List<Topic> getByUserOrderByDateAsc(User user);
+  Page<Topic> getByUserOrderByDateDesc(User user, Pageable pageable);
 
   /**
    * 通过分享id,获取topic
@@ -68,17 +71,39 @@ public interface TopicRepository extends PagingAndSortingRepository<Topic, Integ
   Topic getByIdAndUser(Integer topic_id, User user);
 
   /**
-   * 获取热门城市,并按照出现的次数排序
-   * @return 非空城市的集合
+   * 获取热门标签,并按照出现的次数排序
+   * @return 非空标签的集合
    */
-  @Query(value = "select city from (select city,count(city) as n from topic where city!='' group by"
-      + " city) as t order by t.n desc", nativeQuery = true)
-  List<String> getOrderedCity();
+  @Query(value = "select tags from (select tags,count(tags) as n from topic where tags!='' group by"
+      + " tags) as t order by t.n desc", nativeQuery = true)
+  List<String> getOrderedTags();
 
   /**
-   * 通过城市获取分享
-   * @param city 城市名
-   * @return
+   * 获取五个热门标签,并按照出现的次数排序
+   * @return 非空标签的集合
    */
-  List<Topic> getByCity(String city);
+  @Query(value = "select tags from (select tags,count(tags) as n from topic where tags!='' group by"
+      + " tags) as t order by t.n desc limit 5", nativeQuery = true)
+  List<String> getOrderedTagsLimit();
+
+  /**
+   * 通过标签获取分享.
+   *
+   * @param tags 标签
+   * @param start 记录开始的序号
+   * @param size 记录总数
+   * @return 分享分页数据
+   */
+  @Query(value = "select *from topic where tags like %:tags% limit :start,:size", nativeQuery = true)
+  List<Topic> getByTagsLimit(@Param("tags") String tags, @Param("start") int start,
+      @Param("size") int size);
+
+  /**
+   * 获取标签的总数.
+   *
+   * @param tags the tags
+   * @return the count by tag
+   */
+  @Query(value = "select count(id) from Topic where tags like %:tags%")
+  long getCountByTag(@Param("tags") String tags);
 }

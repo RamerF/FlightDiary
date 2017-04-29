@@ -35,7 +35,7 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
         break;
 
       case "LinkInvalidException":
-        errorMessage = (errorMessage == null || errorMessage == "") ? "链接已失效" : errorMessage;
+        errorMessage = (errorMessage == null || errorMessage == "") ? "手速太慢，链接已失效啦" : errorMessage;
         break;
 
       case "NoPictureException":
@@ -64,12 +64,21 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
       case "PasswordNotMatchException":
         errorMessage = (errorMessage == null || errorMessage == "") ? "密码不匹配" : errorMessage;
         break;
-      case "EmailFormatErrorException":
-        errorMessage = (errorMessage == null || errorMessage == "") ? "邮箱格式错误" : errorMessage;
+      case "SQLExecException":
+        errorMessage = (errorMessage == null || errorMessage == "") ? "系统无法执行当前操作，请稍后再试"
+            : errorMessage;
+        break;
+      case "DefaultException":
+        errorMessage = (errorMessage == null || errorMessage == "") ? "系统被程序猿玩儿坏啦，看看其他东东坏没  ^_^\""
+            : errorMessage;
+        break;
+      case "EmailExistException":
+        errorMessage = (errorMessage == null || errorMessage == "") ? "邮箱已经有了！到底是不是你的！"
+            : errorMessage;
         break;
 
       default:
-        errorMessage = "系统出错了";
+        errorMessage = "系统被程序猿玩儿坏啦，看看其他东东坏没  ^_^\"";
         break;
     }
     modelAndView.addObject("errorMessage", errorMessage);

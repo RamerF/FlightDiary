@@ -39,12 +39,13 @@ public class Encrypt {
       }
       stringBuilder.append(Integer.toHexString(val));
     }
-    //如果是邮箱特殊处理
+    
+    //如果是邮箱特殊处理 
     if (isEmail) {
-      //首字符
+      //首字符 
       char c = string.charAt(0);
       String startString = String.valueOf(c);
-      //定位@，取index-2 到结束的字符串
+      //定位@，取index-2 到结束的字符串 
       int n = string.indexOf("@");
       String endString = string.substring(n - 2, string.length());
       string = doubleEncrypet(stringBuilder.toString(), startString, endString);
@@ -64,7 +65,7 @@ public class Encrypt {
     StringBuilder encryptString = new StringBuilder();
     //取五位字符
     string = string.substring(10, 15);
-    //如果是邮箱则该字符串有值
+    //如果是邮箱则该字符串有值 
     if (emailString.length > 0) {
       encryptString.append(emailString[0]).append(string).append(emailString[1]);
       System.out.println("邮箱加密完成： " + encryptString);
