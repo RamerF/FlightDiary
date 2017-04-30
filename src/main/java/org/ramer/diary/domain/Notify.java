@@ -13,175 +13,53 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.alibaba.fastjson.JSON;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * 用户通知.
  *
  * @author ramer
  */
 @Entity
-public class Notify {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Notify{
 
-  /** The id. */
-  @Id
-  @Column
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+    /** The id. */
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-  /** The content. */
-  @Column(nullable = false)
-  private String content;
+    /** The content. */
+    @Column(nullable = false)
+    private String content;
 
-  /** The date. */
-  @Temporal(value = TemporalType.TIMESTAMP)
-  @Column(nullable = false)
-  private Date date;
+    /** The date. */
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date date;
 
-  /** The user. */
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user", nullable = false)
-  private User user;
+    /** The user. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user", nullable = false)
+    private User user;
 
-  /** The notified user. */
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "notified_user", nullable = false)
-  private User notifiedUser;
+    /** The notified user. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notified_user", nullable = false)
+    private User notifiedUser;
 
-  /** The has check. */
-  @Column(name = "has_check", nullable = false)
-  private String hasCheck;
+    /** The has check. */
+    @Column(name = "has_check", nullable = false)
+    private String hasCheck;
 
-  /**
-   * Gets the checks for check.
-   *
-   * @return the checks for check
-   */
-  public String getHasCheck() {
-    return hasCheck;
-  }
-
-  /**
-   * Sets the checks for check.
-   *
-   * @param hasCheck the new checks for check
-   */
-  public void setHasCheck(String hasCheck) {
-    this.hasCheck = hasCheck;
-  }
-
-  /**
-   * Sets the notified user.
-   *
-   * @param notifiedUser the new notified user
-   */
-  public void setNotifiedUser(User notifiedUser) {
-    this.notifiedUser = notifiedUser;
-  }
-
-  /**
-   * Gets the notified user.
-   *
-   * @return the notified user
-   */
-  public User getNotifiedUser() {
-    return notifiedUser;
-  }
-
-  /**
-   * Gets the id.
-   *
-   * @return the id
-   */
-  public Integer getId() {
-    return id;
-  }
-
-  /**
-   * Sets the id.
-   *
-   * @param id the new id
-   */
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  /**
-   * Gets the content.
-   *
-   * @return the content
-   */
-  public String getContent() {
-    return content;
-  }
-
-  /**
-   * Sets the content.
-   *
-   * @param content the new content
-   */
-  public void setContent(String content) {
-    this.content = content;
-  }
-
-  /**
-   * Gets the date.
-   *
-   * @return the date
-   */
-  public Date getDate() {
-    return date;
-  }
-
-  /**
-   * Sets the date.
-   *
-   * @param date the new date
-   */
-  public void setDate(Date date) {
-    this.date = date;
-  }
-
-  /**
-   * Gets the user.
-   *
-   * @return the user
-   */
-  public User getUser() {
-    return user;
-  }
-
-  /**
-   * Sets the user.
-   *
-   * @param user the new user
-   */
-  public void setUser(User user) {
-    this.user = user;
-  }
-
-  /**
-   * Instantiates a new notify.
-   */
-  public Notify() {
-  }
-
-  /**
-   * Instantiates a new notify.
-   *
-   * @param id the id
-   * @param content the content
-   * @param date the date
-   * @param user the user
-   * @param notifiedUser the notified user
-   * @param hasCheck the has check
-   */
-  public Notify(Integer id, String content, Date date, User user, User notifiedUser,
-      String hasCheck) {
-    this.id = id;
-    this.content = content;
-    this.date = date;
-    this.user = user;
-    this.notifiedUser = notifiedUser;
-    this.hasCheck = hasCheck;
-  }
-
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
 }
