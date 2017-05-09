@@ -6,7 +6,6 @@ package org.ramer.diary.handler.user;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.FavouriteService;
-import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 
 import java.io.IOException;
@@ -30,8 +29,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class AddFavourite{
     @Autowired
     private FavouriteService favouriteService;
-    @Autowired
-    private UserService userService;
 
     /**
      *
@@ -48,7 +45,6 @@ public class AddFavourite{
             HttpSession session) throws IOException {
         response.setCharacterEncoding("UTF-8");
         if (!UserUtils.checkLogin(session)) {
-            User u = userService.getById(((User) session.getAttribute("user")).getId());
             //            if (!UserUtils.multiLogin(session, u)) {
             //                response.getWriter().write("账号异地登陆！ 当前登陆失效，如果不是本人，请及时修改密码 !");
             //                return;
