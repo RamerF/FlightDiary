@@ -65,3 +65,5 @@ bin/*
 .springBeans
 .classpath
 /target/
+.idea/*
+FlightDiary.iml
