@@ -1,24 +1,24 @@
 package org.ramer.diary.controller.user;
 
-import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
-import org.ramer.diary.exception.UserNotLoginException;
-import org.ramer.diary.service.impl.PraiseServiceImpl;
-import org.ramer.diary.service.impl.UserServiceImpl;
-import org.ramer.diary.util.UserUtils;
-
 import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.ramer.diary.domain.Topic;
+import org.ramer.diary.domain.User;
+import org.ramer.diary.exception.UserNotLoginException;
+import org.ramer.diary.service.PraiseService;
+import org.ramer.diary.service.UserService;
+import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 点赞和取消点赞.
@@ -31,9 +31,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class AddPraise{
 
     @Autowired
-    private PraiseServiceImpl praiseService;
+    private PraiseService praiseService;
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     /**
      * 用户点赞.

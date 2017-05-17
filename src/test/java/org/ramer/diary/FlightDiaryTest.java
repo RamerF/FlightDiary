@@ -7,7 +7,7 @@ import org.ramer.diary.constant.PageConstantOld;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.TopicService;
-import org.ramer.diary.service.impl.UserServiceImpl;
+import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +86,7 @@ public class FlightDiaryTest{
     }
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     /**
      * 测试获取达人:  发表最多分享的用户
