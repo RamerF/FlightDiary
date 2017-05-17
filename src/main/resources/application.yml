@@ -1,0 +1,60 @@
+spring:
+  jackson:
+    serialization:
+      indent_output: true
+  datasource:
+    username: dev
+    password: diary
+    url: jdbc:mysql://www.ramerf.cn:3306/flightdiary
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    sessionStatEnable: true
+    profileEnable: true
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    testWhileIdle: true
+    validationQuery: select 1
+    maxOpenPreparedStatements: 20
+  main:
+    banner-mode: off
+  output:
+    ansi:
+      enabled: always
+  thymeleaf:
+    mode: HTML5
+    cache: false
+logging:
+  level:
+    root: info
+    org.ramer.diary: debug
+    org.ramer.diary.repository: debug
+    org.springframework.boot.autoconfigure: info
+    jdbc.resultset: off
+    jdbc.audit: off
+    jdbc.sqlonly: off
+    jdbc.sqltiming: info
+    jdbc.connection: info
+server:
+  session:
+    tracking-modes: COOKIE
+  port: 80
+diary:
+  topic:
+    page:
+      size: 36
+  topPeople:
+    page:
+      size: 6
+  personal:
+    topic:
+      page:
+        size: 3
+  tags:
+    xml:
+      position: /xml/tags.xml
+  page:
+    scroll: true
