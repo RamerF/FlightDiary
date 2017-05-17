@@ -1,8 +1,6 @@
 package org.ramer.diary.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Favourite;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -11,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+@Slf4j
 @Service
 public class FavouriteService {
 
@@ -27,7 +28,7 @@ public class FavouriteService {
   public boolean favourite(User user, Topic topic) {
     Favourite f = favouriteRepository.getByUserAndTopic(user, topic);
     if (f != null) {
-      System.out.println("重复添加收藏");
+      log.debug("重复添加收藏");
       return false;
     }
     Favourite favourite = new Favourite();

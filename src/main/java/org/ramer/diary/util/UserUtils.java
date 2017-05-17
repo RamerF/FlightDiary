@@ -1,6 +1,7 @@
 package org.ramer.diary.util;
 
-import org.ramer.diary.constant.MessageConstant;
+import lombok.extern.slf4j.Slf4j;
+import org.ramer.diary.constant.MessageConstantOld;
 import org.ramer.diary.domain.User;
 
 import javax.servlet.http.HttpSession;
@@ -14,9 +15,10 @@ import javax.servlet.http.HttpSession;
  * @author ramer
  *
  */
+@Slf4j
 public class UserUtils{
     //默认成功信息
-    private static final String SUCCESSMESSAGE = MessageConstant.SUCCESSMESSAGE.toString();
+    private static final String SUCCESSMESSAGE = MessageConstantOld.SUCCESSMESSAGE.toString();
 
     /**
      * 操作成功.
@@ -39,13 +41,13 @@ public class UserUtils{
      * @return 已登录返回true,否则返回false
      */
     public static boolean checkLogin(HttpSession session) {
-        System.out.println("登录检测");
+        log.debug("登录检测");
         if (session.getAttribute("user") != null && ((User) session.getAttribute("user")).getId() != null) {
-            System.out.println("\t已登录");
+            log.debug("\t已登录");
             return true;
         }
         session.setAttribute("user", new User());
-        System.out.println("\t未登录");
+        log.debug("\t未登录");
         return false;
     }
 
@@ -56,13 +58,13 @@ public class UserUtils{
      * @return 已登录返回true,否则返回false
      */
     public static boolean multiLogin(HttpSession session, User user) {
-        System.out.println("登录检测");
+        log.debug("登录检测");
         if (session.getId().equals(user.getSessionid())) {
-            System.out.println("\t已登录");
+            log.debug("\t已登录");
             return true;
         }
         session.setAttribute("user", new User());
-        System.out.println("\t未登录");
+        log.debug("\t未登录");
         return false;
     }
 }

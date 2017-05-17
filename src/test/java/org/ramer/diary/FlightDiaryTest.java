@@ -1,35 +1,28 @@
 package org.ramer.diary;
-import org.ramer.diary.constant.PageConstant;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.ramer.diary.constant.PageConstantOld;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.Pagination;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 项目测试类
  * @author ramer
  *
  */
-@ContextConfiguration("/applicationContext.xml")
+@Slf4j
 @RunWith(value = SpringJUnit4ClassRunner.class)
 @Transactional
 public class FlightDiaryTest{
@@ -44,7 +37,7 @@ public class FlightDiaryTest{
     public void testSimpleDateFormat() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
         String date = simpleDateFormat.format(new Date());
-        System.out.println(date);
+        log.debug(date);
     }
 
     /**
@@ -53,7 +46,7 @@ public class FlightDiaryTest{
     @Test
     public void testEncrypt() {
         String string = Encrypt.execEncrypt("Jelly", false);
-        System.out.println("string = " + string);
+        log.debug("string = " + string);
     }
 
     /**
@@ -67,10 +60,10 @@ public class FlightDiaryTest{
         String match = null;
         match = scanner.next();
         while (!match.matches(regex)) {
-            System.out.println("string = " + match);
+            log.debug("string = " + match);
             match = scanner.next();
         }
-        System.out.println("true");
+        log.debug("true");
     }
 
     /**
@@ -80,7 +73,7 @@ public class FlightDiaryTest{
     public void testExpireTime() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, 5);
-        System.out.println(calendar.get(Calendar.MINUTE));
+        log.debug("{}", calendar.get(Calendar.MINUTE));
     }
 
     /**
@@ -88,7 +81,7 @@ public class FlightDiaryTest{
      */
     @Test
     public void testPageConstant() {
-        System.out.println(PageConstant.HOME.toString());
+        log.debug(PageConstantOld.HOME.toString());
     }
 
     @Autowired
@@ -101,9 +94,9 @@ public class FlightDiaryTest{
     public void testGetTopPeople() {
         Pagination<User> pageUser = userService.getTopPeople(1, 3);
         List<User> users = pageUser.getContent();
-        System.out.println("当前第 " + pageUser.getNumber() + "页");
+        log.debug("当前第 " + pageUser.getNumber() + "页");
         for (User user : users) {
-            System.out.println("name : " + user.getName());
+            log.debug("name : " + user.getName());
         }
     }
 
@@ -115,7 +108,7 @@ public class FlightDiaryTest{
         Pagination<Topic> pageTopic = topicService.getTopicsPageByTags("重庆", 2, 4);
         List<Topic> topics = pageTopic.getContent();
         for (Topic topic : topics) {
-            System.out.println("name : " + topic.getContent());
+            log.debug("name : " + topic.getContent());
         }
     }
 
@@ -125,11 +118,11 @@ public class FlightDiaryTest{
     @Test
     public void testGetAllTags() {
         List<String> tags = topicService.getAllTags();
-        System.out.println("标签名 :  ");
+        log.debug("标签名 :  ");
         for (String tag : tags) {
-            System.out.println("\t" + tag);
+            log.debug("\t" + tag);
         }
-        System.out.println("----------------------\n" + "第一个标签 :  " + tags.iterator().next());
+        log.debug("----------------------\n" + "第一个标签 :  " + tags.iterator().next());
     }
 
     /**
@@ -151,7 +144,7 @@ public class FlightDiaryTest{
         String[] strings = stringBuilder.toString().split(",");
         List<String> tagslist = Arrays.asList(strings);
         tagslist = new ArrayList<>(tagslist);
-        System.out.println("list---------------------" + tagslist);
+        log.debug("list---------------------" + tagslist);
         for (int i = 0; i < tagslist.size(); i++) {
             for (int j = i + 1; j < tagslist.size(); j++) {
                 if (tagslist.get(i).equals(tagslist.get(j))) {
@@ -161,7 +154,7 @@ public class FlightDiaryTest{
             }
         }
         for (String string : tagslist) {
-            System.out.println("-------------------" + string);
+            log.debug("-------------------" + string);
         }
 
     }
@@ -176,7 +169,7 @@ public class FlightDiaryTest{
         String tagStr = ";UI;";
         tagStr = tagStr.startsWith(";") ? tagStr.substring(1) : tagStr;
         tagStr = tagStr.endsWith(";") ? tagStr.substring(0, tagStr.length() - 1) : tagStr;
-        System.out.println(tagStr);
+        log.debug(tagStr);
     }
 
     /**
@@ -190,7 +183,7 @@ public class FlightDiaryTest{
         user.setId(1);
         Page<Topic> topics = topicService.getTopicsPageByUserId(user, 2, 10);
         for (Topic topic : topics.getContent()) {
-            System.out.println(topic.getId());
+            log.debug("{}", topic.getId());
         }
     }
 }

@@ -3,6 +3,7 @@
  */
 package org.ramer.diary.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.repository.FeedBackRepository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author ramer
  *
  */
+@Slf4j
 @Service
 public class UserService{
     @Autowired
@@ -91,10 +93,10 @@ public class UserService{
     public User getByName(String username) {
         String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
         if (username.matches(regex)) {
-            System.out.println("邮箱");
+            log.debug("邮箱");
             return userRepository.getByEmail(Encrypt.execEncrypt(username, true));
         }
-        System.out.println("用户名");
+        log.debug("用户名");
         return userRepository.getByName(username);
     }
 

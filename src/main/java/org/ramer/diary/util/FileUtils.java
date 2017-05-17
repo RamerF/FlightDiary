@@ -1,31 +1,23 @@
 package org.ramer.diary.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpSession;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpSession;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 文件操作工具类，包含常用的静态方法：
@@ -38,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author ramer
  *
  */
+@Slf4j
 public class FileUtils{
     /**
      * 删除分享图片.
@@ -64,7 +57,7 @@ public class FileUtils{
         String alias = user.getAlias();
         String picture = topic.getPicture();
         String pictureName = picture.substring(picture.lastIndexOf(separator) + 1);
-        System.out.println("rootdir:\n\t" + rootdir + "\npictureName:\n\t" + pictureName);
+        log.debug("rootdir:\n\t" + rootdir + "\npictureName:\n\t" + pictureName);
         String realPath = rootdir + separator + username + separator + pictureName;
 
         // 如果用户名中含有中文,路径是别名
@@ -73,7 +66,7 @@ public class FileUtils{
 
         }
         File file = new File(realPath);
-        System.out.println("删除文件 : " + file.getAbsolutePath());
+        log.debug("删除文件 : " + file.getAbsolutePath());
         return file.exists() ? file.delete() : true;
     }
 
@@ -102,7 +95,7 @@ public class FileUtils{
         }
         String rootdir = location + separator + "pictures" + separator + "publish";
         User user = (User) session.getAttribute("user");
-        System.out.println("用户名: " + user.getName());
+        log.debug("用户名: " + user.getName());
         String username = user.getName();
         String alias = user.getAlias();
         File userFolder = new File(rootdir + separator + username);
@@ -129,7 +122,7 @@ public class FileUtils{
                 pathname = path + alias + suffix;
             }
         }
-        System.out.println("上传的图片信息 : \n\t" + pathname);
+        log.debug("上传的图片信息 : \n\t" + pathname);
         File saveFile = new File(pathname);
         saveFile.createNewFile();
         InputStream inputStream = file.getInputStream();
@@ -150,7 +143,7 @@ public class FileUtils{
                 pictureUrl = "pictures" + separator + "publish" + separator + alias + separator + alias + suffix;
             }
         }
-        System.out.println("数据库中的图片路径:" + pictureUrl);
+        log.debug("数据库中的图片路径:" + pictureUrl);
         return pictureUrl;
     }
 

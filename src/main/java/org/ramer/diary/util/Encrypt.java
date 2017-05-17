@@ -3,6 +3,8 @@
  */
 package org.ramer.diary.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -10,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
  * 加密类
  * @author ramer
  */
+@Slf4j
 public class Encrypt{
 
     /**
@@ -23,7 +26,7 @@ public class Encrypt{
         try {
             messageDigest = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("加密出现错误");
+            log.debug("加密出现错误");
         }
         char[] charArr = string.toCharArray();
         byte[] byteArr = new byte[charArr.length];
@@ -70,7 +73,7 @@ public class Encrypt{
         //如果是邮箱则该字符串有值
         if (emailString.length > 0) {
             encryptString.append(emailString[0]).append(string).append(emailString[1]);
-            System.out.println("邮箱加密完成： " + encryptString);
+            log.debug("邮箱加密完成： " + encryptString);
             return encryptString.toString();
         }
         String string2 = "ramer";

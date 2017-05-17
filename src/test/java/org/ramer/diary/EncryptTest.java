@@ -1,4 +1,5 @@
 package org.ramer.diary;
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.util.Encrypt;
 
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.junit.Test;
  * @author ramer
  *
  */
+@Slf4j
 public class EncryptTest{
 
     /**
@@ -16,9 +18,9 @@ public class EncryptTest{
     @Test
     public void testEncrypt() {
         String string = "1390635973@qq.com";
-        System.out.println("加密字符串： " + string);
+        log.debug("加密字符串： " + string);
         String encoded = Encrypt.execEncrypt(string, true);
-        System.out.println(encoded);
+        log.debug(encoded);
     }
 
 }
