@@ -1,22 +1,16 @@
 package org.ramer.diary.controller.user;
 
-import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
-import org.ramer.diary.exception.UserNotExistException;
-import org.ramer.diary.service.FavouriteService;
-import org.ramer.diary.service.FollowService;
-import org.ramer.diary.service.PraiseService;
-import org.ramer.diary.service.TopicService;
-import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.UserUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.ramer.diary.domain.Topic;
+import org.ramer.diary.domain.User;
+import org.ramer.diary.exception.UserNotExistException;
+import org.ramer.diary.service.*;
+import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -25,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 浏览他人主页或分享.

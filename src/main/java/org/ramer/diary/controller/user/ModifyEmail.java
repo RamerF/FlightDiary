@@ -7,7 +7,7 @@ import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.EmailExistException;
 import org.ramer.diary.exception.LinkInvalidException;
 import org.ramer.diary.exception.UserNotLoginException;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.impl.UserServiceImpl;
 import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.MailUtils;
 import org.ramer.diary.util.UserUtils;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class ModifyEmail{
 
     @Autowired
-    UserService userService;
+    UserServiceImpl userService;
     //全局成功页面
     final String SUCCESS = PageConstantOld.SUCCESS.toString();
 

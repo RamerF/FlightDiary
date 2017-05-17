@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.UserNotLoginException;
-import org.ramer.diary.service.PraiseService;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.impl.PraiseServiceImpl;
+import org.ramer.diary.service.impl.UserServiceImpl;
 import org.ramer.diary.util.UserUtils;
 
 import java.io.IOException;
@@ -31,9 +31,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class AddPraise{
 
     @Autowired
-    private PraiseService praiseService;
+    private PraiseServiceImpl praiseService;
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     /**
      * 用户点赞.

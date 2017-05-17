@@ -3,16 +3,15 @@
  */
 package org.ramer.diary.controller.user;
 
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
-import org.ramer.diary.service.FavouriteService;
-import org.ramer.diary.util.UserUtils;
-
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.ramer.diary.domain.Topic;
+import org.ramer.diary.domain.User;
+import org.ramer.diary.service.FavouriteService;
+import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

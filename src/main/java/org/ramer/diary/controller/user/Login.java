@@ -3,7 +3,7 @@ package org.ramer.diary.controller.user;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.impl.UserServiceImpl;
 import org.ramer.diary.util.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,7 @@ import java.util.Map;
 @Controller
 public class Login{
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     /**
      * 用户登录.

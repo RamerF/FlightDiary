@@ -11,18 +11,16 @@ import org.ramer.diary.service.CommentService;
 import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
-
-import java.util.Date;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 评论和删除评论.
@@ -48,9 +46,7 @@ public class AddComment{
      * @param content 分享内容
      * @param map the map
      * @param session the session
-     * @param response the response
      * @return 返回到他人主页或某个分享页面
-     * @throws IOException Signals that an I/O exception has occurred.
      */
     @RequestMapping("/user/topic/comment/{topic_id}")
     public String comment(@PathVariable("topic_id") Integer topic_id, @RequestParam("content") String content,

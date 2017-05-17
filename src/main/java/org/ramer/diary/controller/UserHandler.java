@@ -1,6 +1,11 @@
 package org.ramer.diary.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -13,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.Date;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用户控制器：验证邮箱和用户名，更新前获取用户，实时动态和通知，滚动翻页.
@@ -41,8 +43,6 @@ public class UserHandler{
      * @param user 当更新时,表示更新用户
      * @param username 当前用户输入或自动填充的用户名
      * @param response the response
-     * @param session the session
-     * @param map the map
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @RequestMapping("/user/validateUserName")
