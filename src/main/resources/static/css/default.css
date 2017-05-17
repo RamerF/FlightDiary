@@ -16,18 +16,19 @@
 }
 
 html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form,
-    fieldset, legend, input, textarea, p, blockquote, th, td {
+fieldset, legend, input, textarea, p, blockquote, th, td {
     margin: 0px;
     padding: 0px;
-    font-family: Helvetica, Tahoma, Arial, "Hiragino	Sans	GB", "Hiragino	Sans	GB	W3",
-        "Microsoft	YaHei", STXihei, STHeiti, Heiti, SimSun, sans-serif;
+    font-family: sans-serif, Arial, "Hiragino Sans GB", Helvetica, Tahoma, "Hiragino Sans GB W3", STXihei, STHeiti, Heiti, SimSun;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     font-size: 100%;
     color: rgba(61, 80, 76, 0.63);
 }
 
 body {
-    text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px
-        1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px;
+    text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px;
     background: rgba(255, 255, 255, 1);
     transition: all .6s;
 }
@@ -37,14 +38,17 @@ div {
     /*  		text-transform:	capitalize;	 */
 }
 
-input {
-    margin: 10px;
-    margin-left: -40px;
-    text-align: center;
-    border: none;
+input[type='text'], input[type='password'] {
+    border: 1px solid #eee;
+    border-radius: 2px;
     outline: none;
-    padding: 10px;
-    border-bottom: 1px solid #70BBF7;
+    width: 270px;
+    background: #eee;
+    font-size: 14px;
+    height: 40px;
+    padding: 5px;
+    margin: 15px auto;
+    display: block;
 }
 
 input[type="submit"], input[type="reset"] {
@@ -83,11 +87,13 @@ span {
 input::-webkit-input-placeholder {
     color: #9f9f9f;
 }
+
 /*	清除表单自动填充样式:针对chrome	*/
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset;
     /*		border:	1px	solid	rgba(255,	255,	255,	.15)	!important;	*/
 }
+
 /*	导入bootstrap图标	*/
 [class^="icon-"], [class*="	icon-"] {
     display: inline-block;
@@ -105,30 +111,37 @@ input:-webkit-autofill {
 .icon-white {
     background-image: url("../img/icons-white.png")
 }
+
 /*	拇指向上图标空心	*/
 .icon-thumbs-up {
     background-position: -96px -144px;
 }
+
 /* 拇指向上实心 */
 .icon-thumbs-up-ramer {
     background-position: -120px -144px;
 }
+
 /*	编辑图标	*/
 .icon-edit {
     background-position: -96px -72px;
 }
+
 /*	垃圾箱图标	*/
 .icon-trash {
     background-position: -456px 0;
 }
+
 /*	空心五星图标	*/
 .icon-star-empty {
     background-position: -144px 0;
 }
+
 /* 实心五星图标 */
 .icon-star {
     background-position: -120px 0
 }
+
 /*	加号图标	*/
 .icon-plus {
     background-position: -408px -96px
@@ -138,6 +151,7 @@ input:-webkit-autofill {
 .icon-minus {
     background-position: -433px -96px
 }
+
 /*	箭头朝上图标	*/
 .icon-arrow-up {
     opacity: .5;
@@ -149,26 +163,32 @@ input:-webkit-autofill {
     opacity: .5;
     background-position: -312px -96px;
 }
+
 /*	信封图标	*/
 .icon-envelope {
     background-position: -72px 0
 }
+
 /*  信封图标空  */
 .icon-envelope-empty {
     background-position: 0 0
 }
+
 /* 搜索图标 */
 .icon-search {
     background-position: -48px 0
 }
+
 /* 标签图标 */
 .icon-tags {
     background-position: -25px -48px;
 }
+
 /*	修改浏览器滚动条样式*/
 ::-webkit-scrollbar {
     width: 5px;
 }
+
 /*  滚动条的滑轨背景颜色  */
 ::-webkit-scrollbar-track {
     background-color: #EDEDEF;
@@ -179,15 +199,18 @@ input:-webkit-autofill {
     border-radius: 10px;
     background-color: rgb(77, 171, 245);
 }
+
 /*	滑轨两头的监听按钮颜色	*/
 ::-webkit-scrollbar-button {
     display: none;
     background-color: rgba(61, 80, 76, 0.63);
 }
+
 /*	横向滚动条和纵向滚动条相交处尖角的颜色	*/
 ::-webkit-scrollbar-corner {
     background-color: rgba(61, 80, 76, 0.63);
 }
+
 /*  输入框placeholder默认样式  */
 ::-webkit-input-placeholder {
     opacity: .5;

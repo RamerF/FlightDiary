@@ -12,38 +12,54 @@
 <body>
 <div class="container">
     <div class="title" id="title">登录</div>
-    <div class="form">
-        <form action="/user/login" method="post" modelAttribute="user" id="_form" enctype="multipart/form-data">
-            <span class="label">用户名 : </span>
-            <input name="name" class="username" id="username" placeholder="用户名 / 邮箱"/>
-            <span id="message"></span>
-            <span class="label">密码 : </span>
-            <input type="password" name="password" id="password" class="password"/>
-            <div id="showPassword"></div>
+    <form action="/user/login" method="post" modelAttribute="user" id="_form" enctype="multipart/form-data">
+        <div class="material-form">
+            <div>
+                <input type="text" name="name" class="username" id="username"/>
+                <label for="username">用户名</label>
+            </div>
+            <!--<span id="message"></span>-->
+            <div>
+                <input type="password" name="password" id="password" class="password"/>
+                <label for="password">密码</label>
+            </div>
+            <!--<div id="showPassword"></div>-->
             <!-- 用户注册面板 -->
             <div class="reg_panel" id="regPanel">
                 <!-- 注册导航 -->
-                <div class="nav_vertical"></div>
-                <div class="nav_color"></div>
-                <span class="label">邮箱 : </span>
-                <input type="text" name="email" class="email" id="email" placeholder="安全邮箱"/>
-                <span id="message2"></span>
+                <!--<div class="nav_vertical"/>-->
+                <!--<div class="nav_color"/>-->
+                <div>
+                    <input type="text" name="email" class="email" id="email"/>
+                    <label for="email">邮箱</label>
+                </div>
+                <!--<span id="message2"></span>-->
             </div>
             <div class="update_panel">
-                <span class="label">电话号码 : </span>
-                <input type="text" name="telephone" id="telephone"/>
-                <span class="label">年龄 : </span>
-                <input type="text" name="age" id="age"/>
-                <span class="label">
-                      <img id="preview" class="preview" alt="error" th:src="${user.head}"/>
-               </span>
-                <input type="hidden" name="checkFile" id="checkFile"/>
-                <input type="text" class="picName" placeholder="请选择一张图片"/>
-                <input type="file" class="userHead" id="userHead" name="picture"/>
-                <span class="label">QQ : </span>
-                <input type="text" name="qqNum" id="qqNum"/>
-                <span class="label">微博 : </span>
-                <input type="text" name="weiboNum" id="weiboNum"/>
+                <div>
+                    <input type="text" name="telephone" id="telephone"/>
+                    <label for="telephone">电话号码</label>
+                </div>
+                <div>
+                    <input type="text" name="age" id="age"/>
+                    <label for="age">年龄</label>
+                </div>
+                <div>
+                    <input type="hidden" name="checkFile" id="checkFile"/>
+                    <input type="text" class="picName" placeholder="请选择一张图片"/>
+                    <input type="file" class="userHead" id="userHead" name="picture"/>
+                    <label for="userHead">
+                        <img id="preview" class="preview" alt="error" th:src="${user.head}"/>
+                    </label>
+                </div>
+                <div>
+                    <input type="text" name="qqNum" id="qqNum"/>
+                    <label for="qqNum">QQ </label>
+                </div>
+                <div>
+                    <input type="text" name="weiboNum" id="weiboNum"/>
+                    <label for="weiboNum">微博</label>
+                </div>
                 <span class="label adjustment">性别 : </span>
                 <input type="radio" name="sex" label="男" value="M" class="radio"/>
                 <input type="radio" name="sex" label="女" value="F" class="radio"/>
@@ -58,8 +74,8 @@
                 <input type="submit" value="登录"/>
                 <a href="javascript:void(0);" id="reg">没有账户,去注册</a>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 </body>
 </html>

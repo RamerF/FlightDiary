@@ -64,7 +64,7 @@ $( function() {
 
     // 切换登录/注册
     $( "#reg" ).click( function() {
-        $( "#regPanel,#forgetPass" ).toggle( 1200 , function() {
+        $( "#regPanel,#forgetPass" ).slideToggle( 1200 , function() {
             // 如果切换后注册界面存在,即用户正在注册
             if ($( "#regPanel" ).is( ":visible" )) {
                 // 将导航条重置
@@ -85,7 +85,6 @@ $( function() {
                 $( ":input[type='submit']" ).val( "注册" );
                 // 修改切换文本
                 $( "#reg" ).text( "已有账户,去登录" );
-                $( "#username" ).attr( "placeholder" , "用户名" );
                 // 修改表单action
                 $( "#_form" ).attr( "action" , "/user" );
                 // 验证用户名可用性,此时用户名数据库中不能存在
