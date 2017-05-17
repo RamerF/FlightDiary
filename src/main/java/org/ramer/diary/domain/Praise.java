@@ -1,21 +1,10 @@
 package org.ramer.diary.domain;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
-import com.alibaba.fastjson.JSON;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 /**
  * 点赞类.
@@ -46,7 +35,29 @@ public class Praise{
     @JoinColumn(name = "topic")
     private Topic topic;
 
+    @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        return "Praise{" + "id=" + id + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+
+        Praise praise = (Praise) o;
+
+        return id != null ? id.equals(praise.id) : praise.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
     }
 }

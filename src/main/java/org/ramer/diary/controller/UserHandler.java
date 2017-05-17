@@ -55,7 +55,7 @@ public class UserHandler{
         }
         //    id存在,用户更新
         if (user.getId() != null && user.getId() > 0) {
-            log.debug("用户更新: name  : " + user.getName());
+            log.debug("用户更新: name  : {}" + user.getName());
             if (user.getName().equals(username)) {
                 response.getWriter().write("false");
             }
@@ -73,7 +73,6 @@ public class UserHandler{
      *
      * @param emailString 邮箱字符串
      * @param response the response
-     * @param map the map
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @RequestMapping(value = "/user/validateEmail", method = RequestMethod.POST)
@@ -101,9 +100,7 @@ public class UserHandler{
      * 获取实时动态.
      *
      * @param session the session
-     * @param user the user
      * @return 新动态总数
-     * @throws JsonProcessingException the json processing exception
      */
     @RequestMapping("/user/realTimeTopic")
     @ResponseBody
@@ -118,9 +115,7 @@ public class UserHandler{
      * 获取实时通知.
      *
      * @param session the session
-     * @param user the user
      * @return 通知数
-     * @throws JsonProcessingException the json processing exception
      */
     @RequestMapping("/user/realTimeNotify")
     @ResponseBody

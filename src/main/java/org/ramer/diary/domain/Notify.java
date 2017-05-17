@@ -1,23 +1,11 @@
 package org.ramer.diary.domain;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.alibaba.fastjson.JSON;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 用户通知.
@@ -59,7 +47,39 @@ public class Notify{
     @Column(name = "has_check", nullable = false)
     private String hasCheck;
 
+    @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        return "Notify{" + "id=" + id + ", content='" + content + '\'' + ", date=" + date + ", hasCheck='" + hasCheck
+                + '\'' + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+
+        Notify notify = (Notify) o;
+
+        if (id != null ? !id.equals(notify.id) : notify.id != null)
+            return false;
+        if (content != null ? !content.equals(notify.content) : notify.content != null)
+            return false;
+        if (date != null ? !date.equals(notify.date) : notify.date != null)
+            return false;
+        return hasCheck != null ? hasCheck.equals(notify.hasCheck) : notify.hasCheck == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (hasCheck != null ? hasCheck.hashCode() : 0);
+        return result;
     }
 }

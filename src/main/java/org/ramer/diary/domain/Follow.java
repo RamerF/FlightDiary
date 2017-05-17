@@ -1,20 +1,10 @@
 package org.ramer.diary.domain;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import com.alibaba.fastjson.JSON;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 /**
  * 关注.
@@ -44,7 +34,29 @@ public class Follow{
     @JoinColumn(name = "followed_user")
     private User followedUser;
 
+    @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        return "Follow{" + "id=" + id + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+
+        Follow follow = (Follow) o;
+
+        return id != null ? id.equals(follow.id) : follow.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
     }
 }

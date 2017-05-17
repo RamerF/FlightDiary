@@ -1,22 +1,9 @@
 package org.ramer.diary.domain;
 
-import java.util.Date;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.alibaba.fastjson.JSON;
-
 import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 评论回复.
@@ -52,7 +39,35 @@ public class Reply{
     @JoinColumn(name = "user", nullable = false)
     private User user;
 
+    @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        return "Reply{" + "id=" + id + ", content='" + content + '\'' + ", date=" + date + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+
+        Reply reply = (Reply) o;
+
+        if (id != null ? !id.equals(reply.id) : reply.id != null)
+            return false;
+        if (content != null ? !content.equals(reply.content) : reply.content != null)
+            return false;
+        return date != null ? date.equals(reply.date) : reply.date == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        return result;
     }
 }

@@ -93,10 +93,8 @@ public class UserService{
     public User getByName(String username) {
         String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
         if (username.matches(regex)) {
-            log.debug("邮箱");
             return userRepository.getByEmail(Encrypt.execEncrypt(username, true));
         }
-        log.debug("用户名");
         return userRepository.getByName(username);
     }
 

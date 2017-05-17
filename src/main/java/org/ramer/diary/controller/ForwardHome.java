@@ -1,8 +1,14 @@
 package org.ramer.diary.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.constant.MessageConstantOld;
-import org.ramer.diary.constant.PageConstantOld;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.ramer.diary.constant.MessageConstant;
+import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.IllegalAccessException;
@@ -13,14 +19,6 @@ import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.CollectionsUtils;
 import org.ramer.diary.util.Pagination;
 import org.ramer.diary.util.UserUtils;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -29,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 定位到主页.
@@ -49,13 +49,13 @@ public class ForwardHome{
     private FollowService followService;
 
     //主页面
-    private final String HOME = PageConstantOld.HOME.toString();
+    private final String HOME = PageConstant.HOME;
     //初始化在他人主页变量
     private boolean inOtherPage = false;
     // 初始化在分享页面变量
     private boolean inTopicPage = false;
     //数据格式错误信息
-    private final String WRONGFORMAT = MessageConstantOld.WRONGFORMAT.toString();
+    private final String WRONG_FORMAT = MessageConstant.WRONG_FORMAT;
     //分享页面大小
     @Value("${diary.topic.page.size}")
     private int TOPICPAGESIZE;
@@ -82,7 +82,6 @@ public class ForwardHome{
         if (session.getAttribute("scrollInPage") == null) {
             session.setAttribute("scrollInPage", scrollInPage);
         }
-
         log.debug("主页");
         log.debug("pagesize = " + TOPICPAGESIZE);
         int page = 1;
@@ -108,8 +107,7 @@ public class ForwardHome{
         //记录最新的topicid，用于判断是否有新动态
         map.put("topicCount", topicService.getCount());
         map.put("topics", topics);
-        if (UserUtils.checkLogin(session)
-                && UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))) {
+        if (UserUtils.checkLogin(session)) {
             User user = (User) session.getAttribute("user");
             //获取用户统计数据
             int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -212,7 +210,7 @@ public class ForwardHome{
                 page = 1;
             }
         } catch (Exception e) {
-            throw new IllegalAccessException(WRONGFORMAT);
+            throw new IllegalAccessException(WRONG_FORMAT);
         }
         //    获取达人的分页信息
         Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLEPAGESIZE);
