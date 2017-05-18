@@ -1,12 +1,6 @@
 package org.ramer.diary.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
@@ -23,12 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 定位到主页.
@@ -73,9 +68,8 @@ public class ForwardHome{
      * @param map the map
      * @param session the session
      * @return 引导到主页
-     * @throws IOException
      */
-    @RequestMapping("/home")
+    @GetMapping("/home")
     public String home(@RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
         //初始化滚动翻页
@@ -101,7 +95,6 @@ public class ForwardHome{
         } catch (Exception e) {
             page = 1;
         }
-
         //获取分页分享
         Page<Topic> topics = topicService.getTopicsPage(page, TOPICPAGESIZE);
         //记录最新的topicid，用于判断是否有新动态
@@ -123,11 +116,11 @@ public class ForwardHome{
         map.remove("topic");
         session.removeAttribute("details");
         //  标识为显示分享分类
-        session.setAttribute("showTopic", "true");
+        map.put("showTopic", "true");
         //  取消标识为达人分类
-        session.setAttribute("showTopPeople", "false");
+        map.put("showTopPeople", "false");
         //  取消标识为热门标签分类
-        session.setAttribute("showPopularTags", "false");
+        map.put("showPopularTags", "false");
         return HOME;
     }
 
@@ -163,8 +156,7 @@ public class ForwardHome{
         //获取分页分享
         Page<Topic> topics = topicService.getTopicsPageOrderByFavourite(page, TOPICPAGESIZE);
         map.put("topics", topics);
-        if (UserUtils.checkLogin(session)
-                && UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))) {
+        if (UserUtils.checkLogin(session)) {
             User user = (User) session.getAttribute("user");
             //获取用户统计数据
             int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -175,18 +167,16 @@ public class ForwardHome{
             map.put("topicNumber", topicNumber);
             map.put("followedNumber", followedNumber);
         }
-        User user = (User) session.getAttribute("user");
-        log.debug("--------------------------------------" + user.getId());
         //清除访问的临时用户信息
         map.remove("other");
         map.remove("topic");
         session.removeAttribute("details");
         //    标识为显示分享分类
-        session.setAttribute("showTopic", "true");
+        map.put("showTopic", "true");
         //  取消标识为达人分类
-        session.setAttribute("showTopPeople", "false");
+        map.put("showTopPeople", "false");
         //    取消标识为热门标签分类
-        session.setAttribute("showPopularTags", "false");
+        map.put("showPopularTags", "false");
         return HOME;
     }
 
@@ -231,11 +221,11 @@ public class ForwardHome{
         map.remove("topic");
         session.removeAttribute("details");
         //    标识为达人分类
-        session.setAttribute("showTopPeople", "true");
+        map.put("showTopPeople", "true");
         //    取消标识为分享分类
-        session.setAttribute("showTopic", "false");
+        map.put("showTopic", "false");
         //    取消标识为热门标签分类
-        session.setAttribute("showPopularTags", "false");
+        map.put("showPopularTags", "false");
         return HOME;
     }
 
@@ -307,11 +297,11 @@ public class ForwardHome{
         //    将第一个标签对应的分页分享写入session
         session.setAttribute("tagTopics", tagTopics);
         //    取消标识为达人分类
-        session.setAttribute("showTopPeople", "false");
+        map.put("showTopPeople", "false");
         //    取消标识为分享分类
-        session.setAttribute("showTopic", "false");
+        map.put("showTopic", "false");
         //    标识为热门标签分类
-        session.setAttribute("showPopularTags", "true");
+        map.put("showPopularTags", "true");
         return HOME;
     }
 
