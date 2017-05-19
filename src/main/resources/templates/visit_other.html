@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="/css/default.css" rel="stylesheet"/>
+    <link href="/css/visitOther.css" rel="stylesheet"/>
+    <script src="/js/jquery-2.1.4.min.js"/>
+    <script src="/js/layer/layer.js"/>
+    <script src="/js/js.cookie.js"/>
+    <script type="text/javascript">
+        $(function () {
+            /*<![CDATA[*/
+            userid = /*[[${other.id}]]*/;
+            /*]]>*/
+        })
+    </script>
+    <script src="/js/ramer/visitOther.js"/>
+    <title>
+        Personal Center
+    </title>
+</head>
+<body>
+<!--  返回-->
+<div class="return_link">
+    <img alt="error" src="/pictures/back.png" id="back"/>
+</div>
+<!--  返回主页-->
+<div class="return_home">
+    <img alt="error" src="/pictures/home.png" id="home"/>
+</div>
+<div class="user_info_panel">
+    <div class="head">
+        <a>
+            <img alt="error" th:src="${other != null ?other.head:''}"
+                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+        </a>
+    </div>
+    <div class="selfinfo">
+        <div class="name" th:text="${other != null ?other.name:''}"></div>
+        <div class="contact">
+          <span id="followSpan">
+                 <a href="user/topic/notFollow" class="notFollow" th:if="${isFollowed eq true}">
+                    <i class="icon-minus" id="icon"></i><i id="text" style="font-style: normal;">取消关注</i>
+                </a>
+                <a href="user/topic/follow" class="follow" th:if="${isFollowed ne true}">
+                  <i class="icon-plus" id="icon"></i><i id="text" style="font-style: normal;">关注</i>
+                </a>
+            </span>
+            <span th:text="|QQ: ${other!=null and other.qqNum != null ? other.qqNum : '无'}|"></span>
+            <span th:text="|微博: ${other!=null and other.weiboNum != null ? other.weiboNum : '无'}|"></span>
+            <span>
+              <a id="showFollowPanel" href="#">
+                他/她关注的<i class="icon-arrow-down"></i>
+              </a>
+            </span>
+            <span>
+              <a href="javascript:void(0)" id="notify">
+                <i class="icon-envelope"></i>
+              </a>
+            </span>
+        </div>
+    </div>
+</div>
+<!-- 私信面板 -->
+<div class="notify_panel" id="notify_panel">
+    <form
+            action="/user/personal/sendPrivMess"
+            method="post"
+            enctype="multipart/form-data"
+            id="sendPrivMessForm">
+        <textarea id="privMessContent" rows="7" cols="30" class="notify_content" name="content"></textarea>
+        <input type="submit" value="发送私信" id="sendPrivMess"/>
+        <input type="reset" value="收起" class="hiddenNotify"/>
+    </form>
+</div>
+<!-- 关注面板 -->
+<div class="follow_panel clearfix" id="followPanel">
+      <span th:if="${session.other.follows == null}">
+        他/她还没有关注任何人 !
+      </span>
+    <th:block th:if="${session.other.follows != null}">
+        <div class="followed_user_panel" th:each="follow:${session.other.follows}">
+            <div>
+                <a th:href="|/user/personal/${follow.followedUser.id}|">
+                    <img
+                            alt="error"
+                            th:src="'/'+${follow.followedUser.head}"
+                            class="followed_user_head"/>
+                </a>
+            </div>
+            <div class="followed_user_name_panel">
+                <a th:href="|/user/personal/${follow.followedUser.id}|" th:text="${follow.followedUser.name}"></a>
+            </div>
+        </div>
+    </th:block>
+</div>
+
+<!-- 显示他的分享 -->
+<div class="no_topic" th:if="${#lists.isEmpty(topicsPage.content)}">
+    <strong>
+        他还没有发布任何分享
+    </strong>
+</div>
+<th:block th:if="not ${#lists.isEmpty(topicsPage.content)}">
+    <div class="show_topic" th:each="topic:${topicsPage.content}">
+        <div class="side">
+            <div class="day">
+                <a href="#" th:text="${topic!=null}?${topic.date.date}+'/'+${topic.date.month+1}:''"></a>
+            </div>
+        </div>
+        <div class="main">
+            <div class="content">
+                <th:block th:if="${topic.picture !=null}">
+                    <div class="img">
+                        <img alt="error" th:src="'/'+${topic.picture}" class="topic_pic"/>
+                    </div>
+                    <p class="desc"></p>
+                </th:block>
+                <p class="desc" style="height: 35px;" th:if="${topic.picture == null}"></p>
+                <div class="text" th:text="${topic.content}"></div>
+                <!-- 标签分享 -->
+                <div class="tags_panel">
+                    <th:block th:each="tag:${topic.tags}">
+                        <i class="icon-tags"></i>
+                        <span class="tags" th:text="${tag}"></span>
+                    </th:block>
+                </div>
+                <!-- 通过标签获取分享表单 -->
+                <form action="/home/tag" id="tagForm">
+                    <input type="text" name="tag" id="tagName"/>
+                </form>
+            </div>
+        </div>
+        <hr class="h_line"/>
+        <th:block th:with="isPraise=false" th:each="p:${praises}">
+            <th:block th:if="${topic.id eq p}" th:with="isPraise=true"></th:block>
+        </th:block>
+        <a th:if="${isPraise == true}" th:href="|/user/topic/notPraise/${topic.id}|" class="thumbsup">
+            <i class="icon-thumbs-up-ramer"></i>
+        </a>
+        <a th:if="${isPraise != true}" th:href="|/user/topic/praise/${topic.id}|" class="thumbsup">
+            <i class="icon-thumbs-up"></i>
+        </a>
+        <small class="upCounts" th:text="|(${ topic.upCounts == null ? 0 : topic.upCounts})|"></small>
+        <a th:href="|/user/topic/comment/${topic.id}|" class="comment">
+            <i class="icon-edit"></i>
+        </a>
+        <th:block th:with="isFavourite=false"></th:block>
+        <th:block th:each="f:${favourites}">
+            <th:block th:if="${topic.id eq f }" th:with="isFavourite=true"></th:block>
+        </th:block>
+        <a th:if="${ isFavourite == true}" th:href="|/user/topic/notFavourite/${topic.id}|" class="favourite">
+            <i class="icon-star"></i>
+        </a>
+        <a th:if="${ isFavourite != true}" th:href="|/user/topic/favourite/${topic.id}|" class="favourite">
+            <i class="icon-star-empty"></i>
+        </a>
+        <!-- 评论表单 -->
+        <div class="comment_form_panel">
+            <form action="" method="post" class="comment_form">
+                <textarea rows="7" cols="30" class="comment_content" name="content"></textarea>
+                <input type="hidden" name="user" value="${user.id }"/>
+                <input type="submit" value="发表评论"/>
+                <input type="reset" value="收起" class="hiddenCommentForm"/>
+            </form>
+        </div>
+        <!-- 显示评论 -->
+        <th:block th:each="comment:${topic.comments}">
+            <div class="comment_panel">
+                <p th:inline="text">
+                    <span th:text="|${comment.user.name } : ${comment.content}|"></span>
+                    <sub th:text="|  ${#calendars.format(comment.date,'HH:mm:ss yyyy-MM-dd')}|"></sub>
+                    <a th:href="|/user/topic/comment/reply/${comment.id}|" class="reply">
+                        <i class="icon-edit"></i>
+                    </a>
+                </p>
+                <!-- 回复评论表单 -->
+                <div class="reply_form_panel">
+                    <form action="" method="post" class="reply_form">
+                        <textarea rows="7" cols="30" class="reply_content" name="content"></textarea>
+                        <input type="submit" value="发表评论"/>
+                        <input type="reset" value="收起" class="hiddenReplyForm"/>
+                    </form>
+                </div>
+                <th:block th:each="reply:${comment.replies}">
+                    <p th:inline="text">
+                        <span th:text="|${reply.user.name} 回复 ${comment.user.name} : ${reply.content }|"></span>
+                        <sub th:text="|  ${#calendars.format(reply.date,'HH:mm:ss yyyy-MM-dd')}|"></sub>
+                        <a th:href="|/user/topic/comment/reply/${reply.comment.id}|" class="reply2">
+                            <i class="icon-edit"></i>
+                        </a>
+                    </p>
+                    <!-- 回复回复表单 -->
+                    <div class="reply_double_form_panel">
+                        <form action="" method="post" class="reply_double_form">
+                            <textarea rows="7" cols="30" class="reply_double_content" name="content"></textarea>
+                            <input type="submit" value="回复"/>
+                            <input type="reset" value="收起" class="hiddenReplyDoubleForm"/>
+                        </form>
+                    </div>
+                </th:block>
+            </div>
+        </th:block>
+    </div>
+</th:block>
+<!-- 存储记录的总页数 -->
+<input id="totalPages" type="hidden" th:value="${topicsPage.totalPages }"/>
+<!-- 存储当前页号 -->
+<input id="number" type="hidden" th:value="${topicsPage.number}"/>
+<!-- 分页 -->
+<ul class="page_panel">
+    <li class="lastPage">
+        <a th:href="|?pageNum=${topicsPage.number + 1 - 1}|" id="lastPage">
+            <img alt="error" src="/pictures/previous.png"/>
+        </a>
+    </li>
+    <li class="nextPage">
+        <a th:href="|?pageNum=${topicsPage.number + 1 + 1}|" id="nextPage">
+            <img alt="error" src="/pictures/next.png"/>
+        </a>
+    </li>
+</ul>
+</body>
+</html>

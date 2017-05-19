@@ -106,7 +106,7 @@ public class VisitOther{
             session.setAttribute("praises", praises);
         }
         session.setAttribute("other", other);
-        return "visitOther";
+        return "visit_other";
     }
 
     /**
