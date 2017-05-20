@@ -1,7 +1,7 @@
 package org.ramer.diary.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.constant.MessageConstantOld;
+import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.domain.User;
 
 import javax.servlet.http.HttpSession;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 public class UserUtils{
     //默认成功信息
-    private static final String SUCCESSMESSAGE = MessageConstantOld.SUCCESSMESSAGE.toString();
+    private static final String SUCCESS_MESSAGE = MessageConstant.SUCCESS_MESSAGE;
 
     /**
      * 操作成功.
@@ -31,7 +31,7 @@ public class UserUtils{
             session.setAttribute("succMessage", succMessage[0]);
             return;
         }
-        session.setAttribute("succMessage", SUCCESSMESSAGE);
+        session.setAttribute("succMessage", SUCCESS_MESSAGE);
     }
 
     /**

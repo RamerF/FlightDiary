@@ -3,7 +3,7 @@ package org.ramer.diary;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.ramer.diary.constant.PageConstantOld;
+import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.TopicService;
@@ -82,7 +82,7 @@ public class FlightDiaryTest{
      */
     @Test
     public void testPageConstant() {
-        log.debug(PageConstantOld.HOME.toString());
+        log.debug(PageConstant.HOME);
     }
 
     @Autowired

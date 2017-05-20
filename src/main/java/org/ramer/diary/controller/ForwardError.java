@@ -1,6 +1,6 @@
 package org.ramer.diary.controller;
 
-import org.ramer.diary.constant.PageConstantOld;
+import org.ramer.diary.constant.PageConstant;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ForwardError{
     //全局出错页面
-    private final String ERROR = PageConstantOld.ERROR.toString();
+    private final String ERROR = PageConstant.ERROR;
 
     /**
      *  重定向到错误页面.

@@ -8,8 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ramer.diary.constant.MessageConstantOld;
-import org.ramer.diary.constant.PageConstantOld;
+import org.ramer.diary.constant.MessageConstant;
+import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.LinkInvalidException;
@@ -38,10 +38,10 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class ForgetPassword{
     //全局成功页面
-    final String SUCCESS = PageConstantOld.SUCCESS.toString();
+    final String SUCCESS = PageConstant.SUCCESS;
 
     //  密码修改成功信息
-    final String SUCCESSCHANGEPASS = MessageConstantOld.SUCCESSCHANGEPASS.toString();
+    final String SUCCESS_CHANGEPASS = MessageConstant.SUCCESS_MESSAGE;
 
     @Autowired
     UserService userService;
@@ -136,7 +136,7 @@ public class ForgetPassword{
         if (userService.newOrUpdate(user) == null) {
             throw new SystemWrongException();
         }
-        UserUtils.execSuccess(session, SUCCESSCHANGEPASS);
+        UserUtils.execSuccess(session, SUCCESS_CHANGEPASS);
         return SUCCESS;
     }
 

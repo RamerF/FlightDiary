@@ -1,7 +1,7 @@
 package org.ramer.diary.controller.user;
 
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.constant.PageConstantOld;
+import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.EmailExistException;
@@ -40,7 +40,7 @@ public class ModifyEmail{
      * The Success.
      */
     //全局成功页面
-    final String SUCCESS = PageConstantOld.SUCCESS.toString();
+    final String SUCCESS = PageConstant.SUCCESS;
 
     /**
      * 定向到修改邮箱页面.
