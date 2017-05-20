@@ -100,7 +100,7 @@
             <input type="hidden" th:value="${readedNotify.id}" name="notifyId" class="notifyId"/>
             <input type="hidden" th:value="${readedNotify.notifiedUser.id}" name="notifiedUserId"
                    class="notifiedUserId"/>
-            <a th:href="/user/personal/${readedNotify.user.id}" class="readPrivMess"
+            <a th:href="|/user/personal/${readedNotify.user.id}|" class="readPrivMess"
                th:text="|${readedNotify.user.name } : ${readedNotify.content}|">
                 <sub th:text="${#calendars.format(readedNotify.date,'HH:mm:ss yyyy-MM-dd')}"></sub>
             </a>

@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ramer.diary.constant.PageConstantOld;
+import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Comment;
 import org.ramer.diary.domain.Reply;
 import org.ramer.diary.domain.Topic;
@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AddReply{
 
     //全局出错页面
-    final String ERROR = PageConstantOld.ERROR.toString();
+    final String ERROR = PageConstant.ERROR;
 
     @Autowired
     private ReplyService replyService;
@@ -70,7 +70,7 @@ public class AddReply{
         } catch (NumberFormatException e) {
             log.debug("格式化异常");
         }
-        log.debug("{}",comment_id);
+        log.debug("{}", comment_id);
         Reply reply = new Reply();
         reply.setContent(content);
         reply.setDate(new Date());

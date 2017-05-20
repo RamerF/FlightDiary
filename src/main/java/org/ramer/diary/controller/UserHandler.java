@@ -144,6 +144,11 @@ public class UserHandler{
         response.getWriter().write("scrollInpage: " + scrollInPage);
     }
 
+    @GetMapping("/feedback")
+    public String forwardFeedback() {
+        return "feedback";
+    }
+
     /**
      * 用户反馈.
      *
@@ -154,7 +159,7 @@ public class UserHandler{
      * @param content the content
      * @throws IOException
      */
-    @RequestMapping(value = "/user/feedback", method = RequestMethod.POST)
+    @PostMapping("/user/feedback")
     public void feedback(HttpSession session, HttpServletResponse response, @RequestParam("OS") String os,
             @RequestParam("Browser") String browser, @RequestParam("content") String content) throws IOException {
         response.setCharacterEncoding("UTF-8");
@@ -170,5 +175,10 @@ public class UserHandler{
             return;
         }
         response.getWriter().write("系统繁忙，请稍后再试");
+    }
+
+    @GetMapping("about")
+    public String about() {
+        return "about";
     }
 }

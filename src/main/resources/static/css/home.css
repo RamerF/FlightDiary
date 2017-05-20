@@ -4,6 +4,17 @@ body {
     min-width: 850px;
 }
 
+input[type='text'] {
+    display: inline;
+    border: none;
+}
+
+input[type="submit"], input[type="reset"] {
+    background: rgba(3, 169, 244, 0.67);
+    border: none;
+    color: white;
+}
+
 .top {
     top: 0px;
     font-size: 2em;
@@ -68,6 +79,7 @@ input.querytopic {
     height: 100%;
     outline: none;
     text-align: center;
+    border: none;
 }
 
 .newTopic {
@@ -125,10 +137,10 @@ span.username {
     position: absolute;
     left: 77%;
     text-align: left;
-    margin-top: 107px;
+    margin-top: 101px;
     z-index: 10;
     padding: 10px;
-    box-shadow: 0px 5px 6px rgba(0, 0, 0, .2);
+    box-shadow: 0px 3px 6px #607D8B;
 }
 
 .user_link div {
@@ -150,13 +162,13 @@ div.topic_panel {
     display: none;
     width: 400px;
     min-width: 400px;
-    margin-top: 92px;
+    margin-top: 101px;
     position: absolute;
     text-align: center;
     z-index: 100;
     right: 16%;
-    box-shadow: 0px 1px 10px #E2E1E1;
-    border: 1px solid #80BEEF;
+    box-shadow: 0px 3px 6px #607D8B;
+    text-align: right;
 }
 
 .topic_content {
@@ -164,18 +176,20 @@ div.topic_panel {
     resize: none;
     text-indent: 2em;
     border: none;
-    border-bottom: 1px solid #80BEEF;
+    border-bottom: 1px solid #607D8B;;
     line-height: 1.8em;
     margin-bottom: 10px;
     outline: none;
 }
 
 .tool {
-    border: 1px solid #80BEEF;
+    border-right: 1px solid rgb(96, 125, 139);
+    border-bottom: 1px solid rgb(96, 125, 139);
     display: table;
     position: absolute;
-    top: -1px;
-    right: -42px;
+    top: 0px;
+    right: -41px;
+    text-align: center;
 }
 
 div#addPosition {
@@ -209,11 +223,12 @@ div#addTime {
 .upbtn2 {
     width: 270px;
     height: 46px;
-    margin-left: 129px;
+    margin-left: 128px;
     margin-top: 0px;
     text-align: center;
     text-shadow: 0 1px 2px rgba(0, 0, 0, .1);
-    border: 1px solid #70BBF7;
+    border: none;
+    background: #eee;
 }
 
 .preview {
@@ -240,13 +255,13 @@ div#addTime {
 }
 
 .input_tag_panel select {
-    max-width: 67px;
+    width: 119px;
     outline: none;
-    background: #FFFFFF;
-    border: 1px solid #70BBF7;
-    height: 31px;
-    padding-top: 2px;
-    margin-right: 35px;
+    height: 40px;
+    padding-left: 16px;
+    border: none;
+    background: #eee;
+    margin: 15px auto;
 }
 
 .input_tags {
@@ -254,7 +269,7 @@ div#addTime {
     height: 31px;
     font-size: 15px;
     margin-right: -1px;
-    border: 1px solid #70BBF7;
+    border: 1px solid #607D8B;
 }
 
 .name_panel {

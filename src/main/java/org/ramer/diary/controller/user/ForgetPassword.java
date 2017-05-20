@@ -60,7 +60,7 @@ public class ForgetPassword{
         if (!email.equals("")) {
             map.put("email", "email");
         }
-        return "forgetPass";
+        return "forget_pass";
     }
 
     /**

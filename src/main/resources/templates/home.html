@@ -16,7 +16,7 @@
     <script type="text/javascript">
         $(function () {
             /*<![CDATA[*/
-            scrollInPage = /*[[${scrollInPage}]]*/;
+            scrollInPage = /*[[${session.scrollInPage}]]*/;
             /*]]>*/
         })
     </script>
@@ -169,7 +169,7 @@
         <span>
             <a href="javascript:void(0);" id="saySomething" class="share_link ">分享平台</a>
         </span>
-        <span class="username" id="showProfile" th:text="|Welcome, ${user.name}|"></span>
+        <span class="username" id="showProfile" th:text="|${user.name}|"></span>
         <span id="newNotify" style="position: absolute; margin: 0px; margin-left: -30px;"></span>
         <span id="newTopic" style="position: absolute; margin: 0px; padding: 0px; margin-left: -33px;"
               class="newTopic" th:if="${notifiedNumber &gt; 0}"></span>
@@ -226,7 +226,6 @@
         <input class="upbtn2" placeholder="点击添加一张图片"/>
         <div id="preview" class="preview"></div>
         <div class="input_tag_panel">
-            <span>标签：</span>
             <select id="tags">
                 <option value="no" id="optionTag">请选择</option>
             </select>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>修改密码</title>
+    <link href="/css/default.css" rel="stylesheet"/>
+    <link href="/css/modifyPass.css" rel="stylesheet"/>
+    <script src="/js/jquery-2.1.4.min.js"/>
+    <script src="/js/layer/layer.js"/>
+    <script type="text/javascript">
+        $(function () {
+            var errorMess = $("#errorModifyPass").val();
+            if (errorMess == "" || errorMess == null) {
+                return;
+            } else {
+                layer.msg(errorMess, {
+                    time: 1500
+                });
+            }
+        })
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="title" id="title">修改密码</div>
+    <div class="form">
+        <form action="/user/modifyPassword" method="post" id="modifyPassForm">
+            <input type="password" name="oldPassword" placeholder="旧密码"/>
+            <input type="password" name="newPassword" placeholder="新密码"/>
+            <input type="submit" value="确认"/>
+            <input type="reset" value="清空"/>
+        </form>
+    </div>
+    <div>
+        <input type="hidden" th:value="${error_modifyPass}" id="errorModifyPass"/>
+    </div>
+</div>
+</body>
+</html>

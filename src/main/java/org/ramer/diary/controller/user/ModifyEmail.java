@@ -1,12 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.PageConstantOld;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -19,55 +13,59 @@ import org.ramer.diary.util.MailUtils;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
- *修改邮箱.
- * @author ramer
+ * 修改邮箱.
  *
+ * @author ramer
  */
 @Slf4j
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
 public class ModifyEmail{
 
+    /**
+     * The User service.
+     */
     @Autowired
     UserService userService;
+    /**
+     * The Success.
+     */
     //全局成功页面
     final String SUCCESS = PageConstantOld.SUCCESS.toString();
 
     /**
      * 定向到修改邮箱页面.
+     *
      * @param session JSP内置对象
-     * @return 修改邮箱页面
+     * @return 修改邮箱页面 string
      */
-    @RequestMapping("/user/forwardModifyEmail")
+    @GetMapping("/user/forwardModifyEmail")
     public String forwardModifyEmail(HttpSession session) {
         if (!UserUtils.checkLogin(session)) {
-            User u = userService.getById(((User) session.getAttribute("user")).getId());
-            if (!UserUtils.multiLogin(session, u)) {
-                throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
-            }
             throw new UserNotLoginException("您的登录已过期,请重新登录");
         }
-        return "modifyEmail";
+        return "modify_email";
     }
 
     /**
      * 发送邮件,更改邮箱.
      *
      * @param newEmail 新邮箱
-     * @param user the user
-     * @param map the map
-     * @param session the session
+     * @param user     the user
+     * @param session  the session
      * @param response the response
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping("/user/modifyEmail/sendMail")
+    @PostMapping("/user/modifyEmail/sendMail")
     public void sendEmailToModifyEmail(@RequestParam("newEmail") String newEmail, User user, HttpSession session,
             HttpServletResponse response) throws IOException {
         if (!UserUtils.checkLogin(session)) {
@@ -110,10 +108,9 @@ public class ModifyEmail{
     /**
      * 修改邮箱.
      *
-     * @param email 用户原来的邮箱
+     * @param email    用户原来的邮箱
      * @param newEmail 修改的新邮箱
-     * @param map the map
-     * @param session the session
+     * @param session  the session
      * @return the string
      */
     @RequestMapping("/user/modifyEmail")

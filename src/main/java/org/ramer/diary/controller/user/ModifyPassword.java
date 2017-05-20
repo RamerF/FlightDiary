@@ -1,7 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.PageConstantOld;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -12,35 +11,41 @@ import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  *修改密码.
  * @author ramer
- *
- */@Slf4j
+ */
+@Slf4j
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
 public class ModifyPassword{
 
+    /**
+     * The User service.
+     */
     @Autowired
     UserService userService;
+    /**
+     * The Success.
+     */
     //全局成功页面
     final String SUCCESS = PageConstantOld.SUCCESS.toString();
 
     /**
      * 重定向到修改密码页面.
      *
-     * @param map the map
-     * @param session the session
-     * @return 引导到修改密码页面
+     * @param session the session 
+     * @return 引导到修改密码页面 string
      */
-    @RequestMapping(value = "/user/forwardModifyPassword", method = RequestMethod.GET)
+    @GetMapping("/user/forwardModifyPassword")
     public String forwardModifyPassword(HttpSession session) {
         if (!UserUtils.checkLogin(session)) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
@@ -50,32 +55,28 @@ public class ModifyPassword{
             throw new UserNotLoginException("您还未登录或登录已过期");
         }
         log.debug("引导到修改用户密码页面");
-        return "modifyPass";
+        return "modify_pass";
     }
 
     /**
      * 修改密码.
      *
-     * @param oldPassword 原始密码
-     * @param newPassword 新密码
-     * @param user 用户
-     * @param map the map
-     * @param response the response
-     * @param session the session
-     * @return 密码修改成功: 返回个人主页,失败: 返回密码修改页面
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @param oldPassword 原始密码 
+     * @param newPassword 新密码 
+     * @param user 用户 
+     * @param map the map 
+     * @return 密码修改成功 : 返回个人主页,失败: 返回密码修改页面 
      */
-    @RequestMapping("/user/modifyPassword")
+    @PostMapping("/user/modifyPassword")
     public String modifyPassword(@RequestParam("oldPassword") String oldPassword,
-            @RequestParam("newPassword") String newPassword, User user, HttpSession session) {
+            @RequestParam("newPassword") String newPassword, User user, Map<String, Object> map, HttpSession session) {
         if (!Encrypt.execEncrypt(oldPassword, false).equals(user.getPassword())) {
             log.debug("原始密码错误");
-            session.setAttribute("error_modifyPass", "原始密码错误");
-            return "redirect:/user/forwardModifyPassword";
+            map.put("error_modifyPass", "原始密码错误");
+            return "modify_pass";
         }
         if (oldPassword.equals(newPassword)) {
             log.debug("密码未改变");
-            session.setAttribute("error_modifyPass", "");
             session.setAttribute("succMessage", "密码修改成功");
             return SUCCESS;
         }
@@ -84,7 +85,6 @@ public class ModifyPassword{
         if (user == null) {
             throw new SystemWrongException();
         }
-        session.setAttribute("error_modifyPass", "");
         session.setAttribute("succMessage", "密码修改成功");
         return SUCCESS;
     }
