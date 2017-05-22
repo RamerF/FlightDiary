@@ -1,6 +1,9 @@
 package org.ramer.diary.controller.user;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.UserService;
@@ -11,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import javax.servlet.http.HttpSession;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 登陆类.

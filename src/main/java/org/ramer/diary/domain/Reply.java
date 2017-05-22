@@ -1,9 +1,10 @@
 package org.ramer.diary.domain;
 
-import lombok.Data;
+import java.util.Date;
 
 import javax.persistence.*;
-import java.util.Date;
+
+import lombok.Data;
 
 /**
  * 评论回复.

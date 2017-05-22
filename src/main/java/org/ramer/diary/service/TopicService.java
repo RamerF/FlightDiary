@@ -1,12 +1,11 @@
 package org.ramer.diary.service;
 
+import java.util.List;
+
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.util.Pagination;
 import org.springframework.data.domain.Page;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * Created by RAMER on 5/17/2017.

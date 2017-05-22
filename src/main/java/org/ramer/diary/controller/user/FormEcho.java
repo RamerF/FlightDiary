@@ -1,6 +1,7 @@
 package org.ramer.diary.controller.user;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
+
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 表单回显类：

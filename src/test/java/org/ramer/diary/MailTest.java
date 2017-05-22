@@ -1,11 +1,13 @@
 package org.ramer.diary;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
-import org.ramer.diary.util.MailUtils;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.junit.Test;
+import org.ramer.diary.util.MailUtils;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 邮箱工具测试类

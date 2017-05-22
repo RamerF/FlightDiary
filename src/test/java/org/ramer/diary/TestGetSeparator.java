@@ -1,6 +1,4 @@
 package org.ramer.diary;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +6,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+
+import org.junit.Test;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 获取系统路径分隔符和类路径

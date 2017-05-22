@@ -1,6 +1,8 @@
 package org.ramer.diary;
 
-import lombok.extern.slf4j.Slf4j;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ramer.diary.constant.PageConstant;
@@ -15,8 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 项目测试类

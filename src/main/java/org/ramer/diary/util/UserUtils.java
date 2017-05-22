@@ -1,10 +1,11 @@
 package org.ramer.diary.util;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.domain.User;
 
-import javax.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用户工具类，包含常用的静态方法：

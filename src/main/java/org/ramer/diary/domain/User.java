@@ -1,11 +1,12 @@
 package org.ramer.diary.domain;
 
-import lombok.Data;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.*;
+
+import lombok.Data;
 
 /**
  * 用户.

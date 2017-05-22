@@ -1,8 +1,9 @@
 package org.ramer.diary;
-import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.util.Encrypt;
 
 import org.junit.Test;
+import org.ramer.diary.util.Encrypt;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 加密类的测试类

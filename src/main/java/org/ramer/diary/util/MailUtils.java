@@ -3,9 +3,9 @@
  */
 package org.ramer.diary.util;
 
-import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.domain.User;
-import org.ramer.diary.service.UserService;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -13,9 +13,11 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.ramer.diary.domain.User;
+import org.ramer.diary.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 邮箱工具类:

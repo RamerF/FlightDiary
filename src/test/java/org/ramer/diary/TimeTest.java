@@ -1,9 +1,11 @@
 package org.ramer.diary;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import org.junit.Test;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 时间测试类

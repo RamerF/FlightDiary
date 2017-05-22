@@ -5,13 +5,12 @@ package org.ramer.diary.repository;
 
 import java.util.List;
 
+import org.ramer.diary.domain.Follow;
+import org.ramer.diary.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import org.ramer.diary.domain.Follow;
-import org.ramer.diary.domain.User;
 
 /**
  * @author ramer

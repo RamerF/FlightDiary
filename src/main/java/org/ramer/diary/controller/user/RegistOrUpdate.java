@@ -1,6 +1,12 @@
 package org.ramer.diary.controller.user;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.SystemWrongException;
@@ -14,11 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 注册或更新类

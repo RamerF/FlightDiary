@@ -1,10 +1,9 @@
 package org.ramer.diary.service;
 
+import java.util.Set;
+
 import org.ramer.diary.domain.Notify;
 import org.ramer.diary.domain.User;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Set;
 
 /**
  * Created by RAMER on 5/17/2017.

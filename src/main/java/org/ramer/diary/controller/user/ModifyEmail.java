@@ -1,6 +1,12 @@
 package org.ramer.diary.controller.user;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -15,11 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 修改邮箱.

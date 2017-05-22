@@ -1,9 +1,9 @@
 package org.ramer.diary.service;
 
+import java.util.List;
+
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
-
-import java.util.List;
 
 /**
  * Created by RAMER on 5/17/2017.

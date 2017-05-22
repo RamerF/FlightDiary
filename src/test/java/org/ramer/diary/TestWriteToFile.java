@@ -1,12 +1,14 @@
 package org.ramer.diary;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
-import org.ramer.diary.util.FileUtils;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.junit.Test;
+import org.ramer.diary.util.FileUtils;
+
+import lombok.extern.slf4j.Slf4j;
 
 /*
  * 读取文件内容并比对数据库中的tags查看是否有新tag，如果有追加内容到文件

@@ -3,7 +3,6 @@ package org.ramer.diary.service;
 import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.util.Pagination;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by RAMER on 5/17/2017.
