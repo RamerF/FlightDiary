@@ -6,6 +6,8 @@ import org.ramer.diary.domain.User;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,10 +36,11 @@ public class Login{
      * @param session the session
      * @return 登录成功返回主页,失败返回错误页面
      */
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/logins")
     @ResponseBody
     public String userLogin(User user, Map<String, Object> map, HttpSession session) {
-        log.debug("登录");
+        UserDetails diaryAuthUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.debug("登录,{} : {}", diaryAuthUser.getUsername(), diaryAuthUser.getPassword());
         user.setSessionid(session.getId());
         String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
         if (user.getUsername().matches(regex)) {
@@ -45,8 +48,7 @@ public class Login{
             user.setEmail(Encrypt.execEncrypt(user.getUsername(), true));
             user.setUsername(null);
         }
-        user.setPassword(Encrypt.execEncrypt(user.getPassword(), false));
-        User user2 = userService.login(user);
+        User user2 = userService.getByName(diaryAuthUser.getUsername());
         if (user2.getId() != null) {
             map.put("user", user2);
             session.setAttribute("user", user2);

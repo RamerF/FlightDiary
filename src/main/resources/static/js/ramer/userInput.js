@@ -255,13 +255,13 @@ $( function() {
         if (~~$( "#userId" ).val() == 0) {
             if ($( "#title" ).text() == "登录") {
                 var url = $( "#_form" ).attr( "action" ), args = {
-                    "name" : $( "#username" ).val(),
+                    "username" : $( "#username" ).val(),
                     "password" : $( "#password" ).val(),
                     "_csrf" : $( "#_csrf" ).val(),
                 };
                 $.post( url , args , function( message ) {
                     if (message == "success") {
-                        location.href = "home";
+                        location.href = "/home";
                         return false;
                     } else {
                         layer.msg( "用户名或密码不正确" , {

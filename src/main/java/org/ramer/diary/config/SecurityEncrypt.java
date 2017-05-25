@@ -1,8 +1,14 @@
 package org.ramer.diary.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,17 +16,24 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class SecurityEncrypt implements PasswordEncoder{
+public class SecurityEncrypt implements AuthenticationProvider{
+    @Autowired
+    private UserDetailsService userService;
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Override
-    public String encode(CharSequence rawPassword) {
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " rawPassword : {}", rawPassword);
-        return encoder.encode(rawPassword);
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String username = authentication.getName();
+        Object credentials = authentication.getCredentials();
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " username : {}", username);
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " passwords : {}", credentials);
+        UserDetails user = userService.loadUserByUsername(username);
+        credentials = encoder.encode((String) credentials);
+        return new UsernamePasswordAuthenticationToken(user, credentials, user.getAuthorities());
     }
 
     @Override
-    public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return encoder.encode(rawPassword).equals(encodedPassword);
+    public boolean supports(Class<?> authentication) {
+        return true;
     }
 }

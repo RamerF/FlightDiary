@@ -40,11 +40,11 @@ logging:
     org.ramer.diary: debug
     org.ramer.diary.repository: debug
     org.springframework.boot.autoconfigure: info
-    org.springframework.sercurity: info
-    jdbc.resultset: off
-    jdbc.audit: off
-    jdbc.sqlonly: off
-    jdbc.sqltiming: info
+    org.springframework.sercurity: debug
+    jdbc.resultset: info
+    jdbc.audit: info
+    jdbc.sqlonly: info
+    jdbc.sqltiming: debug
     jdbc.connection: info
 server:
   session:

@@ -1,12 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.SystemWrongException;
@@ -20,7 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 注册或更新类
@@ -63,6 +61,7 @@ public class RegistOrUpdate{
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public String newOrUpdate(User user, @RequestParam("picture") MultipartFile file, HttpSession session,
             Map<String, Object> map, @RequestParam("checkFile") String checkFile) {
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName());
 
         //  如果是更新,用户ID不为空
         if (userService.getByName(user.getUsername()) != null && user.getId() == null) {
