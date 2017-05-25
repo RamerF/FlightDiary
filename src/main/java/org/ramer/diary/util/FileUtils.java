@@ -47,7 +47,7 @@ public class FileUtils{
         String separator = File.separator;
         String location = "";
         //  如果操作系统是Linux
-        if (System.getProperty("os.name").equals("Linux")) {
+        if (System.getProperty("os.username").equals("Linux")) {
             location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
                     + session.getServletContext().getServletContextName()).getCanonicalPath();
         } else {
@@ -55,7 +55,7 @@ public class FileUtils{
         }
         String rootdir = location + separator + "pictures" + separator + "publish";
         User user = (User) session.getAttribute("user");
-        String username = user.getName();
+        String username = user.getUsername();
         String alias = user.getAlias();
         String picture = topic.getPicture();
         String pictureName = picture.substring(picture.lastIndexOf(separator) + 1);
@@ -89,7 +89,7 @@ public class FileUtils{
         String separator = File.separator;
         String location;
         //    如果操作系统是Linux
-        if (System.getProperty("os.name").equals("Linux")) {
+        if (System.getProperty("os.username").equals("Linux")) {
             location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
                     + session.getServletContext().getServletContextName()).getCanonicalPath();
         } else {
@@ -97,8 +97,8 @@ public class FileUtils{
         }
         String rootdir = location + separator + "pictures" + separator + "publish";
         User user = (User) session.getAttribute("user");
-        log.debug("用户名: " + user.getName());
-        String username = user.getName();
+        log.debug("用户名: " + user.getUsername());
+        String username = user.getUsername();
         String alias = user.getAlias();
         File userFolder = new File(rootdir + separator + username);
         if (chn) {
@@ -193,7 +193,7 @@ public class FileUtils{
                 reader.seek(reader.getFilePointer() - 8);
                 reader.write(endLine.getBytes());
                 for (String tag : tags) {
-                    tagString = "    <tag name=\"" + tag + "\" />" + endLine;
+                    tagString = "    <tag username=\"" + tag + "\" />" + endLine;
                     reader.write(tagString.getBytes());
                 }
                 reader.write("</tags>".getBytes());

@@ -48,7 +48,7 @@ public class EditHead {
     if (!file.isEmpty()) {
       log.debug("保存图片");
       String pictureUrl = FileUtils.saveFile(file, session, true,
-          StringUtils.hasChinese(user.getName()));
+          StringUtils.hasChinese(user.getUsername()));
       user.setHead(pictureUrl);
     }
     userService.updateHead(user);

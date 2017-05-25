@@ -45,27 +45,25 @@ public class UserHandler{
      * @param response the response
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping("/user/validateUserName")
-    public void validateUserName(User user, @RequestParam("username") String username, HttpServletResponse response)
+    @RequestMapping("/validateUserName")
+    @ResponseBody
+    public String validateUserName(User user, @RequestParam("username") String username)
             throws IOException {
         log.debug("验证用户名");
-        response.setCharacterEncoding("UTF-8");
         if (username == null || username.trim().equals("")) {
-            return;
+            return "false";
         }
         //    id存在,用户更新
         if (user.getId() != null && user.getId() > 0) {
-            log.debug("用户更新: name  : {}" + user.getName());
-            if (user.getName().equals(username)) {
-                response.getWriter().write("false");
+            log.debug("用户更新: username  : {}" + user.getUsername());
+            if (user.getUsername().equals(username)) {
+                return "false";
             }
         }
         if (userService.getByName(username) == null) {
-            response.getWriter().write("false");
-            return;
+            return "false";
         }
-        response.getWriter().write("true");
-        return;
+        return "true";
     }
 
     /**
@@ -75,7 +73,7 @@ public class UserHandler{
      * @param response the response
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping(value = "/user/validateEmail", method = RequestMethod.POST)
+    @RequestMapping(value = "/validateEmail", method = RequestMethod.POST)
     public void validateEmail(@RequestParam("email") String emailString, HttpServletResponse response)
             throws IOException {
         emailString = emailString.trim();

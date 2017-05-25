@@ -157,9 +157,10 @@ $( function() {
         if (username == "" || $.trim( username ) == "") {
             return;
         }
-        var url = "/user/validateUserName";
+        var url = "/validateUserName";
         var args = {
             "username" : username,
+            "_csrf" : $( "#_csrf" ).val(),
             "time" : new Date()
         };
         $.post( url , args , function( data ) {
@@ -211,12 +212,13 @@ $( function() {
     // 验证邮箱
     $( "#email" ).change( function() {
         var email = $( "input[name='email']" ).val();
-        var url = "/user/validateEmail";
+        var url = "/validateEmail";
         if (email == "" || $.trim( email ) == "") {
             return;
         }
         var args = {
             "email" : email,
+            "_csrf" : $( "#_csrf" ).val(),
             "time" : new Date()
         };
         $.post( url , args , function( data ) {
@@ -254,7 +256,8 @@ $( function() {
             if ($( "#title" ).text() == "登录") {
                 var url = $( "#_form" ).attr( "action" ), args = {
                     "name" : $( "#username" ).val(),
-                    "password" : $( "#password" ).val()
+                    "password" : $( "#password" ).val(),
+                    "_csrf" : $( "#_csrf" ).val(),
                 };
                 $.post( url , args , function( message ) {
                     if (message == "success") {
@@ -269,9 +272,7 @@ $( function() {
                 } )
                 return false;
             }
-
         }
-
         $( "#_form" ).submit();
     } );
     // 预览图片

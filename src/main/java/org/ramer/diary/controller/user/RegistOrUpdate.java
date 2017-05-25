@@ -65,7 +65,7 @@ public class RegistOrUpdate{
             Map<String, Object> map, @RequestParam("checkFile") String checkFile) {
 
         //  如果是更新,用户ID不为空
-        if (userService.getByName(user.getName()) != null && user.getId() == null) {
+        if (userService.getByName(user.getUsername()) != null && user.getId() == null) {
             throw new UserExistException("用户名已存在,注册失败");
         }
         //如果是注册需要加密密码，而更新是不允许修改密码的
@@ -73,7 +73,7 @@ public class RegistOrUpdate{
             user.setPassword(Encrypt.execEncrypt(user.getPassword(), false));
         }
         //包含中文名称的用户,先设置别名
-        if (StringUtils.hasChinese(user.getName())) {
+        if (StringUtils.hasChinese(user.getUsername())) {
             log.debug("用户名包含中文");
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
             String alias = simpleDateFormat.format(new Date());
@@ -84,7 +84,7 @@ public class RegistOrUpdate{
             log.debug("保存图片");
             String pictureUrl;
             try {
-                pictureUrl = FileUtils.saveFile(file, session, true, StringUtils.hasChinese(user.getName()));
+                pictureUrl = FileUtils.saveFile(file, session, true, StringUtils.hasChinese(user.getUsername()));
                 user.setHead(pictureUrl);
             } catch (IOException e) {
                 e.printStackTrace();

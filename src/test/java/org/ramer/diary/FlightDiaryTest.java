@@ -98,7 +98,7 @@ public class FlightDiaryTest{
         List<User> users = pageUser.getContent();
         log.debug("当前第 " + pageUser.getNumber() + "页");
         for (User user : users) {
-            log.debug("name : " + user.getName());
+            log.debug("username : " + user.getUsername());
         }
     }
 
@@ -110,7 +110,7 @@ public class FlightDiaryTest{
         Pagination<Topic> pageTopic = topicService.getTopicsPageByTags("重庆", 2, 4);
         List<Topic> topics = pageTopic.getContent();
         for (Topic topic : topics) {
-            log.debug("name : " + topic.getContent());
+            log.debug("username : " + topic.getContent());
         }
     }
 

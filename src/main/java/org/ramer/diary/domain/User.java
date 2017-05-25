@@ -1,12 +1,12 @@
 package org.ramer.diary.domain;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import lombok.Data;
 
 import javax.persistence.*;
-
-import lombok.Data;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 用户.
@@ -33,7 +33,7 @@ public class User implements Serializable{
     private String says;
     /** 用户名. */
     @Column(unique = true, nullable = false)
-    private String name;
+    private String username;
     /** 用户别名. */
     @Column(unique = true)
     private String alias;
@@ -68,6 +68,11 @@ public class User implements Serializable{
     @Column
     private String sessionid;
 
+    @Column
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Roles> roles;
+
     // 一对多策略
     /** 分享. */
     // 按时间降序排列
@@ -92,7 +97,7 @@ public class User implements Serializable{
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", head='" + head + '\'' + ", says='" + says + '\'' + ", name='" + name + '\''
+        return "User{" + "id=" + id + ", head='" + head + '\'' + ", says='" + says + '\'' + ", username='" + username + '\''
                 + ", alias='" + alias + '\'' + ", password='" + password + '\'' + ", qqNum='" + qqNum + '\''
                 + ", weiboNum='" + weiboNum + '\'' + ", email='" + email + '\'' + ", expireTime='" + expireTime + '\''
                 + ", sex='" + sex + '\'' + ", age=" + age + ", address='" + address + '\'' + ", telephone='" + telephone
@@ -114,7 +119,7 @@ public class User implements Serializable{
             return false;
         if (says != null ? !says.equals(user.says) : user.says != null)
             return false;
-        if (name != null ? !name.equals(user.name) : user.name != null)
+        if (username != null ? !username.equals(user.username) : user.username != null)
             return false;
         if (alias != null ? !alias.equals(user.alias) : user.alias != null)
             return false;
@@ -145,7 +150,7 @@ public class User implements Serializable{
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (head != null ? head.hashCode() : 0);
         result = 31 * result + (says != null ? says.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (alias != null ? alias.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (qqNum != null ? qqNum.hashCode() : 0);

@@ -97,7 +97,7 @@ public class VisitOther{
             List<Integer> favourites = favouriteToList(user, other, session);
             //获取点赞信息
             List<Integer> praises = praiseToList(user, other, session);
-            log.debug("访问" + other.getName() + "的空间");
+            log.debug("访问" + other.getUsername() + "的空间");
             //写入关注信息
             session.setAttribute("isFollowed", isFollowed(user, other));
             //写入收藏信息

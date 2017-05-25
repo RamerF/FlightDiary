@@ -1,11 +1,11 @@
 package org.ramer.diary.util;
 
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.domain.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
 
 /**
  * 用户工具类，包含常用的静态方法：
@@ -43,6 +43,9 @@ public class UserUtils{
      */
     public static boolean checkLogin(HttpSession session) {
         log.debug("登录检测");
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal();
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user.getUsername());
         if (session.getAttribute("user") != null && ((User) session.getAttribute("user")).getId() != null) {
             log.debug("\t已登录");
             return true;

@@ -13,8 +13,12 @@
 <body>
 <div class="container">
     <div class="title" id="title">登录</div>
-    <form action="/user/login" method="post" modelAttribute="user" id="_form" enctype="multipart/form-data">
+    <form th:action="|/login|" method="post" modelAttribute="user" id="_form" enctype="multipart/form-data">
         <div class="material-form">
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   id="_csrf"
+                   th:value="${_csrf.token}"/>
             <div>
                 <input type="text" name="name" class="username" id="username"/>
                 <label for="username">用户名</label>

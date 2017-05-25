@@ -1,20 +1,18 @@
 package org.ramer.diary.controller.user;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * 登陆类.
@@ -36,16 +34,16 @@ public class Login{
      * @param session the session
      * @return 登录成功返回主页,失败返回错误页面
      */
-    @RequestMapping(value = "/user/login")
+    @PostMapping(value = "/login")
     @ResponseBody
     public String userLogin(User user, Map<String, Object> map, HttpSession session) {
-        user.setSessionid(session.getId());
         log.debug("登录");
+        user.setSessionid(session.getId());
         String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
-        if (user.getName().matches(regex)) {
+        if (user.getUsername().matches(regex)) {
             log.debug("通过邮箱登录");
-            user.setEmail(Encrypt.execEncrypt(user.getName(), true));
-            user.setName(null);
+            user.setEmail(Encrypt.execEncrypt(user.getUsername(), true));
+            user.setUsername(null);
         }
         user.setPassword(Encrypt.execEncrypt(user.getPassword(), false));
         User user2 = userService.login(user);
@@ -53,10 +51,8 @@ public class Login{
             map.put("user", user2);
             session.setAttribute("user", user2);
             return "success";
-            //      return "redirect:/home";
         }
         return "error";
-        //    throw new UsernameOrPasswordNotMatchException("登录失败,用户名或密码错误");
     }
 
 }

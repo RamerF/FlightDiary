@@ -1,12 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.DefaultException;
@@ -20,13 +14,14 @@ import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 发表分享和删除分享
@@ -63,7 +58,7 @@ public class Publish{
         }
         Topic topic = topicService.getTopicById(topic_id);
         topicService.deleteTopic(topic);
-        boolean flag = FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getName()));
+        boolean flag = FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getUsername()));
         log.debug("-----删除图片 : " + flag + "-----");
         if (!flag) {
             log.debug("method : deleteTopic -->deleteFile : Publish.java : 60.");
@@ -89,7 +84,7 @@ public class Publish{
             @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {
 
         User user = (User) session.getAttribute("user");
-        log.debug("发表日记: \n\t用户名: " + user.getName());
+        log.debug("发表日记: \n\t用户名: " + user.getUsername());
         Topic topic = new Topic();
         //  当用户上传文件时保存文件
         if (file.isEmpty()) {
@@ -97,7 +92,7 @@ public class Publish{
             throw new NoPictureException("请选择一张图片");
         }
         log.debug("保存图片");
-        String pictureUrl = FileUtils.saveFile(file, session, false, StringUtils.hasChinese(user.getName()));
+        String pictureUrl = FileUtils.saveFile(file, session, false, StringUtils.hasChinese(user.getUsername()));
         topic.setPicture(pictureUrl);
         topic.setContent(content);
         topic.setDate(new Date());
@@ -117,7 +112,7 @@ public class Publish{
         //为空说明sql执行出错
         if (topic.getId() == null) {
             //删除文件，写入出错信息
-            FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getName()));
+            FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getUsername()));
             throw new SQLExecException("系统被程序猿玩儿坏啦，当前无法发表分享 ！！！");
         }
         //    获取所有关注'我'的人
@@ -133,5 +128,10 @@ public class Publish{
             return "redirect:/user/personal";
         }
         return "redirect:/home";
+    }
+
+    @GetMapping("/user/upload")
+    public String fileUpload() {
+        return "file_upload";
     }
 }

@@ -3,8 +3,7 @@
  */
 package org.ramer.diary.service.impl;
 
-import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.repository.FeedBackRepository;
@@ -16,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 /**
  * @author ramer
@@ -24,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -45,8 +44,8 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User login(User user) {
         User u = null;
-        if (user.getName() != null) {
-            u = userRepository.getByNameAndPassword(user.getName(), user.getPassword());
+        if (user.getUsername() != null) {
+            u = userRepository.getByUsernameAndPassword(user.getUsername(), user.getPassword());
         } else {
             u = userRepository.getByEmailAndPassword(user.getEmail(), user.getPassword());
         }
@@ -75,7 +74,7 @@ public class UserServiceImpl implements UserService {
         if (username.matches(regex)) {
             return userRepository.getByEmail(Encrypt.execEncrypt(username, true));
         }
-        return userRepository.getByName(username);
+        return userRepository.getByUsername(username);
     }
 
     @Override
