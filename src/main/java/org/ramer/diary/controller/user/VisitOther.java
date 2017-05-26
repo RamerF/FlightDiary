@@ -1,11 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.UserNotExistException;
@@ -14,13 +9,14 @@ import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 浏览他人主页或分享.
@@ -117,7 +113,7 @@ public class VisitOther{
      * @param session the session
      * @return 返回某个分享的详情页面
      */
-    @RequestMapping("/user/topic/{topic_id}")
+    @GetMapping("/user/topic/{topic_id}")
     public String forwardTopic(@PathVariable("topic_id") Integer topic_id, Map<String, Object> map,
             HttpSession session) {
         //    inOtherPage = false;

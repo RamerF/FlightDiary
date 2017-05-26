@@ -13,6 +13,7 @@ import org.ramer.diary.service.TopicService;
 import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +49,7 @@ public class Publish{
      * @throws IOException
      */
     @RequestMapping("/user/topic/deleteTopic/{topic_id}")
+    @PreAuthorize("hasRole('USER')")
     public String deleteTopic(User user, @PathVariable("topic_id") Integer topic_id, Map<String, Object> map,
             HttpSession session) throws IOException {
         log.debug("-----删除分享-----");

@@ -3,25 +3,31 @@
  */
 package org.ramer.diary.exception;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author ramer
  *
  */
 @ControllerAdvice
+@Slf4j
 public class MyExceptionHandler implements HandlerExceptionResolver{
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object object,
             Exception exception) {
-        System.out.println("异常处理");
+        log.debug("异常处理");
         ModelAndView modelAndView = new ModelAndView();
+        if (exception.getClass().getSimpleName().equals("AccessDeniedException")) {
+            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " exception : {}", exception);
+            return new ModelAndView("error");
+        }
         return setMessage(modelAndView, exception);
     }
 

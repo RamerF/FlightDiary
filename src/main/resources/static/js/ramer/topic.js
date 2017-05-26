@@ -16,6 +16,7 @@ $( function() {
     $( "#sendPrivMess" ).click( function() {
         var url = $( "#sendPrivMessForm" ).attr( "action" );
         var args = {
+            "_csrf" : $( "#_csrf" ).val(),
             "content" : $( "#privMessContent" ).val()
         }
         $.post( url , args , function( data ) {
@@ -52,7 +53,9 @@ $( function() {
     $( ".thumbsup" ).click( function() {
         var des = $( this );
         var url = $( this ).attr( "href" );
-        $.post( url , null , function( data ) {
+        $.post( url , {
+            "_csrf" : $( "#_csrf" ).val()
+        } , function( data ) {
             if (data == "恭喜你骚年,她已经悄悄收下你的赞 !") {
                 $( ".thumbsup i" ).attr( "class" , "icon-thumbs-up-ramer" );
                 $( ".thumbsup" ).attr( "href" , url.replace( "praise" , "notPraise" ) );
@@ -107,7 +110,9 @@ $( function() {
     /* 关注 */
     $( "#followSpan a" ).click( function() {
         var url = $( this ).attr( "href" );
-        $.post( url , null , function( data ) {
+        $.post( url , {
+            "_csrf" : $( "#_csrf" ).val()
+        } , function( data ) {
             if (data == "关注成功 !") {
                 $( ".follow" ).attr( "class" , "notFollow" );
                 $( "i#icon" ).attr( "class" , "icon-minus" );
@@ -130,7 +135,9 @@ $( function() {
     /* 收藏 */
     $( ".favourite" ).click( function() {
         var url = $( this ).attr( "href" );
-        $.post( url , null , function( data ) {
+        $.post( url , {
+            "_csrf" : $( "#_csrf" ).val()
+        } , function( data ) {
             if (data == "收藏成功 !") {
                 $( ".favourite i" ).attr( "class" , "icon-star" );
                 $( ".favourite" ).attr( "href" , url.replace( "favourite" , "notFavourite" ) );

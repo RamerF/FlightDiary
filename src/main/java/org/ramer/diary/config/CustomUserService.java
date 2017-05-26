@@ -1,6 +1,7 @@
 package org.ramer.diary.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.diary.domain.Privilege;
 import org.ramer.diary.domain.Roles;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.UserService;
@@ -25,7 +26,7 @@ public class CustomUserService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.debug(" 登录拦截,{}", username);
+        log.debug(" 登录: {}", username);
         User user = userService.getByName(username);
         if (user == null) {
             throw new UsernameNotFoundException("用户名不存在");
@@ -33,9 +34,14 @@ public class CustomUserService implements UserDetailsService{
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
         for (Roles role : user.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " role : {}", role.getName());
+            List<Privilege> privileges = role.getPrivileges();
+            privileges.forEach(privilege -> {
+                authorities.add(new SimpleGrantedAuthority(privilege.getName()));
+                log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " privilege : {}",
+                        privilege.getName());
+            });
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                authorities);
     }
 }
