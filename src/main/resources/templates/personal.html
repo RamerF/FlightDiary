@@ -40,7 +40,7 @@
         </a>
     </div>
     <div class="selfinfo">
-        <div class="name" th:text="${session.user.name}"></div>
+        <div class="name" th:text="${session.user.username}"></div>
         <div class="contact">
             <span th:text="|QQ: ${user.qqNum != null ? user.qqNum :'无' }|"></span>
             <span th:text="|微博: ${user.weiboNum != null ? user.weiboNum : '无'}|"></span>
@@ -67,7 +67,7 @@
                 <a href="/logOff">注销</a>
             </span>
             <span>
-                <a href="/user/${user.id}" id="editProfile">编辑个人信息</a>
+                <a th:href="|/user/${session.user.id}|" id="editProfile">编辑个人信息</a>
             </span>
             <span>
                 <a href="javascript:void(0);" id="saySomething">给我一个分享平台</a>
@@ -90,7 +90,7 @@
        <input type="hidden" th:value="${notify.id}" name="notifyId" class="notifyId"/>
        <input type="hidden" th:value="${notify.notifiedUser.id}" name="notifiedUserId" class="notifiedUserId"/>
        <a th:href="|/user/personal/${notify.user.id}|" class="notifyUser"
-          th:text="|${notify.user.name} :${notify.content}|"></a>
+          th:text="|${notify.user.username} :${notify.content}|"></a>
         <sub th:text="${#calendars.format(notify.date,'HH:mm:ss yyyy-MM-dd')}"></sub>
         <img alt="error" src="/pictures/new.png" class="newNotify"/>
       </span>
@@ -101,7 +101,7 @@
             <input type="hidden" th:value="${readedNotify.notifiedUser.id}" name="notifiedUserId"
                    class="notifiedUserId"/>
             <a th:href="|/user/personal/${readedNotify.user.id}|" class="readPrivMess"
-               th:text="|${readedNotify.user.name } : ${readedNotify.content}|">
+               th:text="|${readedNotify.user.username } : ${readedNotify.content}|">
                 <sub th:text="${#calendars.format(readedNotify.date,'HH:mm:ss yyyy-MM-dd')}"></sub>
             </a>
         </span>
@@ -134,7 +134,7 @@
                 </a>
             </div>
             <div class="followed_user_name_panel">
-                <a th:href="|/user/personal/${follow.followedUser.id}|" th:text="${follow.followedUser.name}"></a>
+                <a th:href="|/user/personal/${follow.followedUser.id}|" th:text="${follow.followedUser.username}"></a>
             </div>
         </div>
     </th:block>
@@ -259,7 +259,7 @@
         <th:block th:each="comment:${topic.comments}">
             <div class="comment_panel">
                 <p>
-                    <span th:text="|${comment.user.name } : ${comment.content }|"></span>
+                    <span th:text="|${comment.user.username } : ${comment.content }|"></span>
                     <sub th:text="|  ${#calendars.format(comment.date,'HH:mm:ss yyyy-MM-dd')}|"></sub>
                     <a th:href="|/user/topic/comment/reply/${comment.id}|" class="reply">
                         <i class="icon-edit"></i>
@@ -279,7 +279,7 @@
                 </div>
                 <th:block th:each="reply:${comment.replies}">
                     <p>
-                        <span th:text="|${reply.user.name}&nbsp;回复&nbsp;${comment.user.name} : ${reply.content }|"></span>
+                        <span th:text="|${reply.user.username}&nbsp;回复&nbsp;${comment.user.username} : ${reply.content }|"></span>
                         <sub th:text="|  ${#calendars.format(reply.date,'HH:mm:ss yyyy-MM-dd')}|"></sub>
                         <a th:href="|/user/topic/comment/reply/${reply.comment.id}|" class="reply2">
                             <i class="icon-edit"></i>

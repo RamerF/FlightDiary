@@ -59,9 +59,6 @@ public class AddReply{
             User user, HttpSession session, HttpServletResponse response) {
         if (!UserUtils.checkLogin(session)) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
-            if (!UserUtils.multiLogin(session, u)) {
-                throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
-            }
             throw new UserNotLoginException("您还未登录,或登录已过期,请登录");
         }
         Integer comment_id = 0;

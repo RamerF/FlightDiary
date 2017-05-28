@@ -1,9 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -19,7 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  *修改密码.
@@ -51,9 +49,6 @@ public class ModifyPassword{
     public String forwardModifyPassword(HttpSession session) {
         if (!UserUtils.checkLogin(session)) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
-            if (!UserUtils.multiLogin(session, u)) {
-                throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
-            }
             throw new UserNotLoginException("您还未登录或登录已过期");
         }
         log.debug("引导到修改用户密码页面");
