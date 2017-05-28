@@ -42,12 +42,10 @@ public class UserUtils{
      * @return 已登录返回true,否则返回false
      */
     public static boolean checkLogin(HttpSession session) {
-        log.debug("登录检测");
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal();
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user.getUsername());
-        if (session.getAttribute("user") != null && ((User) session.getAttribute("user")).getId() != null) {
-            log.debug("\t已登录");
+        if (user != null) {
+            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user.getUsername());
             return true;
         }
         session.setAttribute("user", new User());
