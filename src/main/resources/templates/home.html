@@ -143,17 +143,17 @@
 <div class="category_panel">
     <div class="category">
         <span>
-            <a href="home" data-toggle="默认">默认</a>
+            <a href="/home" data-toggle="默认">默认</a>
             <span id="newTopic" style="position: absolute; margin: 0px;"></span>
         </span> /
         <span>
-            <a href="home/orderbyUpCounts" data-toggle="热门">热门</a>
+            <a href="/home/orderbyUpCounts" data-toggle="热门">热门</a>
         </span> /
         <span>
-            <a href="home/topPeople" data-toggle="达人">达人</a>
+            <a href="/home/topPeople" data-toggle="达人">达人</a>
         </span> /
         <span>
-            <a href="home/tag" id="topTags" data-toggle="热门标签">热门标签</a>
+            <a href="/home/tag" id="topTags" data-toggle="热门标签">热门标签</a>
         </span>
     </div>
     <!-- 通过用户输入标签获取分享 -->
@@ -216,10 +216,10 @@
         <textarea rows="7" cols="30" name="content" class="topic_content"></textarea>
         <div class="tool">
             <div id="addPosition" class="add_position" data-balloon="添加当前位置" data-balloon-pos="right">
-                <img alt="" src="pictures/position.png"/>
+                <img alt="" src="/pictures/position.png"/>
             </div>
             <div id="addTime" class="add_time" data-balloon="添加当前时间" data-balloon-pos="right">
-                <img alt="" src="pictures/calendar.png"/>
+                <img alt="" src="/pictures/calendar.png"/>
             </div>
         </div>
         <input class="upbtn" type="file" name="picture" accept="image/*" id="upPic"/>
@@ -253,7 +253,7 @@
                     <div class="name_panel">
                         <a th:href="|user/personal/${t.user.id}|">
                             <img th:src="${t.user.head}" class="head"
-                                 onerror="javascript:this.src='pictures/userHead.jpg'"/>
+                                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
                             <br/>
                             <span class="name" th:text="${t.user.username}"></span>
                         </a>
@@ -272,12 +272,12 @@
 <ul class="page_panel">
     <li class="lastPage">
         <a th:href="|?pageNum=${topics.number + 1 - 1}|" id="lastPage">
-            <img alt="error" src="pictures/previous.png"/>
+            <img alt="error" src="/pictures/previous.png"/>
         </a>
     </li>
     <li class="nextPage">
         <a th:href="|?pageNum=${topics.number + 1 + 1}|" id="nextPage">
-            <img alt="error" src="pictures/next.png"/>
+            <img alt="error" src="/pictures/next.png"/>
         </a>
     </li>
     <li>
@@ -294,14 +294,14 @@
                     <a th:href="|user/personal/${u.id}|">
                         <th:block th:each="head:${u.topics}" begin="0" end="0">
                             <img th:src="${head.picture}" alt="error"
-                                 onerror="javascript:this.src='pictures/userHead.jpg'"/>
+                                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
                         </th:block>
                     </a>
                     <div class="name_panel">
                         <a th:href="|user/personal/${u.id}|">
                             <img src="${u.head}" class="head"/>
                             <br/>
-                            <span class="name" th:text="${u.name}"></span>
+                            <span class="name" th:text="${u.username}"></span>
                         </a>
                     </div>
                 </div>
@@ -317,17 +317,17 @@
 <ul class="page_panel" th:if="${showTopPeople eq 'true' }">
     <li class="lastPage">
         <a th:href="|?pageNum=${topPeoples.number + 1 - 1}|" id="lastPage">
-            <img alt="error" src="pictures/previous.png"/>
+            <img alt="error" src="/pictures/previous.png"/>
         </a>
     </li>
     <li class="nextPage">
         <a href="?pageNum=${topPeoples.number + 1 + 1}" id="nextPage">
-            <img alt="error" src="pictures/next.png"/>
+            <img alt="error" src="/pictures/next.png"/>
         </a>
     </li>
     <li>
         <a id="removeScrollPage" th:if="${scrollInPage eq true}">禁止滚动翻页</a>
-        <a id="removeScrollPage" th:if="${scrollInPage not true}">开启滚动翻页</a>
+        <a id="removeScrollPage" th:if="${scrollInPage ne true}">开启滚动翻页</a>
     </li>
 </ul>
 <!-- 显示热门标签 -->
@@ -340,9 +340,9 @@
         </th:block>
     </ul>
 </div>
-<span class="more" data-toggle="更多" id="showMore">更多</span>
+<span class="more" data-toggle="更多" id="showMore" th:if="${showPopularTags eq 'true' }">更多</span>
 <!-- 显示热门标签分享 -->
-<div class="container" th:if="${showPopularTags eq 'true'}">
+<div class="container" th:if="${showPopularTags eq 'true'  and tagTopics ne null}">
     <ul class="grid effect-2" id="grid">
         <th:block th:each="t:${tagTopics.content}">
             <li>
@@ -353,7 +353,7 @@
                     <div class="name_panel">
                         <a th:href="|user/personal/${t.user.id}|">
                             <img th:src="${t.user.head}" class="head"
-                                 onerror="javascript:this.src='pictures/userHead.jpg'"/>
+                                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
                             <br/>
                             <span class="name" th:text="${t.user.username}"></span>
                         </a>
@@ -372,12 +372,12 @@
 <ul class="page_panel" th:if="${showPopularTags eq 'true'}">
     <li class="lastPage">
         <a href="?pageNum=${tagTopics.number + 1 - 1}" id="lastPage">
-            <img alt="error" src="pictures/previous.png"/>
+            <img alt="error" src="/pictures/previous.png"/>
         </a>
     </li>
     <li class="nextPage">
         <a href="?pageNum=${tagTopics.number + 1 + 1}" id="nextPage">
-            <img alt="error" src="pictures/next.png"/>
+            <img alt="error" src="/pictures/next.png"/>
         </a>
     </li>
     <li>
@@ -387,10 +387,10 @@
 </ul>
 <input type="hidden" id="positionVal"/>
 </body>
-<script src="js/masonry.pkgd.min.js"/>
-<script src="js/imagesloaded.js"/>
-<script src="js/classie.js"/>
-<script src="js/AnimOnScroll.js"/>
+<script src="/js/masonry.pkgd.min.js"/>
+<script src="/js/imagesloaded.js"/>
+<script src="/js/classie.js"/>
+<script src="/js/AnimOnScroll.js"/>
 <!-- 瀑布流动画js -->
 <script>
     new AnimOnScroll(document.getElementById('grid'), {
