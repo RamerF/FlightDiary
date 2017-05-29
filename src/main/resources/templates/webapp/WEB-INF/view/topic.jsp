@@ -56,7 +56,7 @@
         <div class="selfinfo">
             <div class="name"><a
                 href="${pageContext.request.contextPath}/user/personal/${topic.user.id}">
-                    ${topic.user.name} </a> <br></div>
+                    ${topic.user.username} </a> <br></div>
             <div class="contact"><span id="followSpan"> 
                     <c:if  test="${isFollowed eq true}">
                         <a href="${pageContext.request.contextPath}/user/topic/notFollow" class="notFollow">
@@ -105,7 +105,7 @@
                     </a></div>
                     <div class="followed_user_name_panel"><a
                         href="${pageContext.request.contextPath}/user/personal/${follow.followedUser.id}">
-                            ${follow.followedUser.name} </a></div>
+                            ${follow.followeduser.username} </a></div>
                 </div>
             </c:forEach>
         </c:if></div>
@@ -166,7 +166,7 @@
                 value="收起" class="hiddenCommentForm"></form>
     </div> <!-- 显示评论 --> <c:forEach items="${topic.comments}" var="comment">
             <div class="comment_panel">
-                <p>${comment.user.name }
+                <p>${comment.user.username }
                     : ${comment.content }<sub>&nbsp;&nbsp;${comment.date}</sub>
                     <a
                         href="${pageContext.request.contextPath}/user/topic/comment/reply/${comment.id}"
@@ -180,7 +180,7 @@
                         type="reset" value="收起" class="hiddenReplyForm">
                 </form>
             </div> <c:forEach items="${comment.replies}" var="reply">
-                    <p>${reply.user.name}&nbsp;回复&nbsp;${comment.user.name}
+                    <p>${reply.user.username}&nbsp;回复&nbsp;${comment.user.username}
                         : ${reply.content }<sub>&nbsp;&nbsp;${reply.date}</sub>
                         <a
                             href="${pageContext.request.contextPath}/user/topic/comment/reply/${reply.comment.id}"
@@ -199,7 +199,7 @@
                     </div>
                 </c:forEach>
             </div>
-        </c:forEach> ${user.name }
+        </c:forEach> ${user.username }
     </div>
 </body>
 </html>

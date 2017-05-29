@@ -110,7 +110,7 @@
               </div>
               <div class="followed_user_name_panel">
                 <a href="${pageContext.request.contextPath}/user/personal/${follow.followedUser.id}">
-                  ${follow.followedUser.name}
+                  ${follow.followeduser.username}
                 </a>
               </div>
             </div>
@@ -223,7 +223,7 @@
             <c:forEach items="${topic.comments}" var="comment">
               <div class="comment_panel">
                 <p>
-                  ${comment.user.name } : ${comment.content }
+                  ${comment.user.username } : ${comment.content }
                   <sub>
                     &nbsp;&nbsp;<fmt:formatDate value="${comment.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
                   </sub>
@@ -242,7 +242,7 @@
                 </div>
                 <c:forEach items="${comment.replies}" var="reply">
                   <p>
-                    ${reply.user.name}&nbsp;回复&nbsp;${comment.user.name} : ${reply.content }
+                    ${reply.user.username}&nbsp;回复&nbsp;${comment.user.username} : ${reply.content }
                     <sub>
                       &nbsp;&nbsp;<fmt:formatDate value="${reply.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
                     </sub>
