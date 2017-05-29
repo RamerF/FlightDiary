@@ -11,7 +11,7 @@ spring:
       indent_output: true
   datasource:
     username: root
-    password: 520530wdl
+    password: ramer
     url: jdbc:mysql://localhost:3306/flightdiary
     driver-class-name: com.mysql.jdbc.Driver
     filters: stat
