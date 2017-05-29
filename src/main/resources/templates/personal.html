@@ -67,7 +67,7 @@
                 <a href="/logOff">注销</a>
             </span>
             <span>
-                <a href="/user/${user.id}" id="editProfile">编辑个人信息</a>
+                <a th:href="|/user/${session.user.id}|" id="editProfile">编辑个人信息</a>
             </span>
             <span>
                 <a href="javascript:void(0);" id="saySomething">给我一个分享平台</a>

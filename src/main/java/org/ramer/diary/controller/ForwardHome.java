@@ -205,8 +205,7 @@ public class ForwardHome{
         //    获取达人的分页信息
         Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLEPAGESIZE);
         map.put("topPeoples", topPeoples);
-        if (UserUtils.checkLogin(session)
-                && UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))) {
+        if (UserUtils.checkLogin(session)) {
             User user = (User) session.getAttribute("user");
             //获取用户统计数据
             int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -263,8 +262,7 @@ public class ForwardHome{
         } catch (Exception e) {
             page = 1;
         }
-        if (UserUtils.checkLogin(session)
-                && UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))) {
+        if (UserUtils.checkLogin(session)) {
             User user = (User) session.getAttribute("user");
             //获取用户统计数据
             int notifiedNumber = notifyService.getNotifiedNumber(user);

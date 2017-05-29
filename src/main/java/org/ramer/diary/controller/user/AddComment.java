@@ -1,10 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.util.Date;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Comment;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -22,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 评论和删除评论.
@@ -56,9 +54,6 @@ public class AddComment{
         log.debug("用户评论");
         if (!UserUtils.checkLogin(session)) {
             User user = userService.getById(((User) session.getAttribute("user")).getId());
-            if (!UserUtils.multiLogin(session, user)) {
-                throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人，请及时修改密码 !");
-            }
             throw new UserNotLoginException("要先登录,才能评论哦 !");
         }
         log.debug("-----用户评论-----");
