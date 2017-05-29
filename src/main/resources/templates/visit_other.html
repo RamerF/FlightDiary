@@ -89,7 +89,7 @@
                 </a>
             </div>
             <div class="followed_user_name_panel">
-                <a th:href="|/user/personal/${follow.followedUser.id}|" th:text="${follow.followedUser.name}"></a>
+                <a th:href="|/user/personal/${follow.followedUser.id}|" th:text="${follow.followeduser.username}"></a>
             </div>
         </div>
     </th:block>
@@ -168,7 +168,7 @@
         <th:block th:each="comment:${topic.comments}">
             <div class="comment_panel">
                 <p th:inline="text">
-                    <span th:text="|${comment.user.name } : ${comment.content}|"></span>
+                    <span th:text="|${comment.user.username } : ${comment.content}|"></span>
                     <sub th:text="|  ${#calendars.format(comment.date,'HH:mm:ss yyyy-MM-dd')}|"></sub>
                     <a th:href="|/user/topic/comment/reply/${comment.id}|" class="reply">
                         <i class="icon-edit"></i>
@@ -184,7 +184,7 @@
                 </div>
                 <th:block th:each="reply:${comment.replies}">
                     <p th:inline="text">
-                        <span th:text="|${reply.user.name} 回复 ${comment.user.name} : ${reply.content }|"></span>
+                        <span th:text="|${reply.user.username} 回复 ${comment.user.username} : ${reply.content }|"></span>
                         <sub th:text="|  ${#calendars.format(reply.date,'HH:mm:ss yyyy-MM-dd')}|"></sub>
                         <a th:href="|/user/topic/comment/reply/${reply.comment.id}|" class="reply2">
                             <i class="icon-edit"></i>

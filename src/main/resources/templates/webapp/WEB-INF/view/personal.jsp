@@ -43,7 +43,7 @@
         </a>
     </div>
     <div class="selfinfo">
-    <div class="name">${sessionScope.user.name}</div>
+    <div class="name">${sessionScope.user.username}</div>
         <div class="contact">
             <span> QQ: ${!empty user.qqNum ? user.qqNum : "无" }</span>
             <span> 微博: ${!empty user.weiboNum ? user.weiboNum : "无"}</span>
@@ -95,7 +95,7 @@
    <input type="hidden" value="${notify.id}" name="notifyId" class="notifyId">
    <input type="hidden" value="${notify.notifiedUser.id}" name="notifiedUserId" class="notifiedUserId">
    <a href="${pageContext.request.contextPath}/user/personal/${notify.user.id}"class="notifyUser">
-    ${notify.user.name } : 
+    ${notify.user.username } :
    </a>
    ${notify.content}
     <sub>
@@ -109,7 +109,7 @@
    <input type="hidden" value="${readedNotify.id}" name="notifyId" class="notifyId">
    <input type="hidden" value="${readedNotify.notifiedUser.id}" name="notifiedUserId" class="notifiedUserId">
    <a href="${pageContext.request.contextPath}/user/personal/${readedNotify.user.id}" class="readPrivMess">
-    ${readedNotify.user.name } : ${readedNotify.content}
+    ${readedNotify.user.username } : ${readedNotify.content}
     <sub>
       <fmt:formatDate value="${readedNotify.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
     </sub>
@@ -145,7 +145,7 @@
                     </a>
                 </div>
                 <div class="followed_user_name_panel">
-                    <a href="${pageContext.request.contextPath}/user/personal/${follow.followedUser.id}">${follow.followedUser.name}</a>
+                    <a href="${pageContext.request.contextPath}/user/personal/${follow.followedUser.id}">${follow.followeduser.username}</a>
                 </div>
             </div>
         </c:forEach>
@@ -281,7 +281,7 @@
         <!-- 显示评论 -->
         <c:forEach items="${topic.comments}" var="comment">
             <div class="comment_panel">
-                <p>${comment.user.name } : ${comment.content }
+                <p>${comment.user.username } : ${comment.content }
                   <sub>
                     &nbsp;&nbsp;<fmt:formatDate value="${comment.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
                   </sub>
@@ -302,7 +302,7 @@
                     </form>
                 </div>
                 <c:forEach items="${comment.replies}" var="reply">
-                    <p>${reply.user.name}&nbsp;回复&nbsp;${comment.user.name} : ${reply.content }
+                    <p>${reply.user.username}&nbsp;回复&nbsp;${comment.user.username} : ${reply.content }
                       <sub>
                         &nbsp;&nbsp;<fmt:formatDate value="${reply.date}" pattern="HH:mm:ss yyyy-MM-dd"/>
                       </sub>

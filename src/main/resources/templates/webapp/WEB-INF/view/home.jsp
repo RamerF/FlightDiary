@@ -144,7 +144,7 @@ background:none;
       <span>
         <a href="javascript:void(0);" id="saySomething" class="share_link ">给我一个分享平台</a>
       </span>
-     <span class="username" id="showProfile">${user.name}</span>
+     <span class="username" id="showProfile">${user.username}</span>
      <span id="newNotify" style="position: absolute;margin: 0px;margin-left: -30px;" ></span>
      <c:if test="${notifiedNumber gt 0}">
       <span id="newTopic" 
@@ -238,7 +238,7 @@ background:none;
                         <img src="${pageContext.request.contextPath}/${t.user.head}" class="head"
                          onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'">
                         <br>
-                        <span class="name">${t.user.name }</span>
+                        <span class="name">${t.user.username }</span>
                     </a>
                     <div class="t_content ">${t.content }</div>
                   </div>
@@ -352,7 +352,7 @@ background:none;
                             <img src="${pageContext.request.contextPath}/${t.user.head}" class="head"
                               onerror="javascript:this.src='${pageContext.request.contextPath}/pictures/userHead.jpg'">
                             <br>
-                            <span class="name">${t.user.name }</span>
+                            <span class="name">${t.user.username }</span>
                         </a>
                         <div class="t_content ">${t.content }</div>
                       </div>
