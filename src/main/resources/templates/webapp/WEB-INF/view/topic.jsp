@@ -105,7 +105,7 @@
                     </a></div>
                     <div class="followed_user_name_panel"><a
                         href="${pageContext.request.contextPath}/user/personal/${follow.followedUser.id}">
-                            ${follow.followeduser.username} </a></div>
+                            ${follow.followedUser.username} </a></div>
                 </div>
             </c:forEach>
         </c:if></div>
