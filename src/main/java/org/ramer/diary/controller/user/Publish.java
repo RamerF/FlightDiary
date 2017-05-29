@@ -49,7 +49,7 @@ public class Publish{
      * @throws IOException
      */
     @RequestMapping("/user/topic/deleteTopic/{topic_id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     public String deleteTopic(User user, @PathVariable("topic_id") Integer topic_id, Map<String, Object> map,
             HttpSession session) throws IOException {
         log.debug("-----删除分享-----");

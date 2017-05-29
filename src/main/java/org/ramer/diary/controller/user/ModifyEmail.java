@@ -1,12 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -21,7 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * 修改邮箱.
@@ -72,9 +70,6 @@ public class ModifyEmail{
             HttpServletResponse response) throws IOException {
         if (!UserUtils.checkLogin(session)) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
-            if (!UserUtils.multiLogin(session, u)) {
-                throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
-            }
             throw new UserNotLoginException("您的登录已过期,请重新登录");
         }
         log.debug("发送邮件,修改邮箱");

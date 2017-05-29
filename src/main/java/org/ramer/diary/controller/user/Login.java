@@ -35,7 +35,7 @@ public class Login{
      * @param session the session
      * @return 登录成功返回主页,失败返回错误页面
      */
-    @PostMapping(value = "/logins")
+    @PostMapping(value = "/sign_in")
     @ResponseBody
     public String userLogin(User user, Map<String, Object> map, HttpSession session, Principal principal) {
         user.setSessionid(session.getId());

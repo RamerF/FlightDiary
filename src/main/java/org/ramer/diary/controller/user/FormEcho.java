@@ -31,7 +31,6 @@ public class FormEcho{
      */
     @GetMapping("/login")
     public String input(User user, Map<String, Object> map) {
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " 表单回显,空白用户");
         return PageConstant.USER_INPUT;
     }
 
@@ -42,15 +41,13 @@ public class FormEcho{
      * @param map the map
      * @return 引导用户更新界面
      */
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/user/{id}")
     public String input(@PathVariable("id") Integer id, Map<String, Object> map) {
-        log.debug("表单回显,id = " + id);
         User user = (User) map.get("user");
         if (user != null && user.getId() == id) {
             map.put("user", userService.getById(user.getId()));
             return PageConstant.USER_INPUT;
         }
-        log.debug("更新用户表单回显,非法访问");
         throw new IllegalAccessException("无法访问用户信息,登录已过期");
     }
 
