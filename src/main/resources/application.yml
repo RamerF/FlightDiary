@@ -6,6 +6,10 @@ spring:
         enable_lazy_load_no_trans: true
     hibernate:
       ddl-auto: update
+  redis:
+    host: localhost
+    port: 6379
+    password: $2a$10$1G3EImK46GA6C9BOA9gJcuIitF3YaXKwjIazh/IxkairzXplXP1rC
   jackson:
     serialization:
       indent_output: true
