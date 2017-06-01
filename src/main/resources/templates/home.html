@@ -81,48 +81,25 @@
             color: #FFFFFF;
         }
 
-        @
-        keyframes ramerAnimateTwo {
-
-        0
-        %
-        {
-            top: 50%
-        ;
-            left: 50%
-        ;
+        @keyframes ramerAnimateTwo {
+            0%{
+                 top: 50%;
+                 left: 50% ;
+             }
+            100%{
+                top: 300px;
+                left: 0%;
+            }
         }
-
-        100
-        %
-        {
-            top: 300px
-        ;
-
-            left: 0%
-        ;
-        }
-        }
-        @
-        keyframes ramerAnimate {
-
-        0
-        %
-        {
-            left: 0
-        ;
-            top: 300px
-        ;
-        }
-        100
-        %
-        {
-            left: 50%
-        ;
-            top: 50%
-        ;
-
-        }
+        @keyframes ramerAnimate {
+            0%{
+                left: 0;
+                top: 300px;
+            }
+            100%{
+                left: 50%;
+                top: 50% ;
+            }
         }
     </style>
 </head>
@@ -165,21 +142,21 @@
     <form action="home/tag" id="tagForm">
         <input type="text" name="tag" id="tagName"/>
     </form>
-    <div class="user_panel" th:if="${user.id &gt; 0}">
+    <div class="user_panel" th:if="${session.user.id &gt; 0}">
         <span>
             <a href="javascript:void(0);" id="saySomething" class="share_link ">分享平台</a>
         </span>
-        <span class="username" id="showProfile" th:text="|${user.username}|"></span>
+        <span class="username" id="showProfile" th:text="|${session.user.username}|"></span>
         <span id="newNotify" style="position: absolute; margin: 0px; margin-left: -30px;"></span>
         <span id="newTopic" style="position: absolute; margin: 0px; padding: 0px; margin-left: -33px;"
               class="newTopic" th:if="${notifiedNumber &gt; 0}"></span>
         <span class="logoff">
-            <a href="logOff" id="logOff">注销</a>
+            <a href="/logOff" id="logOff">注销</a>
         </span>
     </div>
-    <div class="signup" th:if="${user.id ==null or user.id &lt; 0}">
+    <div class="signup" th:if="${session.user.id ==null or session.user.id &lt; 0}">
         <span>
-            <a href="user">登录/注册</a>
+            <a href="/user">登录/注册</a>
         </span>
     </div>
 </div>
@@ -207,7 +184,7 @@
         <a href="user/forwardModifyEmail">修改绑定邮箱</a>
     </div>
     <div>
-        <a th:href="|user/${user.id}|">编辑个人信息</a>
+        <a th:href="|user/${session.user.id}|">编辑个人信息</a>
     </div>
 </div>
 <!-- 发表分享面板 -->
@@ -281,8 +258,8 @@
         </a>
     </li>
     <li>
-        <a id="removeScrollPage" th:if="${scrollInPage eq true}">禁止滚动翻页</a>
-        <a id="removeScrollPage" th:if="${scrollInPage ne true}">开启滚动翻页</a>
+        <a id="removeScrollPage" th:if="${session.scrollInPage eq true}">禁止滚动翻页</a>
+        <a id="removeScrollPage" th:if="${session.scrollInPage ne true}">开启滚动翻页</a>
     </li>
 </ul>
 <!-- 显示达人 -->
@@ -321,7 +298,7 @@
         </a>
     </li>
     <li class="nextPage">
-        <a href="?pageNum=${topPeoples.number + 1 + 1}" id="nextPage">
+        <a th:href="|?pageNum=${topPeoples.number + 1 + 1}|" id="nextPage">
             <img alt="error" src="/pictures/next.png"/>
         </a>
     </li>
@@ -335,7 +312,7 @@
     <ul class="tag_panel" id="tagPanel">
         <th:block th:each="tag:${tags }">
             <li class="tagname">
-                <a th:href="|home/tag/${tag}|" class="tag" data-toggle="${tag}" th:text="${tag}"></a>
+                <a th:href="|/home/tag/${tag}|" class="tag" th:attr="data-toggle=${tag}" th:text="${tag}"></a>
             </li>
         </th:block>
     </ul>
@@ -347,7 +324,7 @@
         <th:block th:each="t:${tagTopics.content}">
             <li>
                 <div class="user_mess">
-                    <a th:href="user/topic/${t.id}">
+                    <a th:href="|/user/topic/${t.id}|">
                         <img th:src="${t.picture}" alt="error"/>
                     </a>
                     <div class="name_panel">
@@ -364,19 +341,19 @@
         </th:block>
     </ul>
     <!-- 存储记录的总页数 -->
-    <input id="totalPages" type="hidden" value="${tagTopics.totalPages }"/>
+    <input id="totalPages" type="hidden" th:value="${tagTopics.totalPages }"/>
     <!-- 存储当前页号 -->
-    <input id="number" type="hidden" value="${tagTopics.number}"/>
+    <input id="number" type="hidden" th:value="${tagTopics.number}"/>
 </div>
 <!-- 分页 -->
 <ul class="page_panel" th:if="${showPopularTags eq 'true'}">
     <li class="lastPage">
-        <a href="?pageNum=${tagTopics.number + 1 - 1}" id="lastPage">
+        <a th:href="|?pageNum=${tagTopics.number + 1 - 1}|" id="lastPage">
             <img alt="error" src="/pictures/previous.png"/>
         </a>
     </li>
     <li class="nextPage">
-        <a href="?pageNum=${tagTopics.number + 1 + 1}" id="nextPage">
+        <a th:href="|?pageNum=${tagTopics.number + 1 + 1}|" id="nextPage">
             <img alt="error" src="/pictures/next.png"/>
         </a>
     </li>

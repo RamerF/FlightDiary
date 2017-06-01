@@ -291,9 +291,9 @@ public class ForwardHome{
             tagTopics = topicService.getTopicsPageByTags(tag, page, TOPICPAGESIZE);
         }
         //   将所有标签写入session
-        session.setAttribute("tags", tags);
+        map.put("tags", tags);
         //    将第一个标签对应的分页分享写入session
-        session.setAttribute("tagTopics", tagTopics);
+        map.put("tagTopics", tagTopics);
         //    取消标识为达人分类
         map.put("showTopPeople", "false");
         //    取消标识为分享分类
