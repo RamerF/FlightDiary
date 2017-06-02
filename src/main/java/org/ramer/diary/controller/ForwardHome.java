@@ -132,7 +132,7 @@ public class ForwardHome{
      * @param session the session
      * @return 引导到主页
      */
-    @RequestMapping("/home/orderbyUpCounts")
+    @GetMapping("/home/orderbyUpCounts")
     public String homeTopicOrderByUpcounts(
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
@@ -184,7 +184,7 @@ public class ForwardHome{
      * 达人
      * @return
      */
-    @RequestMapping("/home/topPeople")
+    @GetMapping("/home/topPeople")
     public String homeTopPeople(@RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
         //初始化滚动翻页
