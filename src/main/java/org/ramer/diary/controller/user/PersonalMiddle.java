@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -49,9 +50,8 @@ public class PersonalMiddle{
      * @param session the session
      * @return 如果用户已登录返回个人主页,否则返回错误页面
      */
-    @RequestMapping("/user/personal")
-    public String personalMiddle(@RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
-            User user, Map<String, Object> map, HttpSession session) {
+    @GetMapping("/user/personal")
+    public String personalMiddle( String pageNum,User user, Map<String, Object> map, HttpSession session) {
 
         session.setAttribute("inOtherPage", false);
         session.setAttribute("inTopicPage", false);

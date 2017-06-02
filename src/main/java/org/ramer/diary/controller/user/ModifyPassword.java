@@ -65,8 +65,7 @@ public class ModifyPassword{
      * @return 密码修改成功 : 返回个人主页,失败: 返回密码修改页面 
      */
     @PostMapping("/user/modifyPassword")
-    public String modifyPassword(@RequestParam("oldPassword") String oldPassword,
-            @RequestParam("newPassword") String newPassword, User user, Map<String, Object> map, HttpSession session) {
+    public String modifyPassword(String oldPassword,String newPassword, User user, Map<String, Object> map, HttpSession session) {
         if (!Encrypt.execEncrypt(oldPassword, false).equals(user.getPassword())) {
             log.debug("原始密码错误");
             map.put("error_modifyPass", "原始密码错误");

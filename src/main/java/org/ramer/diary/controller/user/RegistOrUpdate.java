@@ -58,9 +58,9 @@ public class RegistOrUpdate{
     *      否则,更新返回个人主页,注册返回主页.
     */
     //  由于需要上传文件form 带有属性enctype="multipart/form-data",因此无法使用PUT请求
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public String newOrUpdate(User user, @RequestParam("picture") MultipartFile file, HttpSession session,
-            Map<String, Object> map, @RequestParam("checkFile") String checkFile) {
+    @PostMapping("/user")
+    public String newOrUpdate(User user,MultipartFile file, HttpSession session,
+            Map<String, Object> map, String checkFile) {
         log.debug(Thread.currentThread().getStackTrace()[1].getMethodName());
 
         //  如果是更新,用户ID不为空

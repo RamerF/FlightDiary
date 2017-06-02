@@ -13,6 +13,8 @@ import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -34,16 +36,15 @@ public class AddFollow{
     private UserService userService;
 
     /**
-     * 添加关注.
+     * &#x6dfb;&#x52a0;&#x5173;&#x6ce8;.
      *
-     * @param user 登陆用户
-     * @param topic 用户查看的分享
-     * @param map the map
+     * @param user &#x767b;&#x9646;&#x7528;&#x6237;
+     * @param topic &#x7528;&#x6237;&#x67e5;&#x770b;&#x7684;&#x5206;&#x4eab;
      * @param response the response
      * @param session the session
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping("/user/topic/follow")
+    @GetMapping("/user/topic/follow")
     public void follow(User user, Topic topic, HttpServletResponse response, HttpSession session) throws IOException {
         log.debug("添加关注");
         response.setCharacterEncoding("UTF-8");
@@ -65,12 +66,11 @@ public class AddFollow{
      * 取消关注用户.
      *
      * @param topic  查看的分享
-     * @param map the map
      * @param response jsp内置对象
      * @param session  the session
      * @throws IOException 写入信息失败抛出异常
      */
-    @RequestMapping("/user/topic/notFollow")
+    @PutMapping("/user/topic/notFollow")
     public void notFollow(Topic topic, HttpServletResponse response, HttpSession session) throws IOException {
         log.debug("取消关注");
         response.setCharacterEncoding("UTF-8");

@@ -132,7 +132,7 @@ public class ForwardHome{
      * @param session the session
      * @return 引导到主页
      */
-    @RequestMapping("/home/orderbyUpCounts")
+    @GetMapping("/home/orderbyUpCounts")
     public String homeTopicOrderByUpcounts(
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {

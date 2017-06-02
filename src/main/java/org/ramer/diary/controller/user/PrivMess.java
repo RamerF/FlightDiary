@@ -16,10 +16,7 @@ import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,13 +40,12 @@ public class PrivMess{
      *
      * @param user 用户
      * @param content 私信内容
-     * @param map the map
      * @param response the response
      * @param session the session
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @RequestMapping("/user/personal/sendPrivMess")
-    public void sendPrivMess(User user, @RequestParam("content") String content, HttpServletResponse response,
+    public void sendPrivMess(User user, String content, HttpServletResponse response,
             HttpSession session) throws IOException {
         log.debug("发送私信");
         response.setCharacterEncoding("utf-8");
@@ -87,12 +83,10 @@ public class PrivMess{
      * 用户查看消息.
      *
      * @param notifyId 信息UID
-     * @param map the map
-     * @param session the session
      * @return 重定向到个人主页
      */
-    @RequestMapping("/user/personal/notify/readPrivMess")
-    public String readPrivMess(@RequestParam("notifyId") String notifyId) {
+    @GetMapping("/user/personal/notify/readPrivMess")
+    public String readPrivMess( String notifyId) {
         log.debug("读取通知 : " + notifyId);
         Notify notify = new Notify();
         Integer notify_id = -1;
@@ -120,14 +114,11 @@ public class PrivMess{
      *
      * @param notifyId the notify id
      * @param notifiedUserId the notified user id
-     * @param map the map
-     * @param session the session
      * @return the string
      */
-    @RequestMapping("/user/personal/notify/delete")
+    @DeleteMapping("/user/personal/notify/delete")
     @ResponseBody
-    public String delete(@RequestParam("notifyId") String notifyId,
-            @RequestParam("notifiedUserId") String notifiedUserId) {
+    public String delete( String notifyId, String notifiedUserId) {
         log.debug("删除消息 : " + notifyId);
         Notify notify = new Notify();
         Integer notify_id = -1;
