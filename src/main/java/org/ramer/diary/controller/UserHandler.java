@@ -42,10 +42,9 @@ public class UserHandler{
      *
      * @param user 当更新时,表示更新用户
      * @param username 当前用户输入或自动填充的用户名
-     * @param response the response
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping("/validateUserName")
+    @GetMapping("/validateUserName")
     @ResponseBody
     public String validateUserName(User user, @RequestParam("username") String username)
             throws IOException {
@@ -73,7 +72,7 @@ public class UserHandler{
      * @param response the response
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping(value = "/validateEmail", method = RequestMethod.POST)
+    @PostMapping("/validateEmail" )
     public void validateEmail(@RequestParam("email") String emailString, HttpServletResponse response)
             throws IOException {
         emailString = emailString.trim();
@@ -100,7 +99,7 @@ public class UserHandler{
      * @param session the session
      * @return 新动态总数
      */
-    @RequestMapping("/user/realTimeTopic")
+    @GetMapping("/user/realTimeTopic")
     @ResponseBody
     public String realTimeTopic(HttpSession session) {
         long count = topicService.getCount();
@@ -115,7 +114,7 @@ public class UserHandler{
      * @param session the session
      * @return 通知数
      */
-    @RequestMapping("/user/realTimeNotify")
+    @GetMapping("/user/realTimeNotify")
     @ResponseBody
     public String realTimeNotify(HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -132,7 +131,7 @@ public class UserHandler{
      * @param scrollInPageStr the scroll in page str
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping("/scrollInPage")
+    @GetMapping("/scrollInPage")
     public void scrollInPage(HttpSession session, HttpServletResponse response,
             @RequestParam(value = "scrollInPage", required = false, defaultValue = "false") String scrollInPageStr)
             throws IOException {
@@ -152,8 +151,8 @@ public class UserHandler{
      *
      * @param session the session
      * @param response the response
-     * @param OS the os
-     * @param Browser the browser
+     * @param os the os
+     * @param browser the browser
      * @param content the content
      * @throws IOException
      */

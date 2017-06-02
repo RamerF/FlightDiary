@@ -110,7 +110,7 @@ public class ModifyEmail{
      * @param session  the session
      * @return the string
      */
-    @RequestMapping("/user/modifyEmail")
+    @PutMapping("/user/modifyEmail")
     public String modifyEmail(@RequestParam("email2") String email, @RequestParam("email1") String newEmail,
             HttpSession session) {
         log.debug("修改邮箱");

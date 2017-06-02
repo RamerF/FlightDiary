@@ -2,6 +2,7 @@ package org.ramer.diary.controller;
 
 import org.ramer.diary.constant.PageConstant;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -17,7 +18,7 @@ public class ForwardSuccess{
      *
      * @return 重定向到成功页面
      */
-    @RequestMapping("/success")
+    @GetMapping("/success")
     public String forwardSuccess() {
         return SUCCESS.substring(10);
     }

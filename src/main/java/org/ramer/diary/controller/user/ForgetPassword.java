@@ -21,10 +21,7 @@ import org.ramer.diary.util.MailUtils;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,10 +47,9 @@ public class ForgetPassword{
      * 重定向到忘记密码页面.
      * @param email 用户绑定的邮箱
      * @param map the map
-     * @param session JSP内置对象
      * @return 引导到忘记密码页面
      */
-    @RequestMapping(value = "/user/forwardForgetPassword", method = RequestMethod.GET)
+    @GetMapping("/user/forwardForgetPassword")
     public String forwardForgetPassword(
             @RequestParam(value = "email", required = false, defaultValue = "") String email, Map<String, Object> map) {
         log.debug("引导到忘记用户密码页面");
@@ -67,12 +63,11 @@ public class ForgetPassword{
      * 发送邮件.
      *
      * @param email 未加密的邮箱地址
-     * @param map the map
      * @param session the session
      * @param response JSP内置对象
      * @throws IOException 写入信息失败抛出IO异常
      */
-    @RequestMapping("/user/forgetPass/sendMail")
+    @PostMapping("/user/forgetPass/sendMail")
     public void sendMailToResetPass(@RequestParam("email") String email, HttpSession session,
             HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("utf-8");
@@ -113,11 +108,10 @@ public class ForgetPassword{
      * @param email 已加密邮箱
      * @param password 新密码
      * @param repassword 密码重复
-     * @param map the map
      * @param session the session
      * @return 密码修改成功: 返回个人主页,失败: 返回密码修改页面
      */
-    @RequestMapping("/user/forgetPassword")
+    @PutMapping("/user/forgetPassword")
     public String forgetPassword(@RequestParam("email") String email, @RequestParam("password") String password,
             @RequestParam("repassword") String repassword, HttpSession session) {
 
