@@ -4,20 +4,9 @@ package org.ramer.diary.constant;
  * @author ramer
  *
  */
-public enum PageConstant {
-  HOME("home"), USERINPUT("userInput"), SUCCESS("redirect:/success"), ERROR("redirect:/error");
-  private String page;
-
-  private PageConstant(String page) {
-    this.page = page;
-  }
-
-  private String getPage() {
-    return page;
-  }
-
-  @Override
-  public String toString() {
-    return this.getPage();
-  }
+public class PageConstant{
+    public static final String HOME = "home";
+    public static final String USER_INPUT = "userInput";
+    public static final String SUCCESS = "redirect:/success";
+    public static final String ERROR = "redirect:/error";
 }

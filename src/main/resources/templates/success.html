@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="/css/success.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/default.css"/>
+    <title>操作成功</title>
+</head>
+<body>
+<div class="return_link">
+    <a href="/home">返回主页</a>
+    <br/>
+</div>
+<div class="succMessage" th:text="${session.succMessage}"></div>
+</body>
+</html>

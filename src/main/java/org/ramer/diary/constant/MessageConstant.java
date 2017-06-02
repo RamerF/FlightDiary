@@ -1,21 +1,9 @@
 package org.ramer.diary.constant;
 
-public enum MessageConstant {
-  ERRORMESSAGE("非法操作,请以消费者的身份使用本系统"), SUCCESSMESSAGE("操作成功"), WRONGFORMAT(
-      "数据格式错误"), SUCCESSCHANGEPASS("修改密码成功"), NOPICMESSAGE("必须要有图片哦");
-  private String message;
-
-  private MessageConstant(String message) {
-    this.message = message;
-  }
-
-  private String getMessage() {
-    return this.message;
-  }
-
-  @Override
-  public String toString() {
-    return getMessage();
-  }
-
+public class MessageConstant{
+    public static final String ERROR_MESSAGE = "非法操作,请以消费者的身份使用本系统";
+    public static final String SUCCESS_MESSAGE = "操作成功";
+    public static final String WRONG_FORMAT = "数据格式错误";
+    public static final String SUCCESS_CHANGE_PASS = "修改密码成功";
+    public static final String NO_PIC_MESSAGE = "必须要有图片哦";
 }

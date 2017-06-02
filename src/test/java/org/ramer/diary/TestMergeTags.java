@@ -1,8 +1,11 @@
 package org.ramer.diary;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 合并标签：
@@ -10,6 +13,7 @@ import org.junit.Test;
  * @author ramer
  *
  */
+@Slf4j
 public class TestMergeTags{
     @Test
     public void testMergeTags() throws Exception {
@@ -30,7 +34,7 @@ public class TestMergeTags{
             }
         }
         for (String string : updateTags) {
-            System.out.println("----" + string);
+            log.debug("----" + string);
         }
     }
 
