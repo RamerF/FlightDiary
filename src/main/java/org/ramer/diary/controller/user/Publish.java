@@ -48,7 +48,7 @@ public class Publish{
      * @return 重定向到个人页面,或返回错误页面
      * @throws IOException
      */
-    @RequestMapping("/user/topic/deleteTopic/{topic_id}")
+    @DeleteMapping("/user/topic/deleteTopic/{topic_id}")
     @PreAuthorize("hasRole('USER')")
     public String deleteTopic(User user, @PathVariable("topic_id") Integer topic_id, Map<String, Object> map,
             HttpSession session) throws IOException {
@@ -80,7 +80,7 @@ public class Publish{
      * @return 在主页发表分享返回主页,在个人页面发表分享返回个人页面
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping("/publish")
+    @PostMapping("/publish")
     public String publish(@RequestParam("content") String content, @RequestParam(value = "tags") String tags,
             @RequestParam(value = "personal", required = false, defaultValue = "") String personal,
             @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {

@@ -11,10 +11,7 @@ import org.ramer.diary.util.Encrypt;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
@@ -64,7 +61,7 @@ public class ModifyPassword{
      * @param map the map 
      * @return 密码修改成功 : 返回个人主页,失败: 返回密码修改页面 
      */
-    @PostMapping("/user/modifyPassword")
+    @PutMapping("/user/modifyPassword")
     public String modifyPassword(@RequestParam("oldPassword") String oldPassword,
             @RequestParam("newPassword") String newPassword, User user, Map<String, Object> map, HttpSession session) {
         if (!Encrypt.execEncrypt(oldPassword, false).equals(user.getPassword())) {
