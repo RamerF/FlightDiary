@@ -11,6 +11,7 @@ import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -41,8 +42,8 @@ public class EditHead {
    * @return 返回个人主页
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  @RequestMapping("/user/update")
-  public String editHead(User user, @RequestParam("picture") MultipartFile file,
+  @PutMapping("/user/update")
+  public String editHead(User user,MultipartFile file,
       HttpSession session) throws IOException {
     log.debug("更新用户头像");
     if (!file.isEmpty()) {

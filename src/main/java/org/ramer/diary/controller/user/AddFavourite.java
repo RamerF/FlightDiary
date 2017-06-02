@@ -15,6 +15,7 @@ import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -39,7 +40,7 @@ public class AddFavourite{
      * @param session the session
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping("/user/topic/favourite/{topic_id}")
+    @PutMapping("/user/topic/favourite/{topic_id}")
     public void favourite(@PathVariable("topic_id") Integer topic_id, User user, HttpServletResponse response,
             HttpSession session) throws IOException {
         response.setCharacterEncoding("UTF-8");
@@ -67,10 +68,9 @@ public class AddFavourite{
      * @param topic_id 分享ID
      * @param user 登录用户
      * @param response JSP内置对象
-     * @param session JSP内置对象
      * @throws IOException 写入信息失败抛出IO异常
      */
-    @RequestMapping("/user/topic/notFavourite/{topic_id}")
+    @PutMapping("/user/topic/notFavourite/{topic_id}")
     public void notFavourite(@PathVariable("topic_id") Integer topic_id, User user, HttpServletResponse response)
             throws IOException {
         response.setCharacterEncoding("UTF-8");
