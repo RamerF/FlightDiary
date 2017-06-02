@@ -145,8 +145,6 @@
                 <listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
             </listener>
             添加以上监听器后,spring会在System.property中添加属性flightdiary.root并且值为项目root路径.
-
-         21.规范请求路径,符合REST风格
         
         
     小屏幕时: 显示一张图片左边是头像

@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -27,10 +26,12 @@ public class LogOff{
      * 注销用户.
      *
      * @param session the session
+     * @param request the request
+     * @param response the response
      * @param map the map
      * @return 主页
      */
-    @PostMapping("/logOff")
+    @RequestMapping("/logOff")
     public String logOff(HttpSession session, Map<String, Object> map) {
         log.debug("注销");
         map.clear();

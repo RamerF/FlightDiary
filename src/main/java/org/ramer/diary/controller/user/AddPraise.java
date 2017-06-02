@@ -15,7 +15,6 @@ import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -42,10 +41,11 @@ public class AddPraise{
      * @param topic_id 分享UID
      * @param map the map
      * @param response the response
+     * @param request the request
      * @param session the session
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @PutMapping("/user/topic/praise/{topic_id}")
+    @RequestMapping("/user/topic/praise/{topic_id}")
     public void praise(@PathVariable("topic_id") Integer topic_id, Map<String, Object> map,
             HttpServletResponse response, HttpSession session) throws IOException {
         response.setCharacterEncoding("utf-8");
@@ -75,11 +75,13 @@ public class AddPraise{
      *
      * @param topic_id 分享ID
      * @param user 登录用户
+     * @param map the map
      * @param response JSP内置对象
+     * @param request JSP内置对象
      * @param session JSP内置对象
      * @throws IOException 写入信息失败抛出IO异常
      */
-    @PutMapping("/user/topic/notPraise/{topic_id}")
+    @RequestMapping("/user/topic/notPraise/{topic_id}")
     public void notPraise(@PathVariable("topic_id") Integer topic_id, User user, HttpServletResponse response,
             HttpSession session) throws IOException {
         log.debug("取消点赞");

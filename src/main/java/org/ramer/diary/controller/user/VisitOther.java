@@ -150,6 +150,7 @@ public class VisitOther{
     /**
      * 将指定用户收藏信息存储到list中
      * @param user 用户
+     * @param topic 该用户的分享
      * @return list中存储的是当前用户收藏的所有,当前被浏览用户,的分享的id.
      */
     public List<Integer> favouriteToList(User user, User other, HttpSession session) {

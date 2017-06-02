@@ -66,7 +66,8 @@ public class ModifyEmail{
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @PostMapping("/user/modifyEmail/sendMail")
-    public void sendEmailToModifyEmail(String newEmail, User user, HttpSession session, HttpServletResponse response) throws IOException {
+    public void sendEmailToModifyEmail(@RequestParam("newEmail") String newEmail, User user, HttpSession session,
+            HttpServletResponse response) throws IOException {
         if (!UserUtils.checkLogin(session)) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
             throw new UserNotLoginException("您的登录已过期,请重新登录");
@@ -109,8 +110,9 @@ public class ModifyEmail{
      * @param session  the session
      * @return the string
      */
-    @PutMapping("/user/modifyEmail")
-    public String modifyEmail(String email, String newEmail, HttpSession session) {
+    @RequestMapping("/user/modifyEmail")
+    public String modifyEmail(@RequestParam("email2") String email, @RequestParam("email1") String newEmail,
+            HttpSession session) {
         log.debug("修改邮箱");
         String expireTime = new SimpleDateFormat("yyMMddhhmmss").format(Calendar.getInstance().getTime());
         User user = userService.getByEmail(email);

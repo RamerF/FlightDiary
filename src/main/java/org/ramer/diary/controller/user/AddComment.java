@@ -13,7 +13,10 @@ import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -45,8 +48,8 @@ public class AddComment{
      * @param session the session
      * @return 返回到他人主页或某个分享页面
      */
-    @PostMapping("/user/topic/comment/{topic_id}")
-    public String comment(@PathVariable("topic_id") Integer topic_id, String content,
+    @RequestMapping("/user/topic/comment/{topic_id}")
+    public String comment(@PathVariable("topic_id") Integer topic_id, @RequestParam("content") String content,
             Map<String, Object> map, HttpSession session) {
         log.debug("用户评论");
         if (!UserUtils.checkLogin(session)) {
@@ -89,8 +92,8 @@ public class AddComment{
      * @param session the session
      * @return 重定向到个人页面
      */
-    @DeleteMapping("/user/topic/comment/delete/{comment_id}")
-    public String deleteComment(@PathVariable("comment_id") String comment_id,String topic_id,
+    @RequestMapping("/user/topic/comment/delete/{comment_id}")
+    public String deleteComment(@PathVariable("comment_id") String comment_id, @RequestParam("topic") String topic_id,
             Map<String, Object> map, HttpSession session) {
         log.debug("-----删除某个评论-----");
         //如果在他人页面,代码属于人为构造
