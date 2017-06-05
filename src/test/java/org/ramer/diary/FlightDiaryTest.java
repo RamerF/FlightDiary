@@ -9,7 +9,7 @@ import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.EncryptUtil;
 import org.ramer.diary.util.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,8 +52,8 @@ public class FlightDiaryTest{
      */
     @Test
     public void testEncrypt() {
-        String string = Encrypt.execEncrypt("Jelly", false);
-        log.debug("string = " + string);
+        String string = EncryptUtil.execEncrypt("Jelly");
+        log.debug("string: {}", string);
     }
 
     /**

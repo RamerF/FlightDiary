@@ -1,24 +1,24 @@
 package org.ramer.diary.controller;
 
-import java.io.IOException;
-import java.util.Date;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.domain.dto.CommonResponse;
 import org.ramer.diary.service.NotifyService;
 import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.EncryptUtil;
 import org.ramer.diary.util.MailUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.ramer.diary.util.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * 用户控制器：验证邮箱和用户名，更新前获取用户，实时动态和通知，滚动翻页.
@@ -29,12 +29,12 @@ import lombok.extern.slf4j.Slf4j;
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
 public class UserHandler{
-    @Autowired
-    UserService userService;
-    @Autowired
-    NotifyService notifyService;
-    @Autowired
-    TopicService topicService;
+    @Resource
+    private UserService userService;
+    @Resource
+    private NotifyService notifyService;
+    @Resource
+    private TopicService topicService;
 
     /**
      * 验证用户名.
@@ -44,53 +44,44 @@ public class UserHandler{
      * @param username 当前用户输入或自动填充的用户名
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @GetMapping("/validateUserName")
+    @PostMapping("/validateUserName")
     @ResponseBody
-    public String validateUserName(User user, @RequestParam("username") String username)
-            throws IOException {
-        log.debug("验证用户名");
-        if (username == null || username.trim().equals("")) {
-            return "false";
+    public CommonResponse validateUserName(User user, @RequestParam("username") String username) throws IOException {
+        if (StringUtils.isEmpty(username)) {
+            return new CommonResponse(false, "用户名为空");
         }
         //    id存在,用户更新
         if (user.getId() != null && user.getId() > 0) {
-            log.debug("用户更新: username  : {}" + user.getUsername());
+            log.debug("用户更新: username  : {}", user.getUsername());
             if (user.getUsername().equals(username)) {
-                return "false";
+                return new CommonResponse(false, "用户名未改变");
             }
         }
         if (userService.getByName(username) == null) {
-            return "false";
+            return new CommonResponse(false, "用户名不存在");
         }
-        return "true";
+        return new CommonResponse(true, "用户名已存在");
     }
 
     /**
      * 验证邮箱是否可用.
      *
      * @param emailString 邮箱字符串
-     * @param response the response
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @PostMapping("/validateEmail" )
-    public void validateEmail(@RequestParam("email") String emailString, HttpServletResponse response)
-            throws IOException {
-        emailString = emailString.trim();
-        response.setCharacterEncoding("UTF-8");
-        if (emailString == null || emailString.equals("")) {
-            return;
+    @PostMapping("/validateEmail")
+    @ResponseBody
+    public CommonResponse validateEmail(@RequestParam("email") String emailString) throws IOException {
+        if (StringUtils.isEmpty(emailString)) {
+            return new CommonResponse(false, "邮箱为空");
         }
         if (!MailUtils.isEmail(emailString)) {
-            response.getWriter().write("notEmail");
-            return;
+            return new CommonResponse(false, "邮箱格式不正确");
         }
-
-        if (userService.getByEmail(Encrypt.execEncrypt(emailString, true)) == null) {
-            response.getWriter().write("notExist");
-            return;
+        if (userService.getByEmail(EncryptUtil.execEncrypt(emailString)) == null) {
+            return new CommonResponse(true, "邮箱不存在");
         }
-        log.debug("邮箱已存在");
-        response.getWriter().write("exist");
+        return new CommonResponse(false, "邮箱已存在");
     }
 
     /**

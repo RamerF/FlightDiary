@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class CommonsResponse{
-    private boolean success;
+public class CommonResponse {
+    private boolean result;
     private String message;
 }

@@ -1,13 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
@@ -16,14 +9,19 @@ import org.ramer.diary.exception.LinkInvalidException;
 import org.ramer.diary.exception.PasswordNotMatchException;
 import org.ramer.diary.exception.SystemWrongException;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.EncryptUtil;
 import org.ramer.diary.util.MailUtils;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Map;
 
 /**
  * 忘记密码，用于重置密码.
@@ -35,11 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class ForgetPassword{
     //全局成功页面
-    final String SUCCESS = PageConstant.SUCCESS;
-
+    private final String SUCCESS = PageConstant.SUCCESS;
     //  密码修改成功信息
-    final String SUCCESS_CHANGEPASS = MessageConstant.SUCCESS_MESSAGE;
-
+    private final String SUCCESS_CHANGEPASS = MessageConstant.SUCCESS_MESSAGE;
     @Autowired
     UserService userService;
 
@@ -79,7 +75,7 @@ public class ForgetPassword{
             response.getWriter().write("您输入的不是邮箱哒 ^o^||");
             return;
         }
-        String encodedEmail = Encrypt.execEncrypt(email, true);
+        String encodedEmail = EncryptUtil.execEncrypt(email);
         User user = userService.getByEmail(encodedEmail);
         //    发送邮件之前判断是否存在,防止用户而已发送邮件
         if (user == null) {
@@ -126,7 +122,7 @@ public class ForgetPassword{
         if (!password.equals(repassword)) {
             throw new PasswordNotMatchException();
         }
-        user.setPassword(Encrypt.execEncrypt(password, false));
+        user.setPassword(EncryptUtil.execEncrypt(password));
         if (userService.newOrUpdate(user) == null) {
             throw new SystemWrongException();
         }
