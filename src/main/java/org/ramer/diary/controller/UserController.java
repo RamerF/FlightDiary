@@ -9,6 +9,7 @@ import org.ramer.diary.service.NotifyService;
 import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.EncryptUtil;
+import org.ramer.diary.util.IntegerUtil;
 import org.ramer.diary.util.MailUtils;
 import org.ramer.diary.util.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ import java.util.Date;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
-public class UserHandler{
+public class UserController {
     @Resource
     private UserService userService;
     @Resource
@@ -51,7 +52,7 @@ public class UserHandler{
             return new CommonResponse(false, "用户名为空");
         }
         //    id存在,用户更新
-        if (user.getId() != null && user.getId() > 0) {
+        if (IntegerUtil.isPositiveValue(user.getId())) {
             log.debug("用户更新: username  : {}", user.getUsername());
             if (user.getUsername().equals(username)) {
                 return new CommonResponse(false, "用户名未改变");
@@ -155,8 +156,7 @@ public class UserHandler{
         feedBack.setDate(new Date());
         feedBack.setUser((User) session.getAttribute("user"));
         feedBack.setHasCheck("false");
-        content = content + " 系统信息： " + os + " 浏览器： " + browser;
-        feedBack.setContent(content);
+        feedBack.setContent(StringUtils.concat(content, " 系统信息： ", os, " 浏览器： ", browser));
         boolean flag = userService.feedback(feedBack);
         if (flag) {
             response.getWriter().write("反馈成功");

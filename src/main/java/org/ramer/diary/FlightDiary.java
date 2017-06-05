@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableScheduling
-@ComponentScan(basePackages = "org.ramer.diary")
+@ComponentScan("org.ramer.diary")
 public class FlightDiary extends SpringBootServletInitializer{
     public static void main(String[] args) {
         SpringApplication.run(FlightDiary.class, args);

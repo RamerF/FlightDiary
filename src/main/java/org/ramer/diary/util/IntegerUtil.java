@@ -12,10 +12,17 @@ public class IntegerUtil{
      * @param integer the integer
      * @return the boolean
      */
-    public static boolean greaterThanZero(Integer integer) {
+    public static boolean isPositiveValue(Integer integer) {
         if (integer == null) {
             return false;
         }
         return integer.compareTo(ZERO) > ZERO;
+    }
+
+    public static boolean isNegativeValue(Integer integer) {
+        if (integer == null) {
+            return false;
+        }
+        return integer.compareTo(ZERO) < ZERO;
     }
 }

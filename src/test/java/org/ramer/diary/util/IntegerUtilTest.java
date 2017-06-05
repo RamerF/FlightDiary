@@ -17,10 +17,10 @@ public class IntegerUtilTest{
         Integer i2 = null;
         Integer i3 = new Integer(-2);
         Integer i4 = new Integer(0);
-        Assert.assertThat(true, equalTo(IntegerUtil.greaterThanZero(i1)));
-        Assert.assertThat(false, equalTo(IntegerUtil.greaterThanZero(i2)));
-        Assert.assertThat(false, equalTo(IntegerUtil.greaterThanZero(i3)));
-        Assert.assertThat(false, equalTo(IntegerUtil.greaterThanZero(i4)));
+        Assert.assertThat(true, equalTo(IntegerUtil.isPositiveValue(i1)));
+        Assert.assertThat(false, equalTo(IntegerUtil.isPositiveValue(i2)));
+        Assert.assertThat(false, equalTo(IntegerUtil.isPositiveValue(i3)));
+        Assert.assertThat(false, equalTo(IntegerUtil.isPositiveValue(i4)));
         log.debug("null,{}", i1.compareTo(i2));
     }
 }
