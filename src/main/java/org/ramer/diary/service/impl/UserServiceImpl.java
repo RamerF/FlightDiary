@@ -10,6 +10,7 @@ import org.ramer.diary.repository.FeedBackRepository;
 import org.ramer.diary.repository.UserRepository;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.EncryptUtil;
+import org.ramer.diary.util.IntegerUtil;
 import org.ramer.diary.util.Pagination;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,9 +55,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public User newOrUpdate(User user) {
+    public boolean newOrUpdate(User user) {
         user = userRepository.saveAndFlush(user);
-        return user;
+        return IntegerUtil.isPositiveValue(user.getId());
     }
 
     @Override

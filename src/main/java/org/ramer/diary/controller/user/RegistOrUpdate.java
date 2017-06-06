@@ -1,17 +1,20 @@
 package org.ramer.diary.controller.user;
 
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.diary.constant.PageConstant;
+import org.ramer.diary.domain.Roles;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.domain.dto.CommonResponse;
+import org.ramer.diary.domain.map.UserRoleMap;
 import org.ramer.diary.exception.SystemWrongException;
 import org.ramer.diary.exception.UserExistException;
+import org.ramer.diary.service.RolesService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.EncryptUtil;
 import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
 import org.ramer.diary.validator.UserValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -19,11 +22,14 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,10 +39,12 @@ import java.util.Map;
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
 public class RegistOrUpdate{
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private UserValidator userValidator;
+    @Resource
+    private RolesService rolesService;
 
     @Value("${diary.encrypt.strength}")
     private int ENCRYPT_STRENGTH;
@@ -63,25 +71,30 @@ public class RegistOrUpdate{
     @PostMapping("/sign_up")
     @ResponseBody
     public CommonResponse createUser(@Valid User user, BindingResult result) {
-        log.debug("user: {}", user);
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "user: {}", user);
         if (result.hasErrors()) {
-            StringBuilder message = new StringBuilder("提交信息有误:\n");
-            result.getAllErrors().stream().iterator()
-                    .forEachRemaining(objectError -> message.append(objectError.getDefaultMessage()).append("\n"));
+            StringBuilder message = new StringBuilder("提交信息有误:").append(PageConstant.BR);
+            result.getAllErrors().stream().iterator().forEachRemaining(
+                    objectError -> message.append(objectError.getDefaultMessage()).append(PageConstant.BR));
+            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " message : {}", message.toString());
             return new CommonResponse(false, message.toString());
         }
-
         user.setEmail(EncryptUtil.execEncrypt(user.getEmail()));
         if (StringUtils.hasChinese(user.getUsername())) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
             user.setAlias(simpleDateFormat.format(new Date()));
         }
-        userService.newOrUpdate(user);
+        user.setPassword(EncryptUtil.execEncrypt(user.getPassword()));
+        List<Roles> roles = new ArrayList<>();
+        Roles userRole = rolesService.getByName(UserRoleMap.USER);
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " userRole : {}", userRole);
+        roles.add(userRole);
+        user.setRoles(roles);
         log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user);
-        if (user.getId() > 0) {
+        if (userService.newOrUpdate(user)) {
             return new CommonResponse(true, "注册成功");
         }
-        return new CommonResponse(false, "注册失败");
+        return new CommonResponse(false, "注册失败,请稍后再试");
     }
 
     /**
@@ -136,7 +149,7 @@ public class RegistOrUpdate{
             user.setEmail(EncryptUtil.execEncrypt(user.getEmail()));
         }
         Integer id = user.getId();
-        if (userService.newOrUpdate(user).getId() > 0) {
+        if (userService.newOrUpdate(user)) {
             user = userService.login(user);
             if (user.getId() == null) {
                 throw new SystemWrongException("系统出错了,操作被取消,请返回重新操作");

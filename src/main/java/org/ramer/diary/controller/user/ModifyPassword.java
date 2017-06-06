@@ -75,7 +75,7 @@ public class ModifyPassword{
             return SUCCESS;
         }
         user.setPassword(EncryptUtil.execEncrypt(newPassword));
-        user = userService.newOrUpdate(user);
+        userService.newOrUpdate(user);
         if (user == null) {
             throw new SystemWrongException();
         }

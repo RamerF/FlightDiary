@@ -186,47 +186,29 @@ $( function() {
         var email = $( "input[name='email']" ).val();
         validateEmail( email , function( data ) {
             var fillHtml = "";
-
-            if ($( "#updatePanel" ).is( ":visible" )) {
-                if (data.result == true) {
-                    // 更新时用户名应该不存在
-                    fillHtml = "<img class='valid' src='/pictures/wrong.png' weight='10px' height='10px'>";
-                    $( "input[type='submit']" ).attr( "disabled" , "disabled" );
-                    $( "input[type='submit']" ).css( "opacity" , ".5" );
-                } else {
-                    fillHtml = "<img class='valid' src='/pictures/right.png' weight='10px' height='10px'>";
-                    $( "input[type='submit']" ).removeAttr( "disabled" , "disabled" );
-                    $( "input[type='submit']" ).css( "opacity" , "1" );
-                }
-            }
+            // if ($( "#updatePanel" ).is( ":visible" )) {
+            //     if (data.result == true) {
+            //         fillHtml = "<img class='valid' src='/pictures/wrong.png' weight='10px' height='10px'>";
+            //         $( "input[type='submit']" ).attr( "disabled" , "disabled" );
+            //         $( "input[type='submit']" ).css( "opacity" , ".5" );
+            //     } else {
+            //         fillHtml = "<img class='valid' src='/pictures/right.png' weight='10px' height='10px'>";
+            //         $( "input[type='submit']" ).removeAttr( "disabled" , "disabled" );
+            //         $( "input[type='submit']" ).css( "opacity" , "1" );
+            //     }
+            // }
             // 如果是用户注册
-            else if ($( "#regPanel" ).is( ":visible" )) {
+            if ($( "#regPanel" ).is( ":visible" )) {
                 if (data.result == true) {
-                    // 注册时用户名应该不存在
-                    fillHtml = "<img class='valid' src='/pictures/wrong.png' weight='10px' height='10px'>";
-                    $( "input[type='submit']" ).attr( "disabled" , "disabled" );
-                    $( "input[type='submit']" ).css( "opacity" , ".5" );
-                } else {
                     fillHtml = "<img class='valid' src='/pictures/right.png' weight='10px' height='10px'>";
                     $( "input[type='submit']" ).removeAttr( "disabled" , "disabled" );
                     $( "input[type='submit']" ).css( "opacity" , "1" );
-                }
-
-            }
-            // 如果是用户登录
-            else if ($( "#regPanel" ).is( ":hidden" )) {
-                if (data.result == true) {
-                    // 登录时用户名应该存在
-                    fillHtml = "";
-                    $( "input[type='submit']" ).removeAttr( "disabled" , "disabled" );
-                    $( "input[type='submit']" ).css( "opacity" , "1" );
                 } else {
                     fillHtml = "<img class='valid' src='/pictures/wrong.png' weight='10px' height='10px'>";
                     $( "input[type='submit']" ).attr( "disabled" , "disabled" );
                     $( "input[type='submit']" ).css( "opacity" , ".5" );
                 }
             }
-
             $( "#message2" ).html( fillHtml );
         } );
     } );
@@ -278,18 +260,18 @@ $( function() {
                     "email" : $( "#email" ).val(),
                     "_csrf" : csrf,
                 };
-                $.post( url , args , function( message ) {
-                    if (message.result == true) {
+                $.post( url , args , function( data ) {
+                    if (data.result == true) {
                         location.href = "/home";
-                        return false;
                     } else {
-                        layer.msg( "注册失败,请稍后再试" , {
-                            time : 1800,
+                        layer.alert( data.message , {
+                            btn : [ '知道了' ],
+                            title: "错误提示 !",
                             color : "red"
                         } );
+                        return false;
                     }
                 } )
-                return false;
             }
         }
         // $( "#_form" ).submit();

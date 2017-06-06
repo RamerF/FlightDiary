@@ -1,6 +1,8 @@
 package org.ramer.diary.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
  */
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Roles{
     @Id
     @Column
@@ -20,6 +24,10 @@ public class Roles{
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "role_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
     private List<Privilege> privileges;
+
+    public Roles(String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {

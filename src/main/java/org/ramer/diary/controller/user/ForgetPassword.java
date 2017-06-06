@@ -123,7 +123,7 @@ public class ForgetPassword{
             throw new PasswordNotMatchException();
         }
         user.setPassword(EncryptUtil.execEncrypt(password));
-        if (userService.newOrUpdate(user) == null) {
+        if (!userService.newOrUpdate(user)) {
             throw new SystemWrongException();
         }
         UserUtils.execSuccess(session, SUCCESS_CHANGEPASS);
