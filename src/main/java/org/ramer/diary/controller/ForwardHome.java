@@ -53,13 +53,13 @@ public class ForwardHome{
     private final String WRONG_FORMAT = MessageConstant.WRONG_FORMAT;
     //分享页面大小
     @Value("${diary.topic.page.size}")
-    private int TOPICPAGESIZE;
+    private int TOPIC_PAGE_SIZE;
     //达人页面大小
     @Value("${diary.topPeople.page.size}")
-    private int PEOPLEPAGESIZE;
+    private int PEOPLE_PAGE_SIZE;
     //是否支持滚动翻页
     @Value("${diary.page.scroll}")
-    private boolean scrollInPage;
+    private boolean SCROLL_IN_PAGE;
 
     /**
      * 主页.
@@ -74,10 +74,10 @@ public class ForwardHome{
             Map<String, Object> map, HttpSession session) {
         //初始化滚动翻页
         if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", scrollInPage);
+            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
         }
         log.debug("主页");
-        log.debug("pagesize = " + TOPICPAGESIZE);
+        log.debug("pagesize = " + TOPIC_PAGE_SIZE);
         int page = 1;
         //重置标识信息
         map.put("inOtherPage", inOtherPage);
@@ -96,7 +96,7 @@ public class ForwardHome{
             page = 1;
         }
         //获取分页分享
-        Page<Topic> topics = topicService.getTopicsPage(page, TOPICPAGESIZE);
+        Page<Topic> topics = topicService.getTopicsPage(page, TOPIC_PAGE_SIZE);
         //记录最新的topicid，用于判断是否有新动态
         map.put("topicCount", topicService.getCount());
         map.put("topics", topics);
@@ -138,7 +138,7 @@ public class ForwardHome{
             Map<String, Object> map, HttpSession session) {
         //初始化滚动翻页
         if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", scrollInPage);
+            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
         }
 
         log.debug("热门主页");
@@ -154,7 +154,7 @@ public class ForwardHome{
             throw new IllegalAccessException("非法参数");
         }
         //获取分页分享
-        Page<Topic> topics = topicService.getTopicsPageOrderByFavourite(page, TOPICPAGESIZE);
+        Page<Topic> topics = topicService.getTopicsPageOrderByFavourite(page, TOPIC_PAGE_SIZE);
         map.put("topics", topics);
         if (UserUtils.checkLogin(session)) {
             User user = (User) session.getAttribute("user");
@@ -189,7 +189,7 @@ public class ForwardHome{
             Map<String, Object> map, HttpSession session) {
         //初始化滚动翻页
         if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", scrollInPage);
+            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
         }
 
         log.debug("达人主页");
@@ -203,7 +203,7 @@ public class ForwardHome{
             throw new IllegalAccessException(WRONG_FORMAT);
         }
         //    获取达人的分页信息
-        Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLEPAGESIZE);
+        Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLE_PAGE_SIZE);
         map.put("topPeoples", topPeoples);
         if (UserUtils.checkLogin(session)) {
             User user = (User) session.getAttribute("user");
@@ -246,7 +246,7 @@ public class ForwardHome{
             Map<String, Object> map) throws UnsupportedEncodingException {
         //初始化滚动翻页
         if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", scrollInPage);
+            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
         }
 
         log.debug("热门标签主页");
@@ -285,10 +285,10 @@ public class ForwardHome{
         Pagination<Topic> tagTopics;
         //    取得第一个标签的分享数据
         if (tag.equals("default")) {
-            tagTopics = topicService.getTopicsPageByTags(tags.iterator().next(), page, TOPICPAGESIZE);
+            tagTopics = topicService.getTopicsPageByTags(tags.iterator().next(), page, TOPIC_PAGE_SIZE);
         } else {
             tag = java.net.URLDecoder.decode(tag, "utf8");
-            tagTopics = topicService.getTopicsPageByTags(tag, page, TOPICPAGESIZE);
+            tagTopics = topicService.getTopicsPageByTags(tag, page, TOPIC_PAGE_SIZE);
         }
         //   将所有标签写入session
         map.put("tags", tags);
