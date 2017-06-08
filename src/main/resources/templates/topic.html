@@ -141,7 +141,7 @@
     </a>
     <th:block th:with="isFavourite=false"></th:block>
     <th:block th:each="f:${favourites}">
-        <th:block th:if="${topic.id == f}" th:with="isFavourite == true"></th:block>
+        <th:block th:if="${topic.id == f}" th:with="isFavourite = true"></th:block>
     </th:block>
     <a th:if="${ isFavourite == true}"
        th:href="|/user/topic/notFavourite/${topic.id}|"

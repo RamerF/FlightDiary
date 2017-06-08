@@ -201,7 +201,7 @@
             <div class="content">
                 <th:block th:if="not ${#strings.isEmpty(topic.picture)}">
                     <div class="img">
-                        <img alt="error" th:src="|/${topic.picture}|" class="topic_pic"/>
+                        <img alt="error" th:src="${topic.picture}" class="topic_pic"/>
                     </div>
                     <p class="desc"></p>
                 </th:block>
@@ -225,7 +225,7 @@
         <hr class="h_line"/>
         <th:block th:with="isPraise=false"></th:block>
         <th:block th:each="p:${praises }">
-            <th:block th:if="${topic.id == p }" th:with="isPraise:true"></th:block>
+            <th:block th:if="${topic.id == p }" th:with="isPraise=true"></th:block>
         </th:block>
         <a th:href="|/user/topic/notPraise/${topic.id}|" class="thumbsup" th:if="${ isPraise == true}">
             <i class="icon-thumbs-up-ramer"></i>
