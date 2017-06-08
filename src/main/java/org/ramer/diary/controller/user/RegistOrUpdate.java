@@ -27,10 +27,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 注册或更新类
@@ -57,14 +54,14 @@ public class RegistOrUpdate{
     /**
      * 更新前获取user.
      *
-     * @param id UID
+     * @param userid UID
      * @param map the map
      */
     @ModelAttribute
-    public void getUser(@RequestParam(value = "id", required = false) Integer id, Map<String, Object> map) {
-        if (id != null) {
+    public void getUser(@RequestParam(value = "userid", required = false) Integer userId, Map<String, Object> map) {
+        if (userId != null) {
             log.debug("预加载user");
-            map.put("user", userService.getById(id));
+            map.put("user", userService.getById(userId));
         }
     }
 
@@ -97,26 +94,13 @@ public class RegistOrUpdate{
         return new CommonResponse(false, "注册失败,请稍后再试");
     }
 
-    /**
-    * 注册或更新用户信息.
-    *
-    * @param user 用户
-    * @param file 头像文件
-    * @param session the session
-    * @param map the map
-    * @return 如果用户名存在或执行操作错误返回错误页面.
-    *      否则,更新返回个人主页,注册返回主页.
-    */
     //  由于需要上传文件form 带有属性enctype="multipart/form-data",因此无法使用PUT请求
     @PostMapping("/user/{id}/update")
-    public String newOrUpdate(@SessionAttribute(value = "user", required = false) User user,
+    public String update(@SessionAttribute(value = "user") @Valid User user, @RequestParam("id") Integer userId,
             @RequestParam("picture") MultipartFile file, HttpSession session, Map<String, Object> map,
             @RequestParam("checkFile") String checkFile) {
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName());
-
-        //  如果是更新,用户ID不为空
-        if (userService.getByName(user.getUsername()) != null && user.getId() == null) {
-            throw new UserExistException("用户名已存在,注册失败");
+        if (!userService.getByName(user.getUsername()).getId().equals(userId)) {
+            throw new UserExistException("用户名已存在,更新失败");
         }
         //如果是注册需要加密密码，而更新是不允许修改密码的
         if (user.getId() == null) {
@@ -125,9 +109,7 @@ public class RegistOrUpdate{
         //包含中文名称的用户,先设置别名
         if (StringUtils.hasChinese(user.getUsername())) {
             log.debug("用户名包含中文");
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
-            String alias = simpleDateFormat.format(new Date());
-            user.setAlias(alias);
+            user.setAlias(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
         }
         //先保存图片
         if (!file.isEmpty()) {

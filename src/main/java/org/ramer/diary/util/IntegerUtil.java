@@ -13,16 +13,10 @@ public class IntegerUtil{
      * @return the boolean
      */
     public static boolean isPositiveValue(Integer integer) {
-        if (integer == null) {
-            return false;
-        }
-        return integer.compareTo(ZERO) > ZERO;
+        return integer != null && integer.compareTo(ZERO) > ZERO;
     }
 
     public static boolean isNegativeValue(Integer integer) {
-        if (integer == null) {
-            return false;
-        }
-        return integer.compareTo(ZERO) < ZERO;
+        return integer != null && integer.compareTo(ZERO) < ZERO;
     }
 }
