@@ -1,7 +1,6 @@
 package org.ramer.diary.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.domain.dto.CommonResponse;
@@ -16,10 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * 用户控制器：验证邮箱和用户名，更新前获取用户，实时动态和通知，滚动翻页.
@@ -29,7 +26,7 @@ import java.util.Date;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
-public class UserController {
+public class UserController{
     @Resource
     private UserService userService;
     @Resource
@@ -115,58 +112,4 @@ public class UserController {
         return String.valueOf(number);
     }
 
-    /**
-     * 滚动翻页.
-     *
-     * @param session the session
-     * @param response the response
-     * @param scrollInPageStr the scroll in page str
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    @GetMapping("/scrollInPage")
-    public void scrollInPage(HttpSession session, HttpServletResponse response,
-            @RequestParam(value = "scrollInPage", required = false, defaultValue = "false") String scrollInPageStr)
-            throws IOException {
-        response.setCharacterEncoding("UTF-8");
-        boolean scrollInPage = Boolean.parseBoolean(scrollInPageStr);
-        session.setAttribute("scrollInPage", scrollInPage);
-        response.getWriter().write("scrollInpage: " + scrollInPage);
-    }
-
-    @GetMapping("/feedback")
-    public String forwardFeedback() {
-        return "feedback";
-    }
-
-    /**
-     * 用户反馈.
-     *
-     * @param session the session
-     * @param response the response
-     * @param os the os
-     * @param browser the browser
-     * @param content the content
-     * @throws IOException
-     */
-    @PostMapping("/user/feedback")
-    public void feedback(HttpSession session, HttpServletResponse response, @RequestParam("OS") String os,
-            @RequestParam("Browser") String browser, @RequestParam("content") String content) throws IOException {
-        response.setCharacterEncoding("UTF-8");
-        FeedBack feedBack = new FeedBack();
-        feedBack.setDate(new Date());
-        feedBack.setUser((User) session.getAttribute("user"));
-        feedBack.setHasCheck("false");
-        feedBack.setContent(StringUtils.concat(content, " 系统信息： ", os, " 浏览器： ", browser));
-        boolean flag = userService.feedback(feedBack);
-        if (flag) {
-            response.getWriter().write("反馈成功");
-            return;
-        }
-        response.getWriter().write("系统繁忙，请稍后再试");
-    }
-
-    @GetMapping("about")
-    public String about() {
-        return "about";
-    }
 }

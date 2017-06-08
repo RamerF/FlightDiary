@@ -16,6 +16,12 @@ public class IntegerUtil{
         return integer != null && integer.compareTo(ZERO) > ZERO;
     }
 
+    /**
+     *  Check whether the given {@code integer} less than zero.
+     *
+     * @param integer the integer
+     * @return the boolean
+     */
     public static boolean isNegativeValue(Integer integer) {
         return integer != null && integer.compareTo(ZERO) < ZERO;
     }

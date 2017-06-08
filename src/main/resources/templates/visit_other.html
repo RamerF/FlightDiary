@@ -7,11 +7,9 @@
     <script src="/js/jquery-2.1.4.min.js"/>
     <script src="/js/layer/layer.js"/>
     <script src="/js/js.cookie.js"/>
-    <script type="text/javascript">
+    <script type="application/javascript" th:inline="javascript">
         $(function () {
-            /*<![CDATA[*/
             userid = /*[[${other.id}]]*/;
-            /*]]>*/
         })
     </script>
     <script src="/js/ramer/visitOther.js"/>
@@ -36,7 +34,7 @@
         </a>
     </div>
     <div class="selfinfo">
-        <div class="name" th:text="${other != null ?other.name:''}"></div>
+        <div class="name" th:text="${other != null ?other.username:''}"></div>
         <div class="contact">
           <span id="followSpan">
                  <a href="user/topic/notFollow" class="notFollow" th:if="${isFollowed eq true}">
@@ -84,12 +82,12 @@
                 <a th:href="|/user/personal/${follow.followedUser.id}|">
                     <img
                             alt="error"
-                            th:src="'/'+${follow.followedUser.head}"
+                            th:src="${follow.followedUser.head}"
                             class="followed_user_head"/>
                 </a>
             </div>
             <div class="followed_user_name_panel">
-                <a th:href="|/user/personal/${follow.followedUser.id}|" th:text="${follow.followeduser.username}"></a>
+                <a th:href="|/user/personal/${follow.followedUser.id}|" th:text="${follow.followedUser.username}"></a>
             </div>
         </div>
     </th:block>
@@ -112,7 +110,7 @@
             <div class="content">
                 <th:block th:if="${topic.picture !=null}">
                     <div class="img">
-                        <img alt="error" th:src="'/'+${topic.picture}" class="topic_pic"/>
+                        <img alt="error" th:src="${topic.picture}" class="topic_pic"/>
                     </div>
                     <p class="desc"></p>
                 </th:block>

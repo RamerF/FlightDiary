@@ -85,7 +85,7 @@ public class VisitOther{
                 //获取点赞信息
                 log.debug("访问个人空间");
                 List<Integer> praises = praiseToList(user, user, session);
-                session.setAttribute("praises", praises);
+                map.put("praises", praises);
                 map.put("user", userService.getById(id));
                 return "personal";
             }
@@ -95,13 +95,13 @@ public class VisitOther{
             List<Integer> praises = praiseToList(user, other, session);
             log.debug("访问" + other.getUsername() + "的空间");
             //写入关注信息
-            session.setAttribute("isFollowed", isFollowed(user, other));
+            map.put("isFollowed", isFollowed(user, other));
             //写入收藏信息
-            session.setAttribute("favourites", favourites);
+            map.put("favourites", favourites);
             //写入收藏信息
-            session.setAttribute("praises", praises);
+            map.put("praises", praises);
         }
-        session.setAttribute("other", other);
+        map.put("other", other);
         return "visit_other";
     }
 
@@ -136,14 +136,14 @@ public class VisitOther{
             List<Integer> praises = praiseToList(user, topic.getUser(), session);
 
             //写入收藏信息
-            session.setAttribute("favourites", favourites);
+            map.put("favourites", favourites);
             //写入关注信息
-            session.setAttribute("isFollowed", isFollowed(user, topic.getUser()));
+            map.put("isFollowed", isFollowed(user, topic.getUser()));
             //写入点赞信息
-            session.setAttribute("praises", praises);
+            map.put("praises", praises);
         }
         map.put("topic", topic);
-        session.setAttribute("other", topic.getUser());
+        map.put("other", topic.getUser());
         return "topic";
     }
 

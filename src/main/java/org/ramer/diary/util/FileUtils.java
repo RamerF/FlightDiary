@@ -1,16 +1,6 @@
 package org.ramer.diary.util;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpSession;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +9,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 文件操作工具类，包含常用的静态方法：
@@ -89,7 +87,7 @@ public class FileUtils{
         String separator = File.separator;
         String location;
         //    如果操作系统是Linux
-        if (System.getProperty("os.username").equals("Linux")) {
+        if (System.getProperty("os.name").equals("Linux")) {
             location = new File(System.getProperty("user.home") + "/Projects/web/workspace/eclipse/"
                     + session.getServletContext().getServletContextName()).getCanonicalPath();
         } else {
@@ -135,14 +133,14 @@ public class FileUtils{
             outputStream.write(bys, 0, length);
         }
         outputStream.close();
-        String pictureUrl = "pictures" + separator + "publish" + separator + username + separator + name + suffix;
+        String pictureUrl = "\\pictures" + separator + "publish" + separator + username + separator + name + suffix;
         if (chn) {
-            pictureUrl = "pictures" + separator + "publish" + separator + alias + separator + name + suffix;
+            pictureUrl = "\\pictures" + separator + "publish" + separator + alias + separator + name + suffix;
         }
         if (head) {
-            pictureUrl = "pictures" + separator + "publish" + separator + username + separator + username + suffix;
+            pictureUrl = "\\pictures" + separator + "publish" + separator + username + separator + username + suffix;
             if (chn) {
-                pictureUrl = "pictures" + separator + "publish" + separator + alias + separator + alias + suffix;
+                pictureUrl = "\\pictures" + separator + "publish" + separator + alias + separator + alias + suffix;
             }
         }
         log.debug("数据库中的图片路径:" + pictureUrl);

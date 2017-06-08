@@ -3,8 +3,10 @@ package org.ramer.diary.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
+import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.domain.dto.CommonResponse;
 import org.ramer.diary.exception.IllegalAccessException;
 import org.ramer.diary.service.FollowService;
 import org.ramer.diary.service.NotifyService;
@@ -12,6 +14,7 @@ import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.CollectionsUtils;
 import org.ramer.diary.util.Pagination;
+import org.ramer.diary.util.StringUtils;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,9 +22,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +83,6 @@ public class ForwardHome{
             session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
         }
         log.debug("主页");
-        log.debug("pagesize = " + TOPIC_PAGE_SIZE);
         int page = 1;
         //重置标识信息
         map.put("inOtherPage", inOtherPage);
@@ -303,4 +308,56 @@ public class ForwardHome{
         return HOME;
     }
 
+    /**
+     * 滚动翻页.
+     *
+     * @param session the session
+     * @param response the response
+     * @param scrollInPageStr the scroll in page str
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @GetMapping("/scrollInPage")
+    @ResponseBody
+    public CommonResponse scrollInPage(HttpSession session, HttpServletResponse response,
+            @RequestParam(value = "scrollInPage", required = false, defaultValue = "false") String scrollInPageStr)
+            throws IOException {
+        boolean scrollInPage = Boolean.parseBoolean(scrollInPageStr);
+        session.setAttribute("scrollInPage", scrollInPage);
+        return new CommonResponse(true, scrollInPage == true ? "允许滚动翻页" : "禁止滚动翻页");
+    }
+
+    @GetMapping("/feedback")
+    public String forwardFeedback() {
+        return "feedback";
+    }
+
+    /**
+     * 用户反馈.
+     *
+     * @param session the session
+     * @param os the os
+     * @param browser the browser
+     * @param content the content
+     * @throws IOException
+     */
+    @PostMapping("/user/feedback")
+    @ResponseBody
+    public CommonResponse feedback(HttpSession session, @RequestParam("OS") String os,
+            @RequestParam("Browser") String browser, @RequestParam("content") String content) throws IOException {
+        FeedBack feedBack = new FeedBack();
+        feedBack.setDate(new Date());
+        feedBack.setUser((User) session.getAttribute("user"));
+        feedBack.setHasCheck("false");
+        feedBack.setContent(StringUtils.concat(content, " 系统信息： ", os, " 浏览器： ", browser));
+        boolean flag = userService.feedback(feedBack);
+        if (flag) {
+            return new CommonResponse(true, "反馈成功");
+        }
+        return new CommonResponse(false, "系统繁忙，请稍后再试");
+    }
+
+    @GetMapping("about")
+    public String about() {
+        return "about";
+    }
 }

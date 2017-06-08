@@ -99,15 +99,14 @@ $( function() {
     // 由于路径中含有中文时的问题，使用form提交标签
     $( ".tag" ).click( function() {
         var url = $( this ).attr( "href" );
-        // var prefix = url.substring(0, url.lastIndexOf("/"));
         var tag = url.substring( url.lastIndexOf( "/" ) + 1 );
-        // $("#tagForm").attr("action", prefix);
+        console.log( "----->" + tag );
         $( "#tagName" ).attr( "value" , encodeURI( tag ) );
         $( "#tagForm" ).submit();
         return false;
     } );
 
-    // 验证用户标签是否符合格式
+    // 发布topic,验证用户标签是否符合格式
     $( "#submitTopic" ).click( function() {
         var tags = $( ".input_tags" ).val();
         if (tags.indexOf( "；" ) >= 0 || tags.indexOf( "，" ) >= 0 || tags.indexOf( "," ) >= 0) {
@@ -301,20 +300,22 @@ $( function() {
     // 移除滚动翻页事件
     $( "#removeScrollPage" ).click( function() {
         // 如果支持滚动翻页，禁止
-        if (scrollInPage == "true") {
+        if (scrollInPage == true) {
             $( this ).text( "开启滚动翻页" );
             $( window ).unbind( "scroll" );
             var url = "/scrollInPage", args = {
+                "_csrf" : csrf,
                 "scrollInPage" : "false"
             }
-            $.post( url , args , null );
+            $.get( url , args , null );
         } else {
             $( this ).text( "禁止滚动翻页" );
             $( window ).scroll( scrollPage );
             var url = "/scrollInPage", args = {
+                "_csrf" : csrf,
                 "scrollInPage" : "true"
             }
-            $.post( url , args , null );
+            $.get( url , args , null );
         }
         return false;
     } );

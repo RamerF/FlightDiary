@@ -1,6 +1,16 @@
 package org.ramer.diary.controller.user;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Roles;
 import org.ramer.diary.domain.Topic;
@@ -16,18 +26,15 @@ import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
 import org.ramer.diary.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 注册或更新类
@@ -89,6 +96,10 @@ public class RegistOrUpdate{
         user.setRoles(roles);
         log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user);
         if (userService.newOrUpdate(user)) {
+            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user.getId() : {}", user.getId());
+
+            SecurityContextHolder.getContext()
+                    .setAuthentication(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
             return new CommonResponse(true, "注册成功");
         }
         return new CommonResponse(false, "注册失败,请稍后再试");

@@ -8,7 +8,7 @@ $( function() {
     // 返回主页
     $( "#home" ).click( function() {
         console.log( "返回主页" );
-        location.href = path + "/home";
+        location.href = "/home";
         return false;
     } )
 

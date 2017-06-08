@@ -21,13 +21,13 @@ public class UserValidator implements Validator{
     @Override
     public void validate(Object o, Errors errors) {
         User user = (User) o;
+        String username = user.getUsername();
+        if (username.length() < 4 || username.length() > 15) {
+            errors.rejectValue("username", "field.username.length", "用户名必须为4-15个字符");
+        }
         String password = user.getPassword();
         if (password.length() < 8 || password.length() > 15) {
             errors.rejectValue("password", "field.password.length", "密码必须为8-15个字符");
-        }
-        String username = user.getUsername();
-        if (username.length() < 8 || username.length() > 15) {
-            errors.rejectValue("username", "field.username.length", "用户名必须为8-15个字符");
         }
         String email = user.getEmail();
         if (!MailUtils.isEmail(email)) {

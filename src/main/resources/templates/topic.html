@@ -9,24 +9,23 @@
     <script src="/js/js.cookie.js"/>
     <script src="/js/layer/layer.js"/>
     <script src="/js/ramer/topic.js"/>
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
         $(function () {
             /*<![CDATA[*/
-            path = "";
             /* 记录滚动条的位置 */
             /* 获取滚动条的位置 */
-            var scrollCookie = /*[[Cookies.get("scrollCookie_topic" + "${topic.id}${user.id}")]]*/;
+            var scrollCookie = /*[[Cookies.get("scrollCookie_topic" + "${topic.id}${session.user.id}")]]*/;
             if (scrollCookie != null && scrollCookie != "") {
                 $("html,body").animate({
                     scrollTop: scrollCookie + "px"
                 }, 1000);
             } else {
-                /*[[Cookies.set("scrollCookie_topic" + "${topic.id}${user.id}", $(document).scrollTop("0px"))]]*/
+                /*[[Cookies.set("scrollCookie_topic" + "${topic.id}${session.user.id}", $(document).scrollTop("0px"))]]*/
                 ;
             }
             $(window).scroll(
                 function () {
-                    /*[[Cookies.set("scrollCookie_topic" + "${topic.id}${user.id}",$(document).scrollTop())]]*/
+                    /*[[Cookies.set("scrollCookie_topic" + "${topic.id}${session.user.id}",$(document).scrollTop())]]*/
                     ;
                 });
         });
@@ -115,7 +114,7 @@
     <div class="main">
         <div class="content">
             <div class="img">
-                <img alt="error" th:src="'/'+ ${topic.picture}" class="topic_pic"/>
+                <img alt="error" th:src="${topic.picture}" class="topic_pic"/>
                 <p class="desc"></p>
             </div>
             <div class="text" th:text="${topic.content}"></div>

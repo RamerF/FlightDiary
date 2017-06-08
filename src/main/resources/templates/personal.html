@@ -8,12 +8,11 @@
     <script src="/js/jquery-2.1.4.min.js"/>
     <script src="/js/js.cookie.js"/>
     <script src="/js/layer/layer.js"/>
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
         $(function () {
             /* 指定标签信息的xml文件,全局变量 */
-            path = "";
             /*<![CDATA[*/
-            userid = /*[[${user.id}]]*/;
+            userid = /*[[${session.user.id}]]*/;
             /*]]>*/
         })
     </script>
@@ -33,7 +32,7 @@
 <div class="user_panel">
     <div class="head">
         <a id="showProfile">
-            <img alt="error" th:src="'/'+${session.user.head }" class="user_head"
+            <img alt="error" th:src="${session.user.head }" class="user_head"
                  onerror="javascript:this.src='/pictures/userHead.jpg'"/>
             <br/>
             <span>更换头像</span>
