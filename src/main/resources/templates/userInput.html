@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>日记</title>
+    <link href="img/favicon.ico" rel="icon"/>
+    <link rel="stylesheet" href="/css/default.css"/>
+    <link rel="stylesheet" href="/css/userInput.css"/>
+    <script src="/js/jquery-2.1.4.min.js"/>
+    <script src="/js/layer/layer.js"/>
+    <script src="/js/ramer/userInput.js"/>
+</head>
+<body>
+<div class="container">
+    <div class="title" id="title">登录</div>
+    <form th:action="|/login|" method="post" modelAttribute="user" id="_form" enctype="multipart/form-data">
+        <div class="material-form">
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   id="_csrf"
+                   th:value="${_csrf.token}"/>
+            <div>
+                <input type="text" name="name" class="username" id="username"/>
+                <label for="username">用户名</label>
+            </div>
+            <!--<span id="message"></span>-->
+            <div>
+                <input type="password" name="password" id="password" class="password"/>
+                <label for="password">密码</label>
+            </div>
+            <!--<div id="showPassword"></div>-->
+            <!-- 用户注册面板 -->
+            <div class="reg_panel" id="regPanel">
+                <!-- 注册导航 -->
+                <!--<div class="nav_vertical"/>-->
+                <!--<div class="nav_color"/>-->
+                <div>
+                    <input type="text" name="email" class="email" id="email"/>
+                    <label for="email">邮箱</label>
+                </div>
+                <!--<span id="message2"></span>-->
+            </div>
+            <div class="update_panel">
+                <div>
+                    <input type="text" name="telephone" id="telephone"/>
+                    <label for="telephone">电话号码</label>
+                </div>
+                <div>
+                    <input type="text" name="age" id="age"/>
+                    <label for="age">年龄</label>
+                </div>
+                <div>
+                    <input type="hidden" name="checkFile" id="checkFile"/>
+                    <input type="text" class="picName" placeholder="请选择一张图片"/>
+                    <input type="file" class="userHead" id="userHead" name="picture"/>
+                    <label for="userHead">
+                        <img id="preview" class="preview" alt="error" th:src="${user.head}"/>
+                    </label>
+                </div>
+                <div>
+                    <input type="text" name="qqNum" id="qqNum"/>
+                    <label for="qqNum">QQ </label>
+                </div>
+                <div>
+                    <input type="text" name="weiboNum" id="weiboNum"/>
+                    <label for="weiboNum">微博</label>
+                </div>
+                <span class="label adjustment">性别 : </span>
+                <input type="radio" name="sex" label="男" value="M" class="radio"/>
+                <input type="radio" name="sex" label="女" value="F" class="radio"/>
+            </div>
+            <div class="forget_pass" id="forgetPass">
+                <a href="/user/forwardForgetPassword">
+                    <span>忘记密码</span>
+                </a>
+            </div>
+            <div class="toggle">
+                <input type="reset" value="重置"/>
+                <input type="submit" value="登录"/>
+                <a href="javascript:void(0);" id="reg">没有账户,去注册</a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

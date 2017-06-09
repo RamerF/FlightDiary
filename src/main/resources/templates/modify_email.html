@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>修改邮箱</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="/css/default.css" rel="stylesheet"/>
+    <link href="/css/modifyPass.css" rel="stylesheet"/>
+    <script src="/js/jquery-2.1.4.min.js"/>
+    <script src="/js/layer/layer.js"/>
+    <script src="/js/ramer/modifyEmail.js"/>
+</head>
+<body>
+<div class="container">
+    <div class="title" id="title">修改邮箱</div>
+    <div class="form">
+        <form
+                id="sendMailForm"
+                action="/user/modifyEmail/sendMail"
+                method="post">
+            <input type="text" name="newEmail" placeholder="请输入您的新邮箱" id="newEmail"/>
+            <span id="message"></span>
+            <br/>
+            <a href="https://en.mail.qq.com" id="forwardQQMail">去邮箱查看</a>
+            <input type="submit" value="确认修改" id="sendMail"/>
+            <input type="reset" value="清空"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

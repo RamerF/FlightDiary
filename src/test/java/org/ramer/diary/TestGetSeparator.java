@@ -1,4 +1,5 @@
 package org.ramer.diary;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -8,22 +9,25 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 获取系统路径分隔符和类路径
  * @author ramer
  *
  */
+@Slf4j
 public class TestGetSeparator{
     @Test
     public void testGetSeparator() {
         Properties properties = System.getProperties();
-        System.out.println(File.separatorChar);
+        log.debug("{}", File.separatorChar);
         Set<Entry<Object, Object>> proSet = properties.entrySet();
 
         for (Map.Entry<Object, Object> mEntry : proSet) {
             Object value = mEntry.getValue();
             Object key = mEntry.getKey();
-            System.out.println("[" + key + "=" + value + "]");
+            log.debug("[" + key + "=" + value + "]");
         }
     }
 
@@ -31,8 +35,8 @@ public class TestGetSeparator{
     //    获取类路径
     public void getPath() throws IOException {
         String path = new File("").getCanonicalPath();
-        System.out.println("path = " + path);
-        System.out.println(System.getProperty("os.name").equals("Linux"));
+        log.debug("path = " + path);
+        log.debug("{}", System.getProperty("os.username").equals("Linux"));
 
     }
 

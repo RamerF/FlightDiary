@@ -1,0 +1,183 @@
+@CHARSET "UTF-8";
+
+body {
+    /*     background-image: url("/FlightDiary/pictures/loginBG.jpg"); */
+
+}
+
+@import url('https://fonts.googleapis.com/css?family=Quicksand');
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    min-width: 520px;
+    opacity: .82;
+    box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.1);
+    margin-top: -60px;
+    width: 35%;
+}
+
+.title {
+    text-align: center;
+    padding: 15px;
+    font-size: 30px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, .1);
+}
+
+input[type='text'], input[type='password'] {
+    transition: all .5s;
+    width: 100%;
+    height: 45px;
+}
+
+.material-form input[type='text'], .material-form input[type='password'] {
+    font-family: 'Quicksand', sans-serif;
+    border: none;
+    border-bottom: 2px solid rgba(0, 188, 212, .2);
+    background: transparent;
+    margin-left: 0;
+    padding: 0;
+    padding-left: 46%;
+    color: rgba(0, 0, 0, .54);
+    transform-origin: left bottom;
+}
+
+.material-form input[type='text']:focus, .material-form input[type='password']:focus {
+    border-bottom: 2px solid rgba(0, 188, 212, 1);
+    padding-left: 40px;
+    color: rgba(0, 0, 0, .87);
+    transform: scale(1);
+}
+
+.material-form input:focus + label {
+    transform: scale(.7) translateY(-200%);
+    color: rgba(0, 0, 0, .87);
+}
+
+.material-form div {
+    position: relative;
+    width: 80%;
+    margin: 20px auto;
+}
+
+.material-form label {
+    font-family: 'Quicksand', sans-serif;
+    position: absolute;
+    left: 0;
+    top: 30%;
+    line-height: 16px;
+    color: rgba(0, 0, 0, .37);
+    transition: all .5s;
+    transform-origin: left top;
+    transform: scale(1);
+}
+
+.material-form label:before {
+    content: "asdfasdf";
+    position: absolute;
+    width: 0;
+    bottom: -5.5px;
+    left: 0;
+    border-bottom: 1px solid;
+    height: 0;
+    overflow: hidden;
+}
+
+.material-form input:focus + label:before {
+    width: 100%;
+}
+
+span.label {
+    border-bottom: 1px solid #81BBED;
+    padding: 11px;
+    margin: 10px 40px;
+}
+
+#showPassword {
+    background: url("../pictures/showpassword.png") no-repeat;
+    width: 35px;
+    display: table;
+    position: absolute;
+    z-index: 3;
+    height: 32px;
+    opacity: .6;
+    margin-left: 351px;
+    margin-top: -43px;
+}
+
+div.reg_panel {
+    display: none;
+    width: 100%;
+}
+
+div.nav_vertical {
+    position: absolute;
+    top: 151px;
+    left: 32.6%;
+    width: 452px;
+    height: 6px;
+    /*     box-shadow: 1px 1px 10px #E4D6D6; */
+}
+
+div.nav_color {
+    position: absolute;
+    top: 151px;
+    left: 32.5%;
+    background: #009688;
+    width: 0%;
+    height: 6px;
+    transition: width 1.5s ease-in-out 0s;
+}
+
+.update_panel {
+    display: none;
+}
+
+.preview {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin-left: -3.6%;
+}
+
+.picName {
+    cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.userHead {
+    border: none;
+    /* overflow: hidden; */
+    width: 177px;
+    margin-top: 8px;
+    opacity: 0;
+    position: absolute;
+    /* margin-right: -120px; */
+    margin-left: -195px;
+    cursor: pointer;
+}
+
+.radio {
+    margin-left: 50px;
+}
+
+label {
+    margin-right: 10px;
+}
+
+.label.adjustment {
+    margin-right: 10px;
+}
+
+div.forget_pass {
+    text-align: right;
+    margin: 10px;
+}
+
+#message3 font {
+    margin-right: 10px;
+}
