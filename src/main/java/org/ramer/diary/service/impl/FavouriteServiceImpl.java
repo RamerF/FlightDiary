@@ -14,11 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Resource;
+
 @Slf4j
 @Service
 public class FavouriteServiceImpl implements FavouriteService {
 
-    @Autowired
+    @Resource
     private FavouriteRepository favouriteRepository;
 
     @Override

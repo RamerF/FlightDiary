@@ -5,6 +5,7 @@ package org.ramer.diary.controller.user;
 
 import java.io.IOException;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
 public class AddFavourite{
-    @Autowired
+    @Resource
     private FavouriteService favouriteService;
 
     /**
