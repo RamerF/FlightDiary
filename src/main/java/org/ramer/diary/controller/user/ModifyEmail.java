@@ -1,12 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -14,14 +8,19 @@ import org.ramer.diary.exception.EmailExistException;
 import org.ramer.diary.exception.LinkInvalidException;
 import org.ramer.diary.exception.UserNotLoginException;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.EncryptUtil;
 import org.ramer.diary.util.MailUtils;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * 修改邮箱.
@@ -36,7 +35,7 @@ public class ModifyEmail{
     /**
      * The User service.
      */
-    @Autowired
+    @Resource
     UserService userService;
     /**
      * The Success.
@@ -72,9 +71,6 @@ public class ModifyEmail{
             HttpServletResponse response) throws IOException {
         if (!UserUtils.checkLogin(session)) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
-            if (!UserUtils.multiLogin(session, u)) {
-                throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
-            }
             throw new UserNotLoginException("您的登录已过期,请重新登录");
         }
         log.debug("发送邮件,修改邮箱");
@@ -98,7 +94,7 @@ public class ModifyEmail{
         user.setExpireTime(expireTime);
         userService.newOrUpdate(user);
         String servletName = session.getServletContext().getServletContextName();
-        String encodedEmail = Encrypt.execEncrypt(newEmail, true);
+        String encodedEmail = EncryptUtil.execEncrypt(newEmail);
         String content = "<h3>请点击下面的链接完成邮箱更改,五分钟内有效</h3><br>" + "<a href='http://localhost:8080/" + servletName
                 + "/user/modifyEmail?email1=" + encodedEmail + "&email2=" + user.getEmail() + "'>http://localhost:8080/"
                 + servletName + "/user/modifyEmail/" + newEmail + "</a>";
@@ -115,7 +111,7 @@ public class ModifyEmail{
      * @param session  the session
      * @return the string
      */
-    @RequestMapping("/user/modifyEmail")
+    @PutMapping("/user/modifyEmail")
     public String modifyEmail(@RequestParam("email2") String email, @RequestParam("email1") String newEmail,
             HttpSession session) {
         log.debug("修改邮箱");

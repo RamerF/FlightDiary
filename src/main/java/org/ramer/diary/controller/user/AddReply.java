@@ -1,7 +1,9 @@
 package org.ramer.diary.controller.user;
 
+import java.io.IOException;
 import java.util.Date;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -17,10 +19,7 @@ import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,9 +36,9 @@ public class AddReply{
     //全局出错页面
     final String ERROR = PageConstant.ERROR;
 
-    @Autowired
+    @Resource
     private ReplyService replyService;
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**
@@ -50,18 +49,14 @@ public class AddReply{
      * @param user 登录用户
      * @param session JSP内置对象
      * @param response JSP内置对象
-     * @param map the map
      * @return 返回当前页面
      * @throws IOException 写入信息失败
      */
-    @RequestMapping("/user/topic/comment/reply/{comment_id}")
+    @PutMapping("/user/topic/comment/reply/{comment_id}")
     public String replyComment(@PathVariable("comment_id") String id, @RequestParam("content") String content,
             User user, HttpSession session, HttpServletResponse response) {
         if (!UserUtils.checkLogin(session)) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
-            if (!UserUtils.multiLogin(session, u)) {
-                throw new UserNotLoginException("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
-            }
             throw new UserNotLoginException("您还未登录,或登录已过期,请登录");
         }
         Integer comment_id = 0;
@@ -105,7 +100,7 @@ public class AddReply{
      * @param session the session
      * @return the string
      */
-    @RequestMapping("/user/topic/reply/delete/{reply_id}")
+    @DeleteMapping("/user/topic/reply/delete/{reply_id}")
     public String deleteReply(@PathVariable("reply_id") String id, HttpSession session) {
         log.debug("删除回复");
         Integer reply_id = 0;

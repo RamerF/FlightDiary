@@ -2,6 +2,7 @@ package org.ramer.diary.controller.user;
 
 import java.io.IOException;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.ramer.diary.domain.Topic;
@@ -11,9 +12,7 @@ import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class EditHead {
 
-  @Autowired
+  @Resource
   private UserService userService;
 
   /**
@@ -41,14 +40,14 @@ public class EditHead {
    * @return 返回个人主页
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  @RequestMapping("/user/update")
+  @GetMapping("/user/update")
   public String editHead(User user, @RequestParam("picture") MultipartFile file,
       HttpSession session) throws IOException {
     log.debug("更新用户头像");
     if (!file.isEmpty()) {
       log.debug("保存图片");
       String pictureUrl = FileUtils.saveFile(file, session, true,
-          StringUtils.hasChinese(user.getName()));
+          StringUtils.hasChinese(user.getUsername()));
       user.setHead(pictureUrl);
     }
     userService.updateHead(user);

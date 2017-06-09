@@ -1,11 +1,7 @@
 package org.ramer.diary.controller.user;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.exception.UserNotExistException;
@@ -15,12 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 浏览他人主页或分享.
@@ -32,15 +29,15 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class VisitOther{
 
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private TopicService topicService;
-    @Autowired
+    @Resource
     private PraiseService praiseService;
-    @Autowired
+    @Resource
     private FavouriteService favouriteService;
-    @Autowired
+    @Resource
     private FollowService followService;
     //分享页面大小
     @Value("${diary.personal.topic.page.size}")
@@ -54,7 +51,7 @@ public class VisitOther{
      * @param session the session
      * @return 引导到他人主页
      */
-    @RequestMapping("/user/personal/{id}")
+    @GetMapping("/user/personal/{id}")
     public String visitOtherPage(@PathVariable("id") Integer id,
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
@@ -89,7 +86,7 @@ public class VisitOther{
                 //获取点赞信息
                 log.debug("访问个人空间");
                 List<Integer> praises = praiseToList(user, user, session);
-                session.setAttribute("praises", praises);
+                map.put("praises", praises);
                 map.put("user", userService.getById(id));
                 return "personal";
             }
@@ -97,15 +94,15 @@ public class VisitOther{
             List<Integer> favourites = favouriteToList(user, other, session);
             //获取点赞信息
             List<Integer> praises = praiseToList(user, other, session);
-            log.debug("访问" + other.getName() + "的空间");
+            log.debug("访问" + other.getUsername() + "的空间");
             //写入关注信息
-            session.setAttribute("isFollowed", isFollowed(user, other));
+            map.put("isFollowed", isFollowed(user, other));
             //写入收藏信息
-            session.setAttribute("favourites", favourites);
+            map.put("favourites", favourites);
             //写入收藏信息
-            session.setAttribute("praises", praises);
+            map.put("praises", praises);
         }
-        session.setAttribute("other", other);
+        map.put("other", other);
         return "visit_other";
     }
 
@@ -117,7 +114,7 @@ public class VisitOther{
      * @param session the session
      * @return 返回某个分享的详情页面
      */
-    @RequestMapping("/user/topic/{topic_id}")
+    @GetMapping("/user/topic/{topic_id}")
     public String forwardTopic(@PathVariable("topic_id") Integer topic_id, Map<String, Object> map,
             HttpSession session) {
         //    inOtherPage = false;
@@ -132,8 +129,7 @@ public class VisitOther{
             throw new UserNotExistException("您访问的页面已经乘坐2333···号灰船逃离这个星球了 -.-!");
         }
         User user = (User) session.getAttribute("user");
-        if (UserUtils.checkLogin(session)
-                && UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))) {
+        if (UserUtils.checkLogin(session)) {
             log.debug("已登录,写入信息");
             //获取收藏信息
             List<Integer> favourites = favouriteToList(user, topic.getUser(), session);
@@ -141,26 +137,25 @@ public class VisitOther{
             List<Integer> praises = praiseToList(user, topic.getUser(), session);
 
             //写入收藏信息
-            session.setAttribute("favourites", favourites);
+            map.put("favourites", favourites);
             //写入关注信息
-            session.setAttribute("isFollowed", isFollowed(user, topic.getUser()));
+            map.put("isFollowed", isFollowed(user, topic.getUser()));
             //写入点赞信息
-            session.setAttribute("praises", praises);
+            map.put("praises", praises);
         }
         map.put("topic", topic);
-        session.setAttribute("other", topic.getUser());
+        map.put("other", topic.getUser());
         return "topic";
     }
 
     /**
      * 将指定用户收藏信息存储到list中
      * @param user 用户
-     * @param topic 该用户的分享
      * @return list中存储的是当前用户收藏的所有,当前被浏览用户,的分享的id.
      */
+
     public List<Integer> favouriteToList(User user, User other, HttpSession session) {
-        if (!UserUtils.checkLogin(session)
-                || !UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))) {
+        if (!UserUtils.checkLogin(session)) {
             return new ArrayList<>();
         }
         List<Integer> list = favouriteService.getFavouriteTopicIds(user, other);
@@ -180,15 +175,11 @@ public class VisitOther{
      * @return list中存储的是当前用户点过赞的所有,当前被浏览用户,的分享的id.
      */
     public List<Integer> praiseToList(User user, User other, HttpSession session) {
-        if (!UserUtils.checkLogin(session)
-                || !UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))) {
+        if (!UserUtils.checkLogin(session)) {
             return new ArrayList<>();
         }
         List<Integer> list = praiseService.getPraiseTopicIds(user, other);
-        log.debug("已点赞分享id : ");
-        for (Integer integer : list) {
-            log.debug("\t" + integer);
-        }
+        log.debug("已点赞分享id : {}", JSONObject.toJSONString(list));
         return list;
     }
 

@@ -209,21 +209,13 @@ keyframes bounceOut { 100%{
 }
 
 60%{
-opacity
-:
-1;-webkit-transform
-:scale
+    opacity:1;
+    -webkit-transform :scale(.475) translateY(60px);
+    transform:scale
 (
 .475
 )
- 
-translateY
-(60px);transform
-:scale
-(
-.475
-)
- 
+
 translateY
 (60px);-webkit-animation-timing-function
 :ease-out
@@ -249,21 +241,21 @@ opacity
 (
 .475
 )
- 
+
 translateY
 (60px);-ms-transform
 :scale
 (
 .475
 )
- 
+
 translateY
 (60px);transform
 :scale
 (
 .475
 )
- 
+
 translateY
 (60px);-webkit-animation-timing-function
 :ease-out
@@ -333,14 +325,14 @@ opacity
 (
 .475
 )
- 
+
 translateX
 (48px);transform
 :scale
 (
 .475
 )
- 
+
 translateX
 (48px);-webkit-animation-timing-function
 :ease-out
@@ -366,21 +358,21 @@ opacity
 (
 .475
 )
- 
+
 translateX
 (48px);-ms-transform
 :scale
 (
 .475
 )
- 
+
 translateX
 (48px);transform
 :scale
 (
 .475
 )
- 
+
 translateX
 (48px);-webkit-animation-timing-function
 :ease-out
@@ -405,11 +397,11 @@ opacity
 :
 1;-webkit-transform
 :translateX(0)
- 
+
 rotate
 (0);transform
 :translateX(0)
- 
+
 rotate
 (0)
 }
@@ -427,15 +419,15 @@ opacity
 :
 1;-webkit-transform
 :translateX(0)
- 
+
 rotate
 (0);-ms-transform
 :translateX(0)
- 
+
 rotate
 (0);transform
 :translateX(0)
- 
+
 rotate
 (0)
 }
@@ -654,7 +646,8 @@ opacity
 	line-height: 24px;
 	word-break: break-all;
 	font-size: 14px;
-	overflow: auto
+	overflow: auto;
+    color: rgba(50,50,50,.9);
 }
 
 .layui-layer-dialog .layui-layer-content .layui-layer-ico {
@@ -699,7 +692,7 @@ opacity
 
 .layui-layer-msg {
 	min-width: 180px;
-	border: 1px solid #D3D4D3;
+	border: 2px solid #D3D4D3;
 	box-shadow: none
 }
 
@@ -709,7 +702,10 @@ opacity
 	filter: alpha(opacity = 60);
 	background-color: rgba(0, 0, 0, .6);
 	color: #fff;
-	border: none
+	border: none;
+	-webkit-box-shadow:  1px 1px 6px rgba(50,50,50,.8);
+	-moz-box-shadow:  1px 1px 6px rgba(50,50,50,.8);
+	box-shadow:  1px 1px 6px rgba(50,50,50,.8);
 }
 
 .layui-layer-hui .layui-layer-content {

@@ -3,9 +3,9 @@
  */
 package org.ramer.diary.util;
 
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
+import org.ramer.diary.domain.User;
+import org.ramer.diary.service.UserService;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -13,11 +13,9 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import org.ramer.diary.domain.User;
-import org.ramer.diary.service.UserService;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 邮箱工具类:
@@ -92,7 +90,7 @@ public class MailUtils{
      * @return 存在, 返回true
      */
     public static boolean exist(String email, UserService userService) {
-        User user = userService.getByEmail(Encrypt.execEncrypt(email, true));
+        User user = userService.getByEmail(EncryptUtil.execEncrypt(email));
         return user == null ? false : true;
 
     }

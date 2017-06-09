@@ -3,16 +3,16 @@
 *, *:after, *:before {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    box-sizing: border-box
 }
 
 .clearfix:before, .clearfix:after {
     content: "	";
-    display: table;
+    display: table
 }
 
 .clearfix:after {
-    clear: both;
+    clear: both
 }
 
 html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form,
@@ -24,17 +24,17 @@ fieldset, legend, input, textarea, p, blockquote, th, td {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     font-size: 100%;
-    color: rgba(61, 80, 76, 0.63);
+    color: rgba(61, 80, 76, 0.63)
 }
 
 body {
     text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px;
     background: rgba(255, 255, 255, 1);
-    transition: all .6s;
+    transition: all .6s
 }
 
 div {
-    background: #FFFFFF;
+    background: #FFFFFF
     /*  		text-transform:	capitalize;	 */
 }
 
@@ -48,7 +48,7 @@ input[type='text'], input[type='password'] {
     height: 40px;
     padding: 5px;
     margin: 15px auto;
-    display: block;
+    display: block
 }
 
 input[type="submit"], input[type="reset"] {
@@ -58,39 +58,39 @@ input[type="submit"], input[type="reset"] {
     width: 100px;
     background: rgba(161, 143, 107, 0);
     border: 1px solid #4DABF5;
-    padding: 0px;
+    padding: 0px
 }
 
 textarea {
-    color: rgba(77, 171, 245, 0.75);
+    color: rgba(77, 171, 245, 0.75)
 }
 
 a:VISITED {
     text-decoration: none;
-    color: rgba(61, 80, 76, 0.63);
+    color: rgba(61, 80, 76, 0.63)
 }
 
 a:hover {
-    color: #DDDEDD;
+    color: #DDDEDD
 }
 
 a {
     white-space: nowrap;
     color: rgba(61, 80, 76, 0.63);
-    text-decoration: none;
+    text-decoration: none
 }
 
 span {
-    color: rgba(61, 80, 76, 0.63);
+    color: rgba(61, 80, 76, 0.63)
 }
 
 input::-webkit-input-placeholder {
-    color: #9f9f9f;
+    color: #9f9f9f
 }
 
 /*	清除表单自动填充样式:针对chrome	*/
 input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset;
+    -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset
     /*		border:	1px	solid	rgba(255,	255,	255,	.15)	!important;	*/
 }
 
@@ -105,7 +105,7 @@ input:-webkit-autofill {
     vertical-align: text-top;
     background-image: url("../img/icons-halflings.png");
     background-position: 14px 14px;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat
 }
 
 .icon-white {
@@ -114,27 +114,27 @@ input:-webkit-autofill {
 
 /*	拇指向上图标空心	*/
 .icon-thumbs-up {
-    background-position: -96px -144px;
+    background-position: -96px -144px
 }
 
 /* 拇指向上实心 */
 .icon-thumbs-up-ramer {
-    background-position: -120px -144px;
+    background-position: -120px -144px
 }
 
 /*	编辑图标	*/
 .icon-edit {
-    background-position: -96px -72px;
+    background-position: -96px -72px
 }
 
 /*	垃圾箱图标	*/
 .icon-trash {
-    background-position: -456px 0;
+    background-position: -456px 0
 }
 
 /*	空心五星图标	*/
 .icon-star-empty {
-    background-position: -144px 0;
+    background-position: -144px 0
 }
 
 /* 实心五星图标 */
@@ -155,13 +155,13 @@ input:-webkit-autofill {
 /*	箭头朝上图标	*/
 .icon-arrow-up {
     opacity: .5;
-    background-position: -289px -96px;
+    background-position: -289px -96px
 }
 
 /*	箭头朝下图标	*/
 .icon-arrow-down {
     opacity: .5;
-    background-position: -312px -96px;
+    background-position: -312px -96px
 }
 
 /*	信封图标	*/
@@ -181,37 +181,38 @@ input:-webkit-autofill {
 
 /* 标签图标 */
 .icon-tags {
-    background-position: -25px -48px;
+    background-position: -25px -48px
 }
 
 /*	修改浏览器滚动条样式*/
 ::-webkit-scrollbar {
     width: 5px;
+    height: 5px
 }
 
 /*  滚动条的滑轨背景颜色  */
 ::-webkit-scrollbar-track {
-    background-color: #EDEDEF;
+    background-color: #EDEDEF
 }
 
 /*	滑块颜色	*/
 ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: rgb(77, 171, 245);
+    border-radius: 0px;
+    background-color: rgba(61, 80, 76, 0.63)
 }
 
 /*	滑轨两头的监听按钮颜色	*/
 ::-webkit-scrollbar-button {
     display: none;
-    background-color: rgba(61, 80, 76, 0.63);
+    background-color: rgba(61, 80, 76, 0.63)
 }
 
 /*	横向滚动条和纵向滚动条相交处尖角的颜色	*/
 ::-webkit-scrollbar-corner {
-    background-color: rgba(61, 80, 76, 0.63);
+    background-color: rgba(61, 80, 76, 0.63)
 }
 
 /*  输入框placeholder默认样式  */
 ::-webkit-input-placeholder {
-    opacity: .5;
+    opacity: .5
 }

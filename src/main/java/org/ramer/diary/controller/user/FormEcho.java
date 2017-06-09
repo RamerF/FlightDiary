@@ -1,7 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.util.Map;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
@@ -11,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * 表单回显类：
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class FormEcho{
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**
@@ -30,9 +30,8 @@ public class FormEcho{
      * @param map the map
      * @return 引导用户登录界面或注册界面
      */
-    @GetMapping("/user")
+    @GetMapping("/login")
     public String input(User user, Map<String, Object> map) {
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " 表单回显,空白用户");
         return PageConstant.USER_INPUT;
     }
 
@@ -43,15 +42,13 @@ public class FormEcho{
      * @param map the map
      * @return 引导用户更新界面
      */
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/user/{id}")
     public String input(@PathVariable("id") Integer id, Map<String, Object> map) {
-        log.debug("表单回显,id = " + id);
         User user = (User) map.get("user");
         if (user != null && user.getId() == id) {
             map.put("user", userService.getById(user.getId()));
             return PageConstant.USER_INPUT;
         }
-        log.debug("更新用户表单回显,非法访问");
         throw new IllegalAccessException("无法访问用户信息,登录已过期");
     }
 

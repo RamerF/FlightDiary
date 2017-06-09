@@ -3,20 +3,20 @@
  */
 package org.ramer.diary.service.impl;
 
-import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.repository.FeedBackRepository;
 import org.ramer.diary.repository.UserRepository;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.EncryptUtil;
+import org.ramer.diary.util.IntegerUtil;
 import org.ramer.diary.util.Pagination;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author ramer
@@ -24,10 +24,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
-    @Autowired
+public class UserServiceImpl implements UserService{
+    @Resource
     private UserRepository userRepository;
-    @Autowired
+    @Resource
     private FeedBackRepository feedBackRepository;
 
     @Override
@@ -45,8 +45,8 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User login(User user) {
         User u = null;
-        if (user.getName() != null) {
-            u = userRepository.getByNameAndPassword(user.getName(), user.getPassword());
+        if (user.getUsername() != null) {
+            u = userRepository.getByUsernameAndPassword(user.getUsername(), user.getPassword());
         } else {
             u = userRepository.getByEmailAndPassword(user.getEmail(), user.getPassword());
         }
@@ -55,11 +55,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User newOrUpdate(User user) {
-        //    userRepository.testUpdate(user.getSays(), user.getId());
-        User u = userRepository.saveAndFlush(user);
-        return u;
-
+    public boolean newOrUpdate(User user) {
+        user = userRepository.saveAndFlush(user);
+        return IntegerUtil.isPositiveValue(user.getId());
     }
 
     @Override
@@ -73,9 +71,9 @@ public class UserServiceImpl implements UserService {
     public User getByName(String username) {
         String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
         if (username.matches(regex)) {
-            return userRepository.getByEmail(Encrypt.execEncrypt(username, true));
+            return userRepository.getByEmail(EncryptUtil.execEncrypt(username));
         }
-        return userRepository.getByName(username);
+        return userRepository.getByUsername(username);
     }
 
     @Override

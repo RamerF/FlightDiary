@@ -1,11 +1,11 @@
 package org.ramer.diary.util;
 
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.domain.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
 
 /**
  * 用户工具类，包含常用的静态方法：
@@ -42,30 +42,15 @@ public class UserUtils{
      * @return 已登录返回true,否则返回false
      */
     public static boolean checkLogin(HttpSession session) {
-        log.debug("登录检测");
-        if (session.getAttribute("user") != null && ((User) session.getAttribute("user")).getId() != null) {
-            log.debug("\t已登录");
-            return true;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " principal : {}", principal);
+        if (principal.equals("anonymousUser")) {
+            session.setAttribute("user", new User());
+            log.debug("\t未登录");
+            return false;
         }
-        session.setAttribute("user", new User());
-        log.debug("\t未登录");
-        return false;
-    }
-
-    /**
-     * 检测用户是否异地登录.
-     *
-     * @param session the session
-     * @return 已登录返回true,否则返回false
-     */
-    public static boolean multiLogin(HttpSession session, User user) {
-        log.debug("登录检测");
-        if (session.getId().equals(user.getSessionid())) {
-            log.debug("\t已登录");
-            return true;
-        }
-        session.setAttribute("user", new User());
-        log.debug("\t未登录");
-        return false;
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user.getUsername());
+        return true;
     }
 }

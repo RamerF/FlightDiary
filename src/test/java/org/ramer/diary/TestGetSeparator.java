@@ -36,7 +36,7 @@ public class TestGetSeparator{
     public void getPath() throws IOException {
         String path = new File("").getCanonicalPath();
         log.debug("path = " + path);
-        log.debug("{}", System.getProperty("os.name").equals("Linux"));
+        log.debug("{}", System.getProperty("os.username").equals("Linux"));
 
     }
 

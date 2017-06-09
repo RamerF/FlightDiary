@@ -1,16 +1,12 @@
 package org.ramer.diary.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
+import org.ramer.diary.domain.FeedBack;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.domain.dto.CommonResponse;
 import org.ramer.diary.exception.IllegalAccessException;
 import org.ramer.diary.service.FollowService;
 import org.ramer.diary.service.NotifyService;
@@ -18,6 +14,7 @@ import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
 import org.ramer.diary.util.CollectionsUtils;
 import org.ramer.diary.util.Pagination;
+import org.ramer.diary.util.StringUtils;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +22,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 定位到主页.
@@ -36,13 +41,13 @@ import lombok.extern.slf4j.Slf4j;
 @SessionAttributes(value = { "user", "topics", "topicCount", "scrollInPage" }, types = { User.class, Topic.class })
 @Controller
 public class ForwardHome{
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private TopicService topicService;
-    @Autowired
+    @Resource
     private NotifyService notifyService;
-    @Autowired
+    @Resource
     private FollowService followService;
 
     //主页面
@@ -55,13 +60,13 @@ public class ForwardHome{
     private final String WRONG_FORMAT = MessageConstant.WRONG_FORMAT;
     //分享页面大小
     @Value("${diary.topic.page.size}")
-    private int TOPICPAGESIZE;
+    private int TOPIC_PAGE_SIZE;
     //达人页面大小
     @Value("${diary.topPeople.page.size}")
-    private int PEOPLEPAGESIZE;
+    private int PEOPLE_PAGE_SIZE;
     //是否支持滚动翻页
     @Value("${diary.page.scroll}")
-    private boolean scrollInPage;
+    private boolean SCROLL_IN_PAGE;
 
     /**
      * 主页.
@@ -76,10 +81,9 @@ public class ForwardHome{
             Map<String, Object> map, HttpSession session) {
         //初始化滚动翻页
         if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", scrollInPage);
+            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
         }
         log.debug("主页");
-        log.debug("pagesize = " + TOPICPAGESIZE);
         int page = 1;
         //重置标识信息
         map.put("inOtherPage", inOtherPage);
@@ -98,7 +102,7 @@ public class ForwardHome{
             page = 1;
         }
         //获取分页分享
-        Page<Topic> topics = topicService.getTopicsPage(page, TOPICPAGESIZE);
+        Page<Topic> topics = topicService.getTopicsPage(page, TOPIC_PAGE_SIZE);
         //记录最新的topicid，用于判断是否有新动态
         map.put("topicCount", topicService.getCount());
         map.put("topics", topics);
@@ -134,13 +138,13 @@ public class ForwardHome{
      * @param session the session
      * @return 引导到主页
      */
-    @RequestMapping("/home/orderbyUpCounts")
+    @GetMapping("/home/orderbyUpCounts")
     public String homeTopicOrderByUpcounts(
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
         //初始化滚动翻页
         if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", scrollInPage);
+            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
         }
 
         log.debug("热门主页");
@@ -156,7 +160,7 @@ public class ForwardHome{
             throw new IllegalAccessException("非法参数");
         }
         //获取分页分享
-        Page<Topic> topics = topicService.getTopicsPageOrderByFavourite(page, TOPICPAGESIZE);
+        Page<Topic> topics = topicService.getTopicsPageOrderByFavourite(page, TOPIC_PAGE_SIZE);
         map.put("topics", topics);
         if (UserUtils.checkLogin(session)) {
             User user = (User) session.getAttribute("user");
@@ -186,12 +190,12 @@ public class ForwardHome{
      * 达人
      * @return
      */
-    @RequestMapping("/home/topPeople")
+    @GetMapping("/home/topPeople")
     public String homeTopPeople(@RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
         //初始化滚动翻页
         if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", scrollInPage);
+            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
         }
 
         log.debug("达人主页");
@@ -205,10 +209,9 @@ public class ForwardHome{
             throw new IllegalAccessException(WRONG_FORMAT);
         }
         //    获取达人的分页信息
-        Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLEPAGESIZE);
+        Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLE_PAGE_SIZE);
         map.put("topPeoples", topPeoples);
-        if (UserUtils.checkLogin(session)
-                && UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))) {
+        if (UserUtils.checkLogin(session)) {
             User user = (User) session.getAttribute("user");
             //获取用户统计数据
             int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -249,7 +252,7 @@ public class ForwardHome{
             Map<String, Object> map) throws UnsupportedEncodingException {
         //初始化滚动翻页
         if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", scrollInPage);
+            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
         }
 
         log.debug("热门标签主页");
@@ -265,8 +268,7 @@ public class ForwardHome{
         } catch (Exception e) {
             page = 1;
         }
-        if (UserUtils.checkLogin(session)
-                && UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))) {
+        if (UserUtils.checkLogin(session)) {
             User user = (User) session.getAttribute("user");
             //获取用户统计数据
             int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -289,15 +291,15 @@ public class ForwardHome{
         Pagination<Topic> tagTopics;
         //    取得第一个标签的分享数据
         if (tag.equals("default")) {
-            tagTopics = topicService.getTopicsPageByTags(tags.iterator().next(), page, TOPICPAGESIZE);
+            tagTopics = topicService.getTopicsPageByTags(tags.iterator().next(), page, TOPIC_PAGE_SIZE);
         } else {
             tag = java.net.URLDecoder.decode(tag, "utf8");
-            tagTopics = topicService.getTopicsPageByTags(tag, page, TOPICPAGESIZE);
+            tagTopics = topicService.getTopicsPageByTags(tag, page, TOPIC_PAGE_SIZE);
         }
         //   将所有标签写入session
-        session.setAttribute("tags", tags);
+        map.put("tags", tags);
         //    将第一个标签对应的分页分享写入session
-        session.setAttribute("tagTopics", tagTopics);
+        map.put("tagTopics", tagTopics);
         //    取消标识为达人分类
         map.put("showTopPeople", "false");
         //    取消标识为分享分类
@@ -307,4 +309,56 @@ public class ForwardHome{
         return HOME;
     }
 
+    /**
+     * 滚动翻页.
+     *
+     * @param session the session
+     * @param response the response
+     * @param scrollInPageStr the scroll in page str
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @GetMapping("/scrollInPage")
+    @ResponseBody
+    public CommonResponse scrollInPage(HttpSession session, HttpServletResponse response,
+            @RequestParam(value = "scrollInPage", required = false, defaultValue = "false") String scrollInPageStr)
+            throws IOException {
+        boolean scrollInPage = Boolean.parseBoolean(scrollInPageStr);
+        session.setAttribute("scrollInPage", scrollInPage);
+        return new CommonResponse(true, scrollInPage == true ? "允许滚动翻页" : "禁止滚动翻页");
+    }
+
+    @GetMapping("/feedback")
+    public String forwardFeedback() {
+        return "feedback";
+    }
+
+    /**
+     * 用户反馈.
+     *
+     * @param session the session
+     * @param os the os
+     * @param browser the browser
+     * @param content the content
+     * @throws IOException
+     */
+    @PostMapping("/user/feedback")
+    @ResponseBody
+    public CommonResponse feedback(HttpSession session, @RequestParam("OS") String os,
+            @RequestParam("Browser") String browser, @RequestParam("content") String content) throws IOException {
+        FeedBack feedBack = new FeedBack();
+        feedBack.setDate(new Date());
+        feedBack.setUser((User) session.getAttribute("user"));
+        feedBack.setHasCheck("false");
+        feedBack.setContent(StringUtils.concat(content, " 系统信息： ", os, " 浏览器： ", browser));
+        boolean flag = userService.feedback(feedBack);
+        if (flag) {
+            return new CommonResponse(true, "反馈成功");
+        }
+        return new CommonResponse(false, "系统繁忙，请稍后再试");
+    }
+
+    @GetMapping("about")
+    public String about() {
+        return "about";
+    }
 }
