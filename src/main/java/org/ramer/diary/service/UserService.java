@@ -11,7 +11,7 @@ public interface UserService{
     /**
      * 获取用户,按分享的数量排序
      * @param page 当前页号
-     * @param size
+     * @param 每页记录数
      * @return 用户的分页记录
      */
     Pagination<User> getTopPeople(int page, int size);

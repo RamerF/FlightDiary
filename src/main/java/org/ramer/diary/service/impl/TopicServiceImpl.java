@@ -20,13 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Resource;
-
 @Slf4j
 @Service
 public class TopicServiceImpl implements TopicService {
 
-    @Resource
+    @Autowired
     private TopicRepository topicRepository;
 
     @Override
@@ -112,7 +110,10 @@ public class TopicServiceImpl implements TopicService {
     @Transactional(readOnly = true)
     public boolean getTopicByUserIdAndTopicId(Integer topic_id, User user) {
         Topic topic = topicRepository.getByIdAndUser(topic_id, user);
-        return topic != null;
+        if (topic == null) {
+            return false;
+        }
+        return true;
     }
 
     @Override

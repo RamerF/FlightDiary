@@ -14,4 +14,4 @@ $( function() {
     rightNav += "<hr>";
     rightNav += "</ul>";
     $( "body" ).append( rightNav );
-} );
+} )

@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import javax.annotation.Resource;
-
 /**
  * Created by RAMER on 5/22/2017.
  */
@@ -18,9 +16,9 @@ import javax.annotation.Resource;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-    @Resource
+    @Autowired
     private UserDetailsService customUserService;
-    @Resource
+    @Autowired
     private SecurityEncrypt securityEncrypt;
 
     @Override

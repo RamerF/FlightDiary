@@ -13,14 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-
 @Service
 public class PraiseServiceImpl implements PraiseService {
 
-  @Resource
+  @Autowired
   private PraiseRepository praiseRepository;
-  @Resource
+  @Autowired
   private TopicRepository topicRepository;
 
   @Override

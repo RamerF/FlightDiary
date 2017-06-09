@@ -177,7 +177,7 @@ $( function() {
                 }
             }
             $( "#message" ).html( fillHtml );
-            
+            return;
         } );
     } );
 
@@ -248,7 +248,7 @@ $( function() {
                             color : "red"
                         } );
                     }
-                } );
+                } )
                 return false;
             }
             if ($( "#title" ).text() == "注册") {
@@ -329,4 +329,4 @@ $( function() {
         };
         $.post( url , args , functions );
     }
-} );
+} )

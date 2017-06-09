@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +28,15 @@ import java.util.Map;
 @Controller
 public class VisitOther{
 
-    @Resource
+    @Autowired
     private UserService userService;
-    @Resource
+    @Autowired
     private TopicService topicService;
-    @Resource
+    @Autowired
     private PraiseService praiseService;
-    @Resource
+    @Autowired
     private FavouriteService favouriteService;
-    @Resource
+    @Autowired
     private FollowService followService;
     //分享页面大小
     @Value("${diary.personal.topic.page.size}")
@@ -191,6 +190,6 @@ public class VisitOther{
      */
     boolean isFollowed(User user, User followedUser) {
         boolean flag = followService.isFollowed(user, followedUser);
-        return flag == true;
+        return (flag == true) ? true : false;
     }
 }
