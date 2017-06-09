@@ -67,6 +67,10 @@ diary:
     topic:
       page:
         size: 3
+  qiniu:
+    access: FYfmtmhBMAGZyxZothLB50hgn18an3T1PKLa4nVz
+    secret: YeX5dBtF1Gq2tA-35AosS22O9FalPglj5rRChPDR
+    bucketName: diary
   tags:
     xml:
       position: /xml/tags.xml
