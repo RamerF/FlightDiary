@@ -38,7 +38,7 @@
    if ( !isNaN( el.offsetLeft ) ) {
     offsetLeft += el.offsetLeft;
    }
-  } while( el = el.offsetParent );
+  } while( el = el.offsetParent )
 
   return {
    top : offsetTop,
@@ -170,7 +170,7 @@
     window.removeEventListener( 'scroll', this._onScrollFn );
    }
   }
- };
+ }
 
  // add to global namespace
  window.AnimOnScroll = AnimOnScroll;
