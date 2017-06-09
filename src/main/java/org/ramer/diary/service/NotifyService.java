@@ -64,7 +64,7 @@ public interface NotifyService {
      * 通过id和被通知用户id获取消息.
      *
      * @param notify_id the notify_id
-     * @param notified_user_id the notified_user_id
+     * @param notified_user the notified_user_id
      * @return 消息
      */
     Notify getByIdAndNotifiedUserId(Integer notify_id, User notified_user);

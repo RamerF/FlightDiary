@@ -52,7 +52,7 @@ $( function() {
         tag.each( function( index , content ) {
             optionTag += "<option value='" + $( content ).attr( 'name' ) + "'>" + $( content ).attr( 'name' )
                     + "</option>";
-        } )
+        } );
         $( "#tags" ).append( optionTag );
     } );
     // 将下拉标签的值，显示到输入框
@@ -64,25 +64,25 @@ $( function() {
         }
         if ($.trim( tags ) == "") {
             $( ".input_tags" ).val( tag );
-            return;
+            
         } else if (tags.indexOf( tag ) >= 0) {
-            return;
+            
         } else
             $( ".input_tags" ).val( tags + ";" + tag );
-    } )
+    } );
 
     // 返回
     $( "#back" ).click( function() {
         console.log( "返回" );
         history.back();
         return false;
-    } )
+    } );
     // 返回主页
     $( "#home" ).click( function() {
         console.log( "返回主页" );
         location.href = "/home";
         return false;
-    } )
+    } );
 
     // 显示私信
     $( "#showPrivMess" ).click( function() {
@@ -101,7 +101,7 @@ $( function() {
         var url = "/user/personal/notify/readPrivMess";
         var args = {
             "notifyId" : id
-        }
+        };
         $.get( url , args , function( data ) {
             console.log( "标记为已读" );
         } );
@@ -222,7 +222,7 @@ $( function() {
                     }
                 } );
             } , function() {
-            } )
+            } );
             return false;
         } );
         // 标记为已读
@@ -232,7 +232,7 @@ $( function() {
             var url = "/user/personal/notify/readPrivMess";
             var args = {
                 "notifyId" : $( spanNode ).children( ".notifyId" ).val()
-            }
+            };
             $.get( url , args , function( data ) {
                 console.log( "标记为已读" );
             } );
@@ -249,7 +249,7 @@ $( function() {
         return false;
     } ).click( function() {
         $( ".rightNav" ).css( "display" , "none" );
-    } )
+    } );
 
     /* 显示用户收藏 */
     $( "#showFavouritePanel" ).click( function() {
@@ -280,7 +280,7 @@ $( function() {
         if (tags.indexOf( "；" ) >= 0 || tags.indexOf( "，" ) >= 0 || tags.indexOf( "," ) >= 0) {
             layer.msg( "请使用英文;分隔标签" ) , {
                 time : 1500,
-            }
+            };
             return false;
         }
     } );
@@ -428,7 +428,7 @@ $( function() {
 
     // 上一页
     $( "#lastPage" ).click( function() {
-        var number = new Number( $( "#number" ).val() ) + 1 - 1;
+        var number = Number( $( "#number" ).val() ) + 1 - 1;
         if (number < 1) {
             layer.msg( "报告主人,上一页已结婚  (^v^)" , {
                 time : 1800
@@ -448,7 +448,7 @@ $( function() {
     // 下一页
     $( "#nextPage" ).click( function() {
         var totalPages = $( "#totalPages" ).val();
-        var number = new Number( $( "#number" ).val() ) + 2;
+        var number = Number( $( "#number" ).val() ) + 2;
         Cookies.set( "scrollCookie_personal" + userid , "1" );
         if (number > totalPages) {
             layer.msg( "报告主人,下一页已结婚  (^v^)" , {
@@ -489,4 +489,4 @@ $( function() {
             return false;
         }
     } );
-} )
+} );

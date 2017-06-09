@@ -91,7 +91,7 @@ public class MailUtils{
      */
     public static boolean exist(String email, UserService userService) {
         User user = userService.getByEmail(EncryptUtil.execEncrypt(email));
-        return user == null ? false : true;
+        return user != null;
 
     }
 }

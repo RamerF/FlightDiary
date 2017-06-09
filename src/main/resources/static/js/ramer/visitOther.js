@@ -4,27 +4,27 @@ $( function() {
         console.log( "返回" );
         history.back();
         return false;
-    } )
+    } );
     // 返回主页
     $( "#home" ).click( function() {
         console.log( "返回主页" );
         location.href = "/home";
         return false;
-    } )
+    } );
 
     // 发送私信
     $( "#sendPrivMess" ).click( function() {
         var url = $( "#sendPrivMessForm" ).attr( "action" );
         var args = {
             "content" : $( "#privMessContent" ).val()
-        }
+        };
         $.post( url , args , function( data ) {
             layer.msg( data , {
                 time : 1500
             } );
             $( "#privMessContent" ).val( "" );
             $( "#notify_panel" ).hide( 1000 );
-        } )
+        } );
         return false;
     } );
 
@@ -158,7 +158,7 @@ $( function() {
 
     // 上一页
     $( "#lastPage" ).click( function() {
-        var number = new Number( $( "#number" ).val() ) + 1 - 1;
+        var number = Number( $( "#number" ).val() ) + 1 - 1;
         if (number < 1) {
             layer.msg( "报告主人,上一页已结婚  (^v^)" , {
                 time : 1800
@@ -177,8 +177,8 @@ $( function() {
     } );
     // 下一页
     $( "#nextPage" ).click( function() {
-        var totalPages = new Number( $( "#totalPages" ).val() );
-        var number = new Number( $( "#number" ).val() ) + 2;
+        var totalPages = Number( $( "#totalPages" ).val() );
+        var number = Number( $( "#number" ).val() ) + 2;
         if (number >= totalPages) {
             layer.msg( "报告主人,下一页已结婚  (^v^)" , {
                 time : 1800
@@ -195,4 +195,4 @@ $( function() {
         $( "#tagForm" ).submit();
         return false;
     } );
-} )
+} );

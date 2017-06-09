@@ -12,5 +12,5 @@ public interface RolesService{
      * @param name the name
      * @return the by name
      */
-    public Roles getByName(String name);
+    Roles getByName(String name);
 }

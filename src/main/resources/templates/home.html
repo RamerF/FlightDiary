@@ -235,7 +235,7 @@
                     <div class="name_panel">
                         <a th:href="|user/personal/${t.user.id}|">
                             <img th:src="${t.user.head}" class="head"
-                                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+                                 onerror="this.src='/pictures/userHead.jpg'"/>
                             <br/>
                             <span class="name" th:text="${t.user.username}"></span>
                         </a>
@@ -275,12 +275,12 @@
                 <div class="user_mess">
                     <a th:href="|/user/personal/${u.id}|">
                         <img th:src="${u.topics[0].picture}" alt="error"
-                             onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+                             onerror="this.src='/pictures/userHead.jpg'"/>
                     </a>
                     <div class="name_panel">
                         <a th:href="|/user/personal/${u.id}|">
                             <img th:src="${u.head}" class="head"
-                                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+                                 onerror="this.src='/pictures/userHead.jpg'"/>
                             <br/>
                             <span class="name" th:text="${u.username}"></span>
                         </a>
@@ -334,7 +334,7 @@
                     <div class="name_panel">
                         <a th:href="|/user/personal/${t.user.id}|">
                             <img th:src="${t.user.head}" class="head"
-                                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+                                 onerror="this.src='/pictures/userHead.jpg'"/>
                             <br/>
                             <span class="name" th:text="${t.user.username}"></span>
                         </a>

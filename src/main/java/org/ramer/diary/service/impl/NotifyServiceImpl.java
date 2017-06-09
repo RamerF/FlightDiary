@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
 @Service
 public class NotifyServiceImpl implements NotifyService {
 
-    @Autowired
+    @Resource
     private NotifyRepository notifyRepository;
 
     @Override
@@ -56,17 +58,14 @@ public class NotifyServiceImpl implements NotifyService {
     @Transactional
     public boolean sendPrivMess(Notify notify) {
         Notify n = notifyRepository.saveAndFlush(notify);
-        if (n == null) {
-            return false;
-        }
-        return true;
+        return n != null;
     }
 
     @Override
     @Transactional
     public boolean updateNotify(Notify notify) {
         Notify n = notifyRepository.saveAndFlush(notify);
-        return n == null ? false : true;
+        return n != null;
     }
 
     @Override

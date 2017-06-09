@@ -5,7 +5,7 @@ $( function() {
         var email = $( "#newEmail" ).val();
         var args = {
             "newEmail" : email
-        }
+        };
         $.post( href , args , function( data ) {
             layer.msg( data , {
                 time : 1500
@@ -42,4 +42,4 @@ $( function() {
             $( "#message" ).html( result );
         } );
     } );
-} )
+} );
