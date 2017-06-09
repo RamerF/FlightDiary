@@ -2,6 +2,7 @@ package org.ramer.diary.controller.user;
 
 import java.io.IOException;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -27,9 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class AddFollow{
 
-    @Autowired
+    @Resource
     private FollowService followService;
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**
