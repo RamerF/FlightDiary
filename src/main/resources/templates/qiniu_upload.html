@@ -76,8 +76,8 @@
                         'UploadProgress': init != null && init.UploadProgress != null ? init.UploadProgress : function (up, file) {
                             var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
 //                            console.log(file.percent + "%", file.speed, chunk_size)
-
-                            $(".alert-success").css("width", new Number(file.percent) >>> 0);
+                            var progressWidth = $(".progressDiv").width();
+                            $(".alert-success").css("width", new Number(file.percent * progressWidth / 100) >>> 0);
                         },
                         'FileUploaded': init != null && init.FileUploaded != null ? init.FileUploaded : function (up, file, info) {
                             // 每个文件上传成功后，处理相关的事情
@@ -121,7 +121,7 @@
             border: 1px solid;
             padding: 10px;
             text-align: center;
-            margin: auto
+            margin: 100px auto
         }
 
         .upload-container {
@@ -152,6 +152,7 @@
             height: 39px;
             float: left;
             margin-left: 15px;
+            margin-bottom: 15px;
             background: rgba(50, 50, 50, .15)
         }
 
@@ -162,6 +163,8 @@
         }
 
         nobr {
+            width: 468px;
+            display: block;
             overflow: hidden;
             text-overflow: ellipsis;
         }
