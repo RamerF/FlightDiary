@@ -21,12 +21,10 @@
                 }, 1000);
             } else {
                 /*[[Cookies.set("scrollCookie_topic" + "${topic.id}${session.user.id}", $(document).scrollTop("0px"))]]*/
-                ;
             }
             $(window).scroll(
                 function () {
                     /*[[Cookies.set("scrollCookie_topic" + "${topic.id}${session.user.id}",$(document).scrollTop())]]*/
-                    ;
                 });
         });
         /*]]>*/
@@ -45,7 +43,7 @@
 <div class="user_info_panel">
     <div class="head">
         <a th:href="|/user/personal/${topic.user.id}|">
-            <img alt="error" th:src="|/${topic.user.head}|" onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+            <img alt="error" th:src="|/${topic.user.head}|" onerror="this.src='/pictures/userHead.jpg'"/>
         </a>
     </div>
     <div class="selfinfo">

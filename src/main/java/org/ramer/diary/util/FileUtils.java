@@ -67,7 +67,7 @@ public class FileUtils{
         }
         File file = new File(realPath);
         log.debug("删除文件 : " + file.getAbsolutePath());
-        return file.exists() ? file.delete() : true;
+        return !file.exists() || file.delete();
     }
 
     /**

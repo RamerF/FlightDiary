@@ -33,7 +33,7 @@
     <div class="head">
         <a id="showProfile">
             <img alt="error" th:src="${session.user.head }" class="user_head"
-                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+                 onerror="this.src='/pictures/userHead.jpg'"/>
             <br/>
             <span>更换头像</span>
         </a>
@@ -129,7 +129,7 @@
                 <a th:href="|/user/personal/${follow.followedUser.id}|">
                     <img class="followed_user_head" alt="error"
                          th:src="|/${follow.followedUser.head}|"
-                         onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+                         onerror="this.src='/pictures/userHead.jpg'"/>
                 </a>
             </div>
             <div class="followed_user_name_panel">

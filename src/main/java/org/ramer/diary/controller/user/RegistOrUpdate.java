@@ -61,7 +61,7 @@ public class RegistOrUpdate{
     /**
      * 更新前获取user.
      *
-     * @param userid UID
+     * @param userId UID
      * @param map the map
      */
     @ModelAttribute

@@ -60,9 +60,7 @@
 
    return true;
   }
-  ;
-
-  // initialize
+     // initialize
   this.each(function() {
 
    // is a textarea?

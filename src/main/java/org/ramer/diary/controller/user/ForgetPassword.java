@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class ForgetPassword{
     private final String SUCCESS = PageConstant.SUCCESS;
     //  密码修改成功信息
     private final String SUCCESS_CHANGEPASS = MessageConstant.SUCCESS_MESSAGE;
-    @Autowired
+    @Resource
     UserService userService;
 
     /**

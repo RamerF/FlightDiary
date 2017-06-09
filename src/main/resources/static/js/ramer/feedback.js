@@ -6,13 +6,13 @@ $( function() {
         console.log( "返回" );
         history.back();
         return false;
-    } )
+    } );
     // 返回主页
     $( "#home" ).click( function() {
         console.log( "返回主页" );
         location.href = "/home";
         return false;
-    } )
+    } );
     $( "#feedback" ).click( function() {
         if ($( "textarea" ).val() == null || $.trim( $( "textarea" ).val() ) == "") {
             return false;
@@ -33,4 +33,4 @@ $( function() {
         return false;
     } );
 
-} )
+} );

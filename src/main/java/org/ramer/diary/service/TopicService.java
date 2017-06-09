@@ -49,7 +49,7 @@ public interface TopicService{
     /**
      * 通过标签获取分享分页数据.
      *
-     * @param tags the tags
+     * @param tag the tags
      * @param page 当前页号
      * @param size 每页大小
      * @return 分享的分页数据
