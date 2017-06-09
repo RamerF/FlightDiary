@@ -122,11 +122,11 @@ public class Pagination<T> {
   }
 
   public boolean getHasNext() {
-    return number < totalPages;
+    return number < totalPages ? true : false;
   }
 
   public boolean getHasLast() {
-    return number > 1;
+    return number > 1 ? true : false;
   }
 
   public int getPageSize() {

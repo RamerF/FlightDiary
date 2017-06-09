@@ -60,7 +60,7 @@ $( function() {
         tag.each( function( index , content ) {
             optionTag += "<option value='" + $( content ).attr( 'name' ) + "'>" + $( content ).attr( 'name' )
                     + "</option>";
-        } );
+        } )
         $( "#tags" ).append( optionTag );
     } );
     // 将下拉标签的值，显示到输入框
@@ -72,12 +72,12 @@ $( function() {
         }
         if ($.trim( tags ) == "") {
             $( ".input_tags" ).val( tag );
-            
+            return;
         } else if (tags.indexOf( tag ) >= 0) {
-            
+            return;
         } else
             $( ".input_tags" ).val( tags + ";" + tag );
-    } );
+    } )
 
     // 添加用户当前位置
     $( "#addPosition" ).click( function() {
@@ -112,7 +112,7 @@ $( function() {
         if (tags.indexOf( "；" ) >= 0 || tags.indexOf( "，" ) >= 0 || tags.indexOf( "," ) >= 0) {
             layer.msg( "请使用英文;分隔标签" ) , {
                 time : 1500,
-            };
+            }
             return false;
         }
     } );
@@ -135,7 +135,7 @@ $( function() {
 
     // 上一页
     $( "#lastPage" ).click( function() {
-        var number = Number( $( "#number" ).val() ) + 1 - 1;
+        var number = new Number( $( "#number" ).val() ) + 1 - 1;
         if (number < 1) {
             layer.msg( "报告主人,上一页已结婚	(^v^)" , {
                 time : 1800
@@ -155,7 +155,7 @@ $( function() {
     // 下一页
     $( "#nextPage" ).click( function() {
         var totalPages = $( "#totalPages" ).val();
-        var number = Number( $( "#number" ).val() ) + 2;
+        var number = new Number( $( "#number" ).val() ) + 2;
         Cookies.set( "scrollCookie_home" , "1" );
         if (number > totalPages) {
             layer.msg( "报告主人,下一页已结婚	(^v^)" , {
@@ -306,7 +306,7 @@ $( function() {
             var url = "/scrollInPage", args = {
                 "_csrf" : csrf,
                 "scrollInPage" : "false"
-            };
+            }
             $.get( url , args , null );
         } else {
             $( this ).text( "禁止滚动翻页" );
@@ -314,7 +314,7 @@ $( function() {
             var url = "/scrollInPage", args = {
                 "_csrf" : csrf,
                 "scrollInPage" : "true"
-            };
+            }
             $.get( url , args , null );
         }
         return false;
@@ -366,4 +366,4 @@ $( function() {
         }
     }
 
-} );
+} )

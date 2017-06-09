@@ -13,13 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Resource;
-
 @Slf4j
 @Service
 public class FollowServiceImpl implements FollowService{
 
-    @Resource
+    @Autowired
     private FollowRepository followRepository;
 
     @Override
@@ -60,7 +58,7 @@ public class FollowServiceImpl implements FollowService{
     @Transactional(readOnly = true)
     public boolean isFollowed(User user, User followedUser) {
         Follow f = followRepository.getByUserAndFollowedUser(user, followedUser);
-        return f != null;
+        return (f != null) ? true : false;
     }
 
     @Override

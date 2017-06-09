@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.security.SecureRandom;
 
 /**
@@ -21,7 +20,7 @@ import java.security.SecureRandom;
 @Slf4j
 @Component
 public class SecurityEncrypt implements AuthenticationProvider{
-    @Resource
+    @Autowired
     private UserDetailsService userService;
     @Value("${diary.encrypt.strength}")
     private int ENCRYPT_STRENGTH;

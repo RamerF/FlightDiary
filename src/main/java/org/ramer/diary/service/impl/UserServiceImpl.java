@@ -92,6 +92,9 @@ public class UserServiceImpl implements UserService{
     @Transactional(readOnly = false)
     public boolean feedback(FeedBack feedBack) {
         FeedBack f = feedBackRepository.saveAndFlush(feedBack);
-        return f != null;
+        if (f == null) {
+            return false;
+        }
+        return true;
     }
 }

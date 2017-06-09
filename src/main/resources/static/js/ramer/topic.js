@@ -4,13 +4,13 @@ $( function() {
         console.log( "返回" );
         history.back();
         return false;
-    } );
+    } )
     // 返回主页
     $( "#home" ).click( function() {
         console.log( "返回主页" );
         location.href = "/home";
         return false;
-    } );
+    } )
 
     // 发送私信
     $( "#sendPrivMess" ).click( function() {
@@ -18,14 +18,14 @@ $( function() {
         var args = {
             "_csrf" : $( "#_csrf" ).val(),
             "content" : $( "#privMessContent" ).val()
-        };
+        }
         $.post( url , args , function( data ) {
             layer.msg( data , {
                 time : 1500
             } );
             $( "#privMessContent" ).val( "" );
             $( "#notify_panel" ).hide( 1000 );
-        } );
+        } )
         return false;
     } );
 
@@ -153,4 +153,4 @@ $( function() {
         } );
         return false;
     } );
-} );
+} )

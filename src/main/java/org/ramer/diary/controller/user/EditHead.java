@@ -2,7 +2,6 @@ package org.ramer.diary.controller.user;
 
 import java.io.IOException;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.ramer.diary.domain.Topic;
@@ -28,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class EditHead {
 
-  @Resource
+  @Autowired
   private UserService userService;
 
   /**
