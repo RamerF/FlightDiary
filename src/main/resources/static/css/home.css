@@ -1,0 +1,407 @@
+@CHARSET "UTF-8";
+
+body {
+    min-width: 850px;
+}
+
+input[type='text'] {
+    display: inline;
+    border: none;
+}
+
+input[type="submit"], input[type="reset"] {
+    background: rgba(3, 169, 244, 0.67);
+    border: none;
+    color: white;
+}
+
+.top {
+    top: 0px;
+    font-size: 2em;
+    position: fixed;
+    z-index: 10000;
+    overflow: hidden;
+    width: 100%;
+}
+
+.title {
+    text-align: right;
+    width: 55%;
+    float: left;
+    margin-top: 10px;
+}
+
+.about {
+    text-align: right;
+    font-size: .6em;
+    margin: 15px 10px 0px;
+}
+
+.category_panel {
+    position: absolute;
+    height: 45px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    top: 55px;
+    width: 100%;
+    min-width: 850px;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, .1);
+}
+
+.category {
+    line-height: 32px;
+    text-align: center;
+    font-size: 18px;
+    padding-left: 1%;
+    float: left;
+    width: 36%;
+    height: 100%;
+    min-width: 310px;
+    margin: 0 auto;
+}
+
+.category span {
+    margin: auto 3%;
+}
+
+.query {
+    float: left;
+    height: 100%;
+    width: 29%;
+    min-width: 250px;
+    position: relative;
+    margin: auto;
+}
+
+input.querytopic {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    text-align: center;
+    border: none;
+}
+
+.newTopic {
+    background: url("/FlightDiary/pictures/new.png") no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
+.signup {
+    line-height: 32px;
+    text-align: center;
+    font-size: 18px;
+    float: left;
+    width: 35%;
+    height: 100%;
+    min-width: 310px;
+    margin: 0 auto;
+}
+
+::-webkit-input-placeholder {
+    color: #85918F !important;
+    opacity: 1;
+}
+
+.search {
+    width: 14px;
+    position: absolute;
+    top: 25%;
+    right: 10px;
+}
+
+.user_panel {
+    text-align: center;
+    height: 100%;
+    line-height: 32px;
+    width: 33%;
+    min-width: 286px;
+    float: left;
+}
+
+.user_panel span {
+    margin: auto 3%;
+}
+
+span.username {
+    text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px, rgba(133, 145, 143, .1) 3px 3px 0px, rgba(133, 145, 143, .1) 4px 4px 0px,
+    rgba(133, 145, 143, .1) 5px 5px 0px, rgba(133, 145, 143, .1) 6px 6px 0px,
+    rgba(133, 145, 143, .1) 7px 7px 0px, rgba(133, 145, 143, .1) 8px 8px 0px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.user_link {
+    display: none;
+    position: absolute;
+    left: 77%;
+    text-align: left;
+    margin-top: 101px;
+    z-index: 10;
+    padding: 10px;
+    box-shadow: 0px 3px 6px #607D8B;
+}
+
+.user_link div {
+    padding: 10px 0px;
+}
+
+.user_link div span {
+    margin-left: 50px;
+}
+
+.container {
+    width: 100%;
+    overflow: hidden;
+    float: left;
+    margin-top: 100px;
+}
+
+div.topic_panel {
+    display: none;
+    width: 400px;
+    min-width: 400px;
+    margin-top: 101px;
+    position: absolute;
+    text-align: center;
+    z-index: 100;
+    right: 16%;
+    box-shadow: 0px 3px 6px #607D8B;
+    text-align: right;
+}
+
+.topic_content {
+    width: 100%;
+    resize: none;
+    text-indent: 2em;
+    border: none;
+    border-bottom: 1px solid #607D8B;;
+    line-height: 1.8em;
+    margin-bottom: 10px;
+    outline: none;
+}
+
+.tool {
+    border-right: 1px solid rgb(96, 125, 139);
+    border-bottom: 1px solid rgb(96, 125, 139);
+    display: table;
+    position: absolute;
+    top: 0px;
+    right: -41px;
+    text-align: center;
+}
+
+div#addPosition {
+    width: 40px;
+    cursor: pointer;
+    font-size: .9em;
+    padding: 5px;
+}
+
+#addTime img {
+    height: 23px;
+    width: 21px;
+}
+
+div#addTime {
+    cursor: pointer;
+    font-size: .9em;
+    padding: 5px;
+    width: 40px;
+}
+
+.upbtn {
+    width: 270px;
+    position: absolute;
+    right: -11px;
+    opacity: 0;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.upbtn2 {
+    width: 270px;
+    height: 46px;
+    margin-left: 128px;
+    margin-top: 0px;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+    border: none;
+    background: #eee;
+}
+
+.preview {
+    position: absolute;
+    margin-top: -52px;
+    background: none;
+    display: none;
+    width: 131px;
+    height: 42px;
+    overflow: hidden;
+}
+
+.preview_pic {
+    right: 48px;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    border-radius: 50px;
+}
+
+.input_tag_panel {
+    /* overflow: hidden; */
+    text-align: right;
+}
+
+.input_tag_panel select {
+    width: 119px;
+    outline: none;
+    height: 40px;
+    padding-left: 16px;
+    border: none;
+    background: #eee;
+    margin: 15px auto;
+}
+
+.input_tags {
+    width: 270px;
+    height: 31px;
+    font-size: 15px;
+    margin-right: -1px;
+    border: 1px solid #607D8B;
+}
+
+.name_panel {
+    line-height: 1em;
+    padding: 0px;
+    margin: 0px;
+    height: 103px;
+    text-align: center;
+}
+
+.tags_panel {
+    line-height: 1.5em;
+    letter-spacing: 0.1em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 90%;
+    margin: 0px auto;
+}
+
+.tags {
+    cursor: pointer;
+}
+
+.name {
+    position: relative;
+    top: 0px;
+    opacity: 1;
+}
+
+.head {
+    opacity: 1;
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+}
+
+.t_content {
+    background: none;
+    line-height: 2em;
+    margin-top: 6px;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.user_mess {
+    text-align: center;
+    opacity: .9;
+    box-shadow: 0px 0px 6px 3px rgba(50, 50, 50, 0.15)
+}
+
+.page_panel {
+    width: 108px;
+    float: left;
+    position: fixed;
+    top: 100px;
+    right: 0;
+    margin: 20px;
+    text-align: center;
+}
+
+ul.page_panel li {
+    cursor: pointer;
+    padding: 10px;
+    list-style: none;
+    opacity: 0.5;
+}
+
+#removeScrollPage {
+    cursor: pointer;
+}
+
+.tag_panel {
+    min-width: 122px;
+    z-index: 10;
+    position: absolute;
+    padding: 10px;
+    line-height: 2em;
+    border: 1px solid #009f95;
+    transition: all 2s;
+    background: #FFFFFF;
+    margin-top: 120px;
+    height: 180px;
+    overflow: hidden;
+    border-bottom: none;
+}
+
+.tag_panel_new {
+    z-index: 10;
+    position: absolute;
+    padding: 10px;
+    line-height: 2em;
+    border: 1px solid #4DABF5;
+    transition: all 2s;
+    background: #FFFFFF;
+    margin: -125px 0 0 -300px;
+    overflow: hidden;
+    width: 600px;
+    left: 50%;
+    top: 50%;
+    height: 250px;
+    transform: scale(.2);
+}
+
+.tagname {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+form#tagForm {
+    display: none;
+}
+
+a {
+    position: relative;
+}
+
+a::before {
+    position: absolute;
+    content: attr(data-toggle);
+    opacity: 0;
+    color: rgba(61, 80, 76, 0.63);
+    transform: scale(1.1) rotate(8deg) translateX(10px) translateY(-10px);
+    transition: all .5s;
+}
+
+a:hover::before {
+    position: absolute;
+    opacity: 1;
+    transform: scale(1) rotate(0deg) translateX(0px) translateY(0px);
+    color: #FFFFFF;
+/ / text-shadow: 0 px 0 px 0 px rgb(0, 0, 0);
+}

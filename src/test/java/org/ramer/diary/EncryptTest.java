@@ -1,13 +1,17 @@
 package org.ramer.diary;
-import org.ramer.diary.util.Encrypt;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.security.SecureRandom;
 
 /**
  * 加密类的测试类
  * @author ramer
  *
  */
+@Slf4j
 public class EncryptTest{
 
     /**
@@ -15,10 +19,8 @@ public class EncryptTest{
      */
     @Test
     public void testEncrypt() {
-        String string = "1390635973@qq.com";
-        System.out.println("加密字符串： " + string);
-        String encoded = Encrypt.execEncrypt(string, true);
-        System.out.println(encoded);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10, new SecureRandom("feng".getBytes()));
+        log.debug(encoder.encode("ramer"));
     }
 
 }

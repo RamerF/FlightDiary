@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>重置密码</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="/css/default.css" rel="stylesheet"/>
+    <link href="/css/forgetPass.css" rel="stylesheet"/>
+    <script src="/js/jquery-2.1.4.min.js"/>
+    <script src="/js/layer/layer.js"/>
+    <script src="/js/ramer/forgetPass.js"/>
+</head>
+<body>
+<div class="container">
+    <div class="title" id="title">重置密码</div>
+    <div class="form">
+        <th:block th:if="${#strings.isEmpty(email)}">
+            <form id="sendMailForm"
+                  action="/user/forgetPass/sendMail"
+                  method="post">
+                <span>您的邮箱 : </span>
+                <input type="text" name="email" placeholder="请输入账号关联的邮箱" id="mailAddr"/>
+                <span id="message"></span>
+                <a href="https://en.mail.qq.com" id="forwardQQMail">去邮箱查看</a>
+                <input type="submit" value="发送邮件" id="sendMail"/>
+            </form>
+        </th:block>
+        <th:block th:if="not ${#strings.isEmpty(email)}">
+            <form id="modifyEmailForm"
+                  action="/user/forgetPassword"
+                  method="post">
+                <span>新密码 :</span>
+                <input type="text" name="password" placeholder="请输入密码" id="pass"/>
+                <br/>
+                <span>请确认密码 : </span>
+                <input type="text" name="repassword" placeholder="确认密码" id="rePass"/>
+                <span id="message2"></span>
+                <br/>
+                <input type="hidden" th:value="${email}" name="email"/>
+                <input type="submit" value="确认修改" id="modifyPass"/>
+                <input type="reset" value="清空"/>
+            </form>
+        </th:block>
+    </div>
+</div>
+</body>
+</html>
