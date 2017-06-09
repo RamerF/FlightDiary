@@ -3,6 +3,7 @@ package org.ramer.diary.controller.user;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -28,9 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class AddPraise{
 
-    @Autowired
+    @Resource
     private PraiseService praiseService;
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**

@@ -3,6 +3,7 @@ package org.ramer.diary.controller.user;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -35,9 +36,9 @@ public class AddReply{
     //全局出错页面
     final String ERROR = PageConstant.ERROR;
 
-    @Autowired
+    @Resource
     private ReplyService replyService;
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**

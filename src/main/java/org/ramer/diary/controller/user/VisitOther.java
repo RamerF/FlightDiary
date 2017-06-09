@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +29,15 @@ import java.util.Map;
 @Controller
 public class VisitOther{
 
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private TopicService topicService;
-    @Autowired
+    @Resource
     private PraiseService praiseService;
-    @Autowired
+    @Resource
     private FavouriteService favouriteService;
-    @Autowired
+    @Resource
     private FollowService followService;
     //分享页面大小
     @Value("${diary.personal.topic.page.size}")

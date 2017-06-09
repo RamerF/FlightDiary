@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.Set;
@@ -29,11 +30,11 @@ import java.util.Set;
 @Controller
 public class PersonalMiddle{
 
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private TopicService topicService;
-    @Autowired
+    @Resource
     private NotifyService notifyService;
     //分享页面大小
     @Value("${diary.personal.topic.page.size}")

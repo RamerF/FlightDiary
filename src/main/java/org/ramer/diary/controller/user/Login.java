@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Map;
@@ -24,7 +25,7 @@ import java.util.Map;
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
 public class Login{
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**

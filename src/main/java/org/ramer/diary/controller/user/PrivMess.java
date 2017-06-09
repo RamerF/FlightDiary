@@ -3,6 +3,7 @@ package org.ramer.diary.controller.user;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -30,9 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class PrivMess{
 
-    @Autowired
+    @Resource
     private NotifyService notifyService;
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**
