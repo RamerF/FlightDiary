@@ -50,7 +50,7 @@ public class VisitOther{
      * @param session the session
      * @return 引导到他人主页
      */
-    @RequestMapping("/user/personal/{id}")
+    @GetMapping("/user/personal/{id}")
     public String visitOtherPage(@PathVariable("id") Integer id,
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
@@ -150,9 +150,9 @@ public class VisitOther{
     /**
      * 将指定用户收藏信息存储到list中
      * @param user 用户
-     * @param topic 该用户的分享
      * @return list中存储的是当前用户收藏的所有,当前被浏览用户,的分享的id.
      */
+
     public List<Integer> favouriteToList(User user, User other, HttpSession session) {
         if (!UserUtils.checkLogin(session)) {
             return new ArrayList<>();

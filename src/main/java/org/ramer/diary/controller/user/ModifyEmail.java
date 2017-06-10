@@ -8,7 +8,7 @@ import org.ramer.diary.exception.EmailExistException;
 import org.ramer.diary.exception.LinkInvalidException;
 import org.ramer.diary.exception.UserNotLoginException;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.EncryptUtil;
 import org.ramer.diary.util.MailUtils;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +93,7 @@ public class ModifyEmail{
         user.setExpireTime(expireTime);
         userService.newOrUpdate(user);
         String servletName = session.getServletContext().getServletContextName();
-        String encodedEmail = Encrypt.execEncrypt(newEmail, true);
+        String encodedEmail = EncryptUtil.execEncrypt(newEmail);
         String content = "<h3>请点击下面的链接完成邮箱更改,五分钟内有效</h3><br>" + "<a href='http://localhost:8080/" + servletName
                 + "/user/modifyEmail?email1=" + encodedEmail + "&email2=" + user.getEmail() + "'>http://localhost:8080/"
                 + servletName + "/user/modifyEmail/" + newEmail + "</a>";
@@ -110,7 +110,7 @@ public class ModifyEmail{
      * @param session  the session
      * @return the string
      */
-    @RequestMapping("/user/modifyEmail")
+    @PutMapping("/user/modifyEmail")
     public String modifyEmail(@RequestParam("email2") String email, @RequestParam("email1") String newEmail,
             HttpSession session) {
         log.debug("修改邮箱");

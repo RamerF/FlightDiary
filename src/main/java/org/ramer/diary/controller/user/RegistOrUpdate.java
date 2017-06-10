@@ -1,23 +1,35 @@
 package org.ramer.diary.controller.user;
 
 import lombok.extern.slf4j.Slf4j;
+import org.ramer.diary.constant.PageConstant;
+import org.ramer.diary.domain.Roles;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.domain.dto.CommonResponse;
+import org.ramer.diary.domain.map.UserRoleMap;
 import org.ramer.diary.exception.SystemWrongException;
 import org.ramer.diary.exception.UserExistException;
+import org.ramer.diary.service.RolesService;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.EncryptUtil;
 import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.ramer.diary.validator.UserValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,8 +39,20 @@ import java.util.Map;
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
 public class RegistOrUpdate{
-    @Autowired
+    @Resource
     private UserService userService;
+    @Resource
+    private UserValidator userValidator;
+    @Resource
+    private RolesService rolesService;
+
+    @Value("${diary.encrypt.strength}")
+    private int ENCRYPT_STRENGTH;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(userValidator);
+    }
 
     /**
      * 更新前获取user.
@@ -38,13 +62,39 @@ public class RegistOrUpdate{
      */
     @ModelAttribute
     public void getUser(@RequestParam(value = "id", required = false) Integer id, Map<String, Object> map) {
-        log.debug("更新前获取user");
         if (id != null) {
-            log.debug("更新前获取user");
-            log.debug("id = " + id);
-            User user = userService.getById(id);
-            map.put("user", user);
+            log.debug("预加载user");
+            map.put("user", userService.getById(id));
         }
+    }
+
+    @PostMapping("/sign_up")
+    @ResponseBody
+    public CommonResponse createUser(@Valid User user, BindingResult result) {
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "user: {}", user);
+        if (result.hasErrors()) {
+            StringBuilder message = new StringBuilder("提交信息有误:").append(PageConstant.BR);
+            result.getAllErrors().stream().iterator().forEachRemaining(
+                    objectError -> message.append(objectError.getDefaultMessage()).append(PageConstant.BR));
+            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " message : {}", message.toString());
+            return new CommonResponse(false, message.toString());
+        }
+        user.setEmail(EncryptUtil.execEncrypt(user.getEmail()));
+        if (StringUtils.hasChinese(user.getUsername())) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+            user.setAlias(simpleDateFormat.format(new Date()));
+        }
+        user.setPassword(EncryptUtil.execEncrypt(user.getPassword()));
+        List<Roles> roles = new ArrayList<>();
+        Roles userRole = rolesService.getByName(UserRoleMap.USER);
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " userRole : {}", userRole);
+        roles.add(userRole);
+        user.setRoles(roles);
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user);
+        if (userService.newOrUpdate(user)) {
+            return new CommonResponse(true, "注册成功");
+        }
+        return new CommonResponse(false, "注册失败,请稍后再试");
     }
 
     /**
@@ -58,9 +108,10 @@ public class RegistOrUpdate{
     *      否则,更新返回个人主页,注册返回主页.
     */
     //  由于需要上传文件form 带有属性enctype="multipart/form-data",因此无法使用PUT请求
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public String newOrUpdate(User user, @RequestParam("picture") MultipartFile file, HttpSession session,
-            Map<String, Object> map, @RequestParam("checkFile") String checkFile) {
+    @PostMapping("/user/{id}/update")
+    public String newOrUpdate(@SessionAttribute(value = "user", required = false) User user,
+            @RequestParam("picture") MultipartFile file, HttpSession session, Map<String, Object> map,
+            @RequestParam("checkFile") String checkFile) {
         log.debug(Thread.currentThread().getStackTrace()[1].getMethodName());
 
         //  如果是更新,用户ID不为空
@@ -69,7 +120,7 @@ public class RegistOrUpdate{
         }
         //如果是注册需要加密密码，而更新是不允许修改密码的
         if (user.getId() == null) {
-            user.setPassword(Encrypt.execEncrypt(user.getPassword(), false));
+            user.setPassword(EncryptUtil.execEncrypt(user.getPassword()));
         }
         //包含中文名称的用户,先设置别名
         if (StringUtils.hasChinese(user.getUsername())) {
@@ -90,15 +141,15 @@ public class RegistOrUpdate{
             }
         } else {
             checkFile = checkFile.substring(checkFile.indexOf("/", 2));
-            log.debug("------------------------------" + checkFile);
+            log.debug("checkFile: {}", checkFile);
             user.setHead(checkFile);
         }
-        //    判断邮箱是否存在，如果存在说明以后未修改，不不要加密
+        //    判断邮箱是否存在，如果存在说明以后未修改，不要加密
         if (userService.getByEmail(user.getEmail()) == null) {
-            user.setEmail(Encrypt.execEncrypt(user.getEmail(), true));
+            user.setEmail(EncryptUtil.execEncrypt(user.getEmail()));
         }
         Integer id = user.getId();
-        if (userService.newOrUpdate(user).getId() > 0) {
+        if (userService.newOrUpdate(user)) {
             user = userService.login(user);
             if (user.getId() == null) {
                 throw new SystemWrongException("系统出错了,操作被取消,请返回重新操作");

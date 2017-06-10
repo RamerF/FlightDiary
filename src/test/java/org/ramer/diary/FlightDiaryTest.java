@@ -1,8 +1,7 @@
 package org.ramer.diary;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ramer.diary.constant.PageConstant;
@@ -10,14 +9,19 @@ import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.TopicService;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.EncryptUtil;
 import org.ramer.diary.util.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 项目测试类
@@ -25,7 +29,8 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-@RunWith(value = SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 @Transactional
 public class FlightDiaryTest{
 
@@ -47,8 +52,8 @@ public class FlightDiaryTest{
      */
     @Test
     public void testEncrypt() {
-        String string = Encrypt.execEncrypt("Jelly", false);
-        log.debug("string = " + string);
+        String string = EncryptUtil.execEncrypt("Jelly");
+        log.debug("string: {}", string);
     }
 
     /**
@@ -187,5 +192,23 @@ public class FlightDiaryTest{
         for (Topic topic : topics.getContent()) {
             log.debug("{}", topic.getId());
         }
+    }
+
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Test
+    public void testRedis() throws Exception {
+        String pass = null;
+        if (redisTemplate.opsForHash().get("ramer", "id") == null) {
+            redisTemplate.opsForHash().put("ramer", "id", "ramer");
+        }
+        pass = (String) redisTemplate.opsForHash().get("ramer", "id");
+        Assert.assertEquals("ramer", redisTemplate.opsForHash().get("ramer", "id"));
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " pass : {}", pass);
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " pass : {}",
+                stringRedisTemplate.opsForHash().get("ramer", "id"));
     }
 }

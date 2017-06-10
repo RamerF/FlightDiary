@@ -97,8 +97,8 @@ public class User implements Serializable{
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", head='" + head + '\'' + ", says='" + says + '\'' + ", username='" + username + '\''
-                + ", alias='" + alias + '\'' + ", password='" + password + '\'' + ", qqNum='" + qqNum + '\''
+        return "User{" + "id=" + id + ", head='" + head + '\'' + ", says='" + says + '\'' + ", username='" + username
+                + '\'' + ", alias='" + alias + '\'' + ", password='" + password + '\'' + ", qqNum='" + qqNum + '\''
                 + ", weiboNum='" + weiboNum + '\'' + ", email='" + email + '\'' + ", expireTime='" + expireTime + '\''
                 + ", sex='" + sex + '\'' + ", age=" + age + ", address='" + address + '\'' + ", telephone='" + telephone
                 + '\'' + ", sessionid='" + sessionid + '\'' + '}';
@@ -164,4 +164,5 @@ public class User implements Serializable{
         result = 31 * result + (sessionid != null ? sessionid.hashCode() : 0);
         return result;
     }
+
 }

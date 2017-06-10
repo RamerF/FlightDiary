@@ -1,13 +1,6 @@
 package org.ramer.diary.controller.user;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.Topic;
@@ -16,17 +9,19 @@ import org.ramer.diary.exception.LinkInvalidException;
 import org.ramer.diary.exception.PasswordNotMatchException;
 import org.ramer.diary.exception.SystemWrongException;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.EncryptUtil;
 import org.ramer.diary.util.MailUtils;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Map;
 
 /**
  * 忘记密码，用于重置密码.
@@ -38,11 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class ForgetPassword{
     //全局成功页面
-    final String SUCCESS = PageConstant.SUCCESS;
-
+    private final String SUCCESS = PageConstant.SUCCESS;
     //  密码修改成功信息
-    final String SUCCESS_CHANGEPASS = MessageConstant.SUCCESS_MESSAGE;
-
+    private final String SUCCESS_CHANGEPASS = MessageConstant.SUCCESS_MESSAGE;
     @Autowired
     UserService userService;
 
@@ -50,10 +43,9 @@ public class ForgetPassword{
      * 重定向到忘记密码页面.
      * @param email 用户绑定的邮箱
      * @param map the map
-     * @param session JSP内置对象
      * @return 引导到忘记密码页面
      */
-    @RequestMapping(value = "/user/forwardForgetPassword", method = RequestMethod.GET)
+    @GetMapping("/user/forwardForgetPassword")
     public String forwardForgetPassword(
             @RequestParam(value = "email", required = false, defaultValue = "") String email, Map<String, Object> map) {
         log.debug("引导到忘记用户密码页面");
@@ -67,12 +59,11 @@ public class ForgetPassword{
      * 发送邮件.
      *
      * @param email 未加密的邮箱地址
-     * @param map the map
      * @param session the session
      * @param response JSP内置对象
      * @throws IOException 写入信息失败抛出IO异常
      */
-    @RequestMapping("/user/forgetPass/sendMail")
+    @PostMapping("/user/forgetPass/sendMail")
     public void sendMailToResetPass(@RequestParam("email") String email, HttpSession session,
             HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("utf-8");
@@ -84,7 +75,7 @@ public class ForgetPassword{
             response.getWriter().write("您输入的不是邮箱哒 ^o^||");
             return;
         }
-        String encodedEmail = Encrypt.execEncrypt(email, true);
+        String encodedEmail = EncryptUtil.execEncrypt(email);
         User user = userService.getByEmail(encodedEmail);
         //    发送邮件之前判断是否存在,防止用户而已发送邮件
         if (user == null) {
@@ -113,11 +104,10 @@ public class ForgetPassword{
      * @param email 已加密邮箱
      * @param password 新密码
      * @param repassword 密码重复
-     * @param map the map
      * @param session the session
      * @return 密码修改成功: 返回个人主页,失败: 返回密码修改页面
      */
-    @RequestMapping("/user/forgetPassword")
+    @PutMapping("/user/forgetPassword")
     public String forgetPassword(@RequestParam("email") String email, @RequestParam("password") String password,
             @RequestParam("repassword") String repassword, HttpSession session) {
 
@@ -132,8 +122,8 @@ public class ForgetPassword{
         if (!password.equals(repassword)) {
             throw new PasswordNotMatchException();
         }
-        user.setPassword(Encrypt.execEncrypt(password, false));
-        if (userService.newOrUpdate(user) == null) {
+        user.setPassword(EncryptUtil.execEncrypt(password));
+        if (!userService.newOrUpdate(user)) {
             throw new SystemWrongException();
         }
         UserUtils.execSuccess(session, SUCCESS_CHANGEPASS);

@@ -24,11 +24,11 @@ public interface UserService{
     User login(User user);
 
     /**
-     * 注册或更新用户
-     * @param user 用户
-     * @return 返回注册成功的用户信息或已更新的用户信息
+     * regist or update an user.
+     * @param user the user
+     * @return true,if success
      */
-    User newOrUpdate(User user);
+    boolean newOrUpdate(User user);
 
     /**
      * 通过UID获取用户

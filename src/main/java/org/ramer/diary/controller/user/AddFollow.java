@@ -13,8 +13,7 @@ import org.ramer.diary.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,12 +37,11 @@ public class AddFollow{
      *
      * @param user 登陆用户
      * @param topic 用户查看的分享
-     * @param map the map
      * @param response the response
      * @param session the session
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @RequestMapping("/user/topic/follow")
+    @PutMapping("/user/topic/follow")
     public void follow(User user, Topic topic, HttpServletResponse response, HttpSession session) throws IOException {
         log.debug("添加关注");
         response.setCharacterEncoding("UTF-8");
@@ -65,12 +63,11 @@ public class AddFollow{
      * 取消关注用户.
      *
      * @param topic  查看的分享
-     * @param map the map
      * @param response jsp内置对象
      * @param session  the session
      * @throws IOException 写入信息失败抛出异常
      */
-    @RequestMapping("/user/topic/notFollow")
+    @DeleteMapping("/user/topic/notFollow")
     public void notFollow(Topic topic, HttpServletResponse response, HttpSession session) throws IOException {
         log.debug("取消关注");
         response.setCharacterEncoding("UTF-8");

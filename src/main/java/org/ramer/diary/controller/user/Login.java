@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.Encrypt;
+import org.ramer.diary.util.EncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +42,7 @@ public class Login{
         String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
         if (user.getUsername().matches(regex)) {
             log.debug("通过邮箱登录");
-            user.setEmail(Encrypt.execEncrypt(user.getUsername(), true));
+            user.setEmail(EncryptUtil.execEncrypt(user.getUsername()));
             user.setUsername(null);
         }
         User user2 = userService.getByName(principal.getName());

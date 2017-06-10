@@ -1,24 +1,29 @@
 $( function() {
+    var csrf = $( "#_csrf" ).val();
     // 实时动态
     if ($( ".user_panel" ).is( ":visible" )) {
         var topicUrl = "/user/realTimeTopic";
         var notifyUrl = "/user/realTimeNotify";
         var realTimeContent = setInterval( function() {
-            $.get( topicUrl , null , function( newTopicCount ) {
+            $.get( topicUrl , {
+                "_csrf" : csrf
+            } , function( newTopicCount ) {
                 console.log( "新动态：" + ~~newTopicCount );
                 if (~~newTopicCount > 0)
                     // 新动态标识
                     $( "#newTopic" ).addClass( "newTopic" );
 
             } );
-            $.get( notifyUrl , null , function( newNotifyCount ) {
+            $.get( notifyUrl , {
+                "_csrf" : csrf
+            } , function( newNotifyCount ) {
                 console.log( "新通知：" + newNotifyCount );
                 if (~~newNotifyCount > 0) {
                     // 新通知
                     $( "#newNotify" ).addClass( "newTopic" );
                 }
             } );
-        } , 10 * 1000 );
+        } , 600 * 1000 );
     }
     // 获取地理位置
     if (navigator.geolocation) {

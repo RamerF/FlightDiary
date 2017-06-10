@@ -6,12 +6,17 @@ spring:
         enable_lazy_load_no_trans: true
     hibernate:
       ddl-auto: update
+    show-sql: true
+  redis:
+    host: localhost
+    port: 6379
+    password: $2a$10$1G3EImK46GA6C9BOA9gJcuIitF3YaXKwjIazh/IxkairzXplXP1rC
   jackson:
     serialization:
       indent_output: true
   datasource:
-    username: root
-    password: 520530wdl
+    username: dev
+    password: diarydev
     url: jdbc:mysql://localhost:3306/flightdiary
     driver-class-name: com.mysql.jdbc.Driver
     filters: stat
@@ -51,6 +56,7 @@ server:
     tracking-modes: COOKIE
   port: 80
 diary:
+  encrypt.strength: 10
   topic:
     page:
       size: 36
