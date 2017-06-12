@@ -103,13 +103,13 @@ input:-webkit-autofill {
     *margin-right: .3em;
     line-height: 14px;
     vertical-align: text-top;
-    background-image: url("../img/icons-halflings.png");
+    background-image: url("http://oqdpapa6l.bkt.clouddn.com/icons-halflings.png");
     background-position: 14px 14px;
     background-repeat: no-repeat
 }
 
 .icon-white {
-    background-image: url("../img/icons-white.png")
+    background-image: url("http://oqdpapa6l.bkt.clouddn.com/icons-white.png")
 }
 
 /*	拇指向上图标空心	*/

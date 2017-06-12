@@ -16,13 +16,13 @@ import org.ramer.diary.util.CollectionsUtils;
 import org.ramer.diary.util.Pagination;
 import org.ramer.diary.util.StringUtils;
 import org.ramer.diary.util.UserUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -78,12 +78,13 @@ public class ForwardHome{
      */
     @GetMapping("/home")
     public String home(@RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
-            Map<String, Object> map, HttpSession session) {
-        //初始化滚动翻页
-        if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
-        }
+            Map<String, Object> map, @SessionAttribute(name = "scrollInPage", required = false) String scrollInPage,
+            HttpSession session) {
         log.debug("主页");
+        //初始化滚动翻页
+        if (map.get("scrollInPage") == null) {
+            map.put("scrollInPage", SCROLL_IN_PAGE);
+        }
         int page = 1;
         //重置标识信息
         map.put("inOtherPage", inOtherPage);
@@ -314,17 +315,14 @@ public class ForwardHome{
      *
      * @param session the session
      * @param response the response
-     * @param scrollInPageStr the scroll in page str
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @GetMapping("/scrollInPage")
     @ResponseBody
-    public CommonResponse scrollInPage(HttpSession session, HttpServletResponse response,
-            @RequestParam(value = "scrollInPage", required = false, defaultValue = "false") String scrollInPageStr)
-            throws IOException {
-        boolean scrollInPage = Boolean.parseBoolean(scrollInPageStr);
-        session.setAttribute("scrollInPage", scrollInPage);
-        return new CommonResponse(true, scrollInPage == true ? "允许滚动翻页" : "禁止滚动翻页");
+    public CommonResponse scrollInPage(HttpSession session, HttpServletRequest request, HttpServletResponse response,
+            @SessionAttribute(name = "scrollInPage", required = false) boolean scrollInPage, Map<String, Object> map) {
+        map.put("scrollInPage", !scrollInPage);
+        return new CommonResponse(true, !scrollInPage ? "允许滚动翻页" : "禁止滚动翻页");
     }
 
     @GetMapping("/feedback")

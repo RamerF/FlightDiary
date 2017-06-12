@@ -291,8 +291,8 @@ $( function() {
         var propertyNum = propertyStr.substring( 0 , propertyStr.indexOf( "p" ) );
         return propertyNum;
     }
-    console.log( "支持滚动翻页： " + (scrollInPage == "true") );
-    if (scrollInPage == "true") {
+    console.log( "支持滚动翻页： " + (scrollInPage == true) );
+    if (scrollInPage == true) {
         // 滚动条滚动时记录滚动条高度,判断滚动条是否停止滚动，滑动到底部翻页
         $( window ).scroll( scrollPage );
     }
@@ -304,16 +304,14 @@ $( function() {
             $( this ).text( "开启滚动翻页" );
             $( window ).unbind( "scroll" );
             var url = "/scrollInPage", args = {
-                "_csrf" : csrf,
-                "scrollInPage" : "false"
+                "_csrf" : csrf
             }
             $.get( url , args , null );
         } else {
             $( this ).text( "禁止滚动翻页" );
             $( window ).scroll( scrollPage );
             var url = "/scrollInPage", args = {
-                "_csrf" : csrf,
-                "scrollInPage" : "true"
+                "_csrf" : csrf
             }
             $.get( url , args , null );
         }

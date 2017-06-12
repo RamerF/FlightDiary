@@ -2,10 +2,8 @@ package org.ramer.diary.config;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.domain.Roles;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +22,7 @@ import java.util.List;
 public class CustomUserService implements UserDetailsService{
     @Resource
     private UserService userService;
+    private static final String[] privileSuffixs = { "view", "edit" };
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -33,10 +32,22 @@ public class CustomUserService implements UserDetailsService{
             throw new UsernameNotFoundException("用户名不存在");
         }
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Roles role : user.getRoles()) {
+        user.getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " role : {}",
+            role.getPrivileges().forEach(privilege -> {
+                String privilegeName = privilege.getName();
+                if (privilegeName.contains("*")) {
+                    authorities.add(new SimpleGrantedAuthority(privilegeName));
+                    for (String privileageSuffix : privileSuffixs) {
+                        authorities.add(new SimpleGrantedAuthority(
+                                privilegeName.substring(0, privilegeName.indexOf("*")) + privileageSuffix));
+                    }
+                } else {
+                    authorities.add(new SimpleGrantedAuthority(privilegeName));
+                }
+            });
+        });
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " permission : {}",
                 JSONObject.toJSONString(authorities));
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 authorities);

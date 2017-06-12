@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8"/>
     <title>七牛上传</title>
-    <script src="/js/jquery-2.1.4.min.js"/>
-    <script src="http://oqdpapa6l.bkt.clouddn.com/FmiT7g6CKoiXbwXlwI579X8wn5it"/>
-    <script src="https://static.bekky.cn/manage/js/plupload.dev.js"/>
-    <script src="https://static.bekky.cn/manage/js/qiniu.min.js"/>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"/>
+    <script src="http://oqdpapa6l.bkt.clouddn.com/moxie.js"/>
+    <script src="http://oqdpapa6l.bkt.clouddn.com/plupload.dev.js"/>
+    <script src="http://oqdpapa6l.bkt.clouddn.com/qiniu.min.js"/>
     <script type="text/javascript">
         Date.prototype.format = function (format) {
             var o = {
@@ -43,7 +43,7 @@
                     browse_button: browse_button,
                     uptoken_url: '/upload/token',
                     //为true表示文件名保存为随机码,false保存为当前文件名
-                    unique_names: true,
+                    unique_names: false,
                     save_key: false,
                     domain: 'http://oqdpapa6l.bkt.clouddn.com',
                     container: container,
