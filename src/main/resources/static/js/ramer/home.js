@@ -307,6 +307,7 @@ $( function() {
                 "_csrf" : csrf
             }
             $.get( url , args , null );
+            scrollInPage = false;
         } else {
             $( this ).text( "禁止滚动翻页" );
             $( window ).scroll( scrollPage );
@@ -314,6 +315,7 @@ $( function() {
                 "_csrf" : csrf
             }
             $.get( url , args , null );
+            scrollInPage = true;
         }
         return false;
     } );
