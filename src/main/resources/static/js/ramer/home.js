@@ -298,7 +298,7 @@ $( function() {
     }
 
     // 移除滚动翻页事件
-    $( "#removeScrollPage" ).click( function() {
+    $( "#toggleScrollInPage" ).click( function() {
         // 如果支持滚动翻页，禁止
         if (scrollInPage == true) {
             $( this ).text( "开启滚动翻页" );
