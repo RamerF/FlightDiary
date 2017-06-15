@@ -3,10 +3,7 @@ package org.ramer.diary.controller.user;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
-import org.ramer.diary.exception.DefaultException;
-import org.ramer.diary.exception.IllegalAccessException;
-import org.ramer.diary.exception.NoPictureException;
-import org.ramer.diary.exception.SQLExecException;
+import org.ramer.diary.exception.DiaryException;
 import org.ramer.diary.service.FollowService;
 import org.ramer.diary.service.NotifyService;
 import org.ramer.diary.service.TopicService;
@@ -56,7 +53,7 @@ public class TopicController {
         //如果访问的临时用户存在,说明当前用户在他人的分享主页
         //用户将无法执行删除
         if (map.keySet().contains("other")) {
-            throw new IllegalAccessException("你没有删除该条分享的权限");
+            throw new DiaryException("你没有删除该条分享的权限");
         }
         Topic topic = topicService.getTopicById(topic_id);
         topicService.deleteTopic(topic);
@@ -64,7 +61,7 @@ public class TopicController {
         log.debug("-----删除图片 : " + flag + "-----");
         if (!flag) {
             log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " delete picture");
-            throw new DefaultException();
+            throw new DiaryException();
         }
         return "redirect:/user/personal";
     }
@@ -91,7 +88,7 @@ public class TopicController {
         //  当用户上传文件时保存文件
         if (file.isEmpty()) {
             log.debug("未选择图片");
-            throw new NoPictureException("请选择一张图片");
+            throw new DiaryException("请选择一张图片");
         }
         log.debug("保存图片");
         String pictureUrl = FileUtils.saveFile(file, session, false, StringUtils.hasChinese(user.getUsername()));
@@ -116,7 +113,7 @@ public class TopicController {
         if (topic.getId() == null) {
             //删除文件，写入出错信息
             FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getUsername()));
-            throw new SQLExecException("系统被程序猿玩儿坏啦，当前无法发表分享 ！！！");
+            throw new DiaryException("系统被程序猿玩儿坏啦，当前无法发表分享 ！！！");
         }
         //    获取所有关注'我'的人
         List<User> followUsers = followService.getFollowUser(user);

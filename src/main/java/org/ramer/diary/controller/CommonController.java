@@ -1,15 +1,6 @@
 package org.ramer.diary.controller;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.FeedBack;
@@ -18,7 +9,7 @@ import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.domain.dto.CommonResponse;
 import org.ramer.diary.domain.map.UserRoleMap;
-import org.ramer.diary.exception.IllegalAccessException;
+import org.ramer.diary.exception.DiaryException;
 import org.ramer.diary.service.*;
 import org.ramer.diary.util.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +20,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 定位到主页.
@@ -159,7 +157,7 @@ public class CommonController{
                 page = 1;
             }
         } catch (Exception e) {
-            throw new IllegalAccessException("非法参数");
+            throw new DiaryException("非法参数");
         }
         //获取分页分享
         Page<Topic> topics = topicService.getTopicsPageOrderByFavourite(page, TOPIC_PAGE_SIZE);
@@ -208,7 +206,7 @@ public class CommonController{
                 page = 1;
             }
         } catch (Exception e) {
-            throw new IllegalAccessException(WRONG_FORMAT);
+            throw new DiaryException(WRONG_FORMAT);
         }
         //    获取达人的分页信息
         Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLE_PAGE_SIZE);
@@ -338,6 +336,17 @@ public class CommonController{
         return "error";
     }
 
+    /**
+     * 表单回显,用于用户注册或登录.
+     *
+     * @param map the map
+     * @return 引导用户登录界面或注册界面
+     */
+    @GetMapping("/login")
+    public String input(User user, Map<String, Object> map) {
+        return PageConstant.USER_INPUT;
+    }
+
     @PostMapping("/sign_up")
     @ResponseBody
     public CommonResponse createUser(@Valid User user, BindingResult result) {
@@ -369,6 +378,21 @@ public class CommonController{
             return new CommonResponse(true, "注册成功");
         }
         return new CommonResponse(false, "注册失败,请稍后再试");
+    }
+
+    /**
+     * 注销用户;.
+     *
+     * @param session the session
+     * @param map the map
+     * @return 主页;
+     */
+    @GetMapping("/logOff")
+    public String logOff(HttpSession session, Map<String, Object> map) {
+        log.debug("注销");
+        map.clear();
+        session.invalidate();
+        return "redirect:/home";
     }
 
     /**
@@ -422,8 +446,6 @@ public class CommonController{
     /**
      * 滚动翻页.
      *
-     * @param session the session
-     * @param response the response
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @GetMapping("/scrollInPage")

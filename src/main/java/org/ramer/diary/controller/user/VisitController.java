@@ -4,14 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
-import org.ramer.diary.exception.UserNotExistException;
+import org.ramer.diary.exception.DiaryException;
 import org.ramer.diary.service.*;
 import org.ramer.diary.util.UserUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -27,7 +29,7 @@ import java.util.Map;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", "topicsPage" }, types = { User.class, Topic.class })
 @Controller
-public class VisitOther{
+public class VisitController{
 
     @Resource
     private UserService userService;
@@ -76,7 +78,7 @@ public class VisitOther{
         session.setAttribute("inOtherPage", true);
         User other = userService.getById(id);
         if (other == null) {
-            throw new UserNotExistException("您访问的用户不存在");
+            throw new DiaryException("您访问的用户不存在");
         }
         // && UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))
         if (UserUtils.checkLogin(session)) {
@@ -126,7 +128,7 @@ public class VisitOther{
         log.debug("-----查看分享-----");
         Topic topic = topicService.getTopicById(topic_id);
         if (topic == null || topic.getId() < 0) {
-            throw new UserNotExistException("您访问的页面已经乘坐2333···号灰船逃离这个星球了 -.-!");
+            throw new DiaryException("您访问的页面已经乘坐2333···号灰船逃离这个星球了 -.-!");
         }
         User user = (User) session.getAttribute("user");
         if (UserUtils.checkLogin(session)) {
@@ -190,7 +192,6 @@ public class VisitOther{
      * @return 已关注返回true
      */
     boolean isFollowed(User user, User followedUser) {
-        boolean flag = followService.isFollowed(user, followedUser);
-        return (flag == true) ? true : false;
+        return followService.isFollowed(user, followedUser) == true;
     }
 }

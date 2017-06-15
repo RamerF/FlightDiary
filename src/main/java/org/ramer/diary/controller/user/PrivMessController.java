@@ -1,25 +1,21 @@
 package org.ramer.diary.controller.user;
 
-import java.io.IOException;
-import java.util.Date;
+import lombok.extern.slf4j.Slf4j;
+import org.ramer.diary.domain.Notify;
+import org.ramer.diary.domain.Topic;
+import org.ramer.diary.domain.User;
+import org.ramer.diary.exception.DiaryException;
+import org.ramer.diary.service.NotifyService;
+import org.ramer.diary.service.UserService;
+import org.ramer.diary.util.UserUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.ramer.diary.domain.Notify;
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
-import org.ramer.diary.exception.IllegalAccessException;
-import org.ramer.diary.exception.SystemWrongException;
-import org.ramer.diary.service.NotifyService;
-import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.UserUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * 发送私信和读取私信.
@@ -29,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
-public class PrivMess{
+public class PrivMessController{
 
     @Resource
     private NotifyService notifyService;
@@ -94,7 +90,7 @@ public class PrivMess{
         try {
             notify_id = Integer.parseInt(notifyId);
         } catch (Exception e) {
-            throw new IllegalAccessException("数据格式有误");
+            throw new DiaryException("数据格式有误");
         }
         if (notify_id > 0) {
             notify.setId(notify_id);
@@ -102,10 +98,10 @@ public class PrivMess{
             notify.setHasCheck("true");
             boolean flag = notifyService.updateNotify(notify);
             if (!flag) {
-                throw new SystemWrongException();
+                throw new DiaryException();
             }
         } else {
-            throw new IllegalAccessException("数据格式有误");
+            throw new DiaryException("数据格式有误");
         }
         return "redirect:/user/personal";
     }
@@ -129,7 +125,7 @@ public class PrivMess{
             notify_id = Integer.parseInt(notifyId);
             notified_user_id = Integer.parseInt(notifiedUserId);
         } catch (Exception e) {
-            throw new IllegalAccessException("数据格式有误");
+            throw new DiaryException("数据格式有误");
         }
         if (notify_id > 0) {
             notify.setId(notify_id);
@@ -139,11 +135,11 @@ public class PrivMess{
             notify = notifyService.getByIdAndNotifiedUserId(notify_id, notifiedUser);
             if (notify != null) {
                 if (!notifyService.delete(notify)) {
-                    throw new SystemWrongException();
+                    throw new DiaryException();
                 }
             }
         } else {
-            throw new IllegalAccessException("数据格式有误");
+            throw new DiaryException("数据格式有误");
         }
         return "success";
     }
