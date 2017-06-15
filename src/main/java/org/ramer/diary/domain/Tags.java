@@ -3,8 +3,11 @@ package org.ramer.diary.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by caipeijun on 2017/5/29.
@@ -15,7 +18,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tags {
+public class Tags{
 
     private static final long serialVersionUID = 1L;
 
@@ -34,4 +37,8 @@ public class Tags {
      * 标签热度
      */
     private Integer hot;
+    @CreationTimestamp
+    private Date createDate;
+    @UpdateTimestamp
+    private Date updateDate;
 }

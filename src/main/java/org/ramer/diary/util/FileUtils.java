@@ -51,7 +51,7 @@ public class FileUtils{
         } else {
             location = new File(session.getServletContext().getRealPath("/")).getCanonicalPath();
         }
-        String rootdir = location + separator + "pictures" + separator + "publish";
+        String rootdir = location + separator + "pictures" + separator + "createTopic";
         User user = (User) session.getAttribute("user");
         String username = user.getUsername();
         String alias = user.getAlias();
@@ -93,7 +93,7 @@ public class FileUtils{
         } else {
             location = new File(session.getServletContext().getRealPath("/")).getAbsolutePath();
         }
-        String rootdir = location + separator + "pictures" + separator + "publish";
+        String rootdir = location + separator + "pictures" + separator + "createTopic";
         User user = (User) session.getAttribute("user");
         log.debug("用户名: " + user.getUsername());
         String username = user.getUsername();
@@ -133,14 +133,14 @@ public class FileUtils{
             outputStream.write(bys, 0, length);
         }
         outputStream.close();
-        String pictureUrl = "\\pictures" + separator + "publish" + separator + username + separator + name + suffix;
+        String pictureUrl = "\\pictures" + separator + "createTopic" + separator + username + separator + name + suffix;
         if (chn) {
-            pictureUrl = "\\pictures" + separator + "publish" + separator + alias + separator + name + suffix;
+            pictureUrl = "\\pictures" + separator + "createTopic" + separator + alias + separator + name + suffix;
         }
         if (head) {
-            pictureUrl = "\\pictures" + separator + "publish" + separator + username + separator + username + suffix;
+            pictureUrl = "\\pictures" + separator + "createTopic" + separator + username + separator + username + suffix;
             if (chn) {
-                pictureUrl = "\\pictures" + separator + "publish" + separator + alias + separator + alias + suffix;
+                pictureUrl = "\\pictures" + separator + "createTopic" + separator + alias + separator + alias + suffix;
             }
         }
         log.debug("数据库中的图片路径:" + pictureUrl);

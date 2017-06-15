@@ -4,6 +4,51 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>关于Diary</title>
     <link href="/css/about.css" rel="stylesheet"/>
+    <style>
+        .topic-panel {
+            box-shadow: 1px 1px 6px rgba(50, 50, 50, .8);
+            overflow: hidden;
+            width: 100%
+        }
+
+        .topic-tab {
+            padding: 0;
+            min-width: 85px;
+            margin: 0;
+            width: 10%;
+            float: left
+        }
+
+        .topic-tab li {
+            outline: none;
+            list-style: none
+        }
+
+        .topic-tab li a {
+            display: inline-block;
+            height: 100%;
+            line-height: 37px;
+            padding: 0px 10px;
+            border-bottom: 1px solid rgba(50, 50, 50, .2)
+        }
+
+        .topic-tab li a:hover {
+            color: white;
+            background: rgba(50, 50, 50, .2)
+        }
+
+        .topic-main {
+
+        }
+    </style>
+    <link rel="stylesheet" href="js/ssi-uploader/ssi-uploader.min.css"/>
+    <script type="application/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"/>
+    <script src="js/ssi-uploader/ssi-uploader.min.js"/>
+    <script>
+        $(function () {
+            $("#topicPic").ssi_uploader({url: '#', dropZone: false, allowed: ['jpg', 'gif', 'txt', 'png', 'pdf']});
+        })
+    </script>
 </head>
 <body>
 <div class="container">
@@ -18,5 +63,43 @@
         Diary注重与用户的交互，界面友好，性能稳定，可扩展性强。
     </p>
 </div>
+
+<div class="topic-panel" id="topic_panel">
+    <ul class="topic-tab">
+        <li><a>添加图片</a></li>
+        <li><a>选择标签</a></li>
+        <li><a>添加评论</a></li>
+    </ul>
+    <div class="topic-main">
+        <input type="file" multiple="multiple" id="topicPic"/>
+    </div>
+
+</div>
+<!--<form actiocreateTopiclish" method="post" enctype="multipart/form-data">-->
+<!--<input type="hidden"-->
+<!--th:name="${_csrf.parameterName}"-->
+<!--id="_csrf"-->
+<!--th:value="${_csrf.token}"/>-->
+<!--<textarea rows="7" cols="30" name="content" class="topic_content"></textarea>-->
+<!--<div class="tool">-->
+<!--<div id="addPosition" class="add_position" data-balloon="添加当前位置" data-balloon-pos="right">-->
+<!--<img alt="" src="/pictures/position.png"/>-->
+<!--</div>-->
+<!--<div id="addTime" class="add_time" data-balloon="添加当前时间" data-balloon-pos="right">-->
+<!--<img alt="" src="/pictures/calendar.png"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--<input class="upbtn" type="file" name="picture" accept="image/*" id="upPic" multiple="multiple"/>-->
+<!--<input class="upbtn2" placeholder="点击添加一张图片"/>-->
+<!--<div id="preview" class="preview"></div>-->
+<!--<div class="input_tag_panel">-->
+<!--<select id="tags">-->
+<!--<option value="no" id="optionTag">请选择</option>-->
+<!--</select>-->
+<!--<input type="text" name="tags" class="input_tags" placeholder="标签使用;隔开"/>-->
+<!--</div>-->
+<!--<input type="submit" value="分享" id="submitTopic"/>-->
+<!--<input type="reset" value="收起" class="hiddenTopic"/>-->
+<!--</form>-->
 </body>
 </html>

@@ -12,7 +12,6 @@ import org.ramer.diary.service.NotifyService;
 import org.ramer.diary.service.TopicService;
 import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +30,7 @@ import java.util.Map;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
-public class Publish{
+public class TopicController {
     @Resource
     private FollowService followService;
     @Resource
@@ -64,7 +63,7 @@ public class Publish{
         boolean flag = FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getUsername()));
         log.debug("-----删除图片 : " + flag + "-----");
         if (!flag) {
-            log.debug("method : deleteTopic -->deleteFile : Publish.java : 60.");
+            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " delete picture");
             throw new DefaultException();
         }
         return "redirect:/user/personal";
@@ -82,9 +81,9 @@ public class Publish{
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @PostMapping("/publish")
-    public String publish(@RequestParam("content") String content, @RequestParam(value = "tags") String tags,
-            @RequestParam(value = "personal", required = false, defaultValue = "") String personal,
-            @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {
+    public String createTopic(@RequestParam("content") String content, @RequestParam(value = "tags") String tags,
+                              @RequestParam(value = "personal", required = false, defaultValue = "") String personal,
+                              @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {
 
         User user = (User) session.getAttribute("user");
         log.debug("发表日记: \n\t用户名: " + user.getUsername());
@@ -109,7 +108,8 @@ public class Publish{
             tags = tags.endsWith(";") ? tags.substring(0, tags.length() - 1) : tags;
             tags = tags.replace("；", ";");
         }
-        topic.setTags(tags);
+        // TODO: 处理tags
+        //        topic.setTagses(tags);
         //保存用户经历
         topic = topicService.publish(topic);
         //为空说明sql执行出错

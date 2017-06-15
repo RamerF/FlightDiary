@@ -4,17 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.EncryptUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-import java.security.Principal;
-import java.util.Map;
 
 /**
  * 登陆类.
@@ -28,31 +21,6 @@ public class Login{
     @Resource
     private UserService userService;
 
-    /**
-     * 用户登录.
-     *
-     * @param user the user
-     * @param map the map
-     * @param session the session
-     * @return 登录成功返回主页,失败返回错误页面
-     */
-    @PostMapping(value = "/sign_in")
-    @ResponseBody
-    public String userLogin(User user, Map<String, Object> map, HttpSession session, Principal principal) {
-        user.setSessionid(session.getId());
-        String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
-        if (user.getUsername().matches(regex)) {
-            log.debug("通过邮箱登录");
-            user.setEmail(EncryptUtil.execEncrypt(user.getUsername()));
-            user.setUsername(null);
-        }
-        User user2 = userService.getByName(principal.getName());
-        if (user2.getId() != null) {
-            map.put("user", user2);
-            session.setAttribute("user", user2);
-            return "success";
-        }
-        return "error";
-    }
+
 
 }

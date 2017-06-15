@@ -1,36 +1,35 @@
 package org.ramer.diary.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.FeedBack;
+import org.ramer.diary.domain.Roles;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.domain.dto.CommonResponse;
+import org.ramer.diary.domain.map.UserRoleMap;
 import org.ramer.diary.exception.IllegalAccessException;
-import org.ramer.diary.service.FollowService;
-import org.ramer.diary.service.NotifyService;
-import org.ramer.diary.service.TopicService;
-import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.CollectionsUtils;
-import org.ramer.diary.util.Pagination;
-import org.ramer.diary.util.StringUtils;
-import org.ramer.diary.util.UserUtils;
+import org.ramer.diary.service.*;
+import org.ramer.diary.util.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 定位到主页.
@@ -40,7 +39,7 @@ import java.util.Map;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", "topicCount", "scrollInPage" }, types = { User.class, Topic.class })
 @Controller
-public class ForwardHome{
+public class CommonController{
     @Resource
     private UserService userService;
     @Resource
@@ -67,6 +66,8 @@ public class ForwardHome{
     //是否支持滚动翻页
     @Value("${diary.page.scroll}")
     private boolean SCROLL_IN_PAGE;
+    @Resource
+    private RolesService rolesService;
 
     /**
      * 主页.
@@ -311,6 +312,114 @@ public class ForwardHome{
     }
 
     /**
+     * 用户登录.
+     *
+     * @param user the user
+     * @param map the map
+     * @param session the session
+     * @return 登录成功返回主页,失败返回错误页面
+     */
+    @PostMapping(value = "/sign_in")
+    @ResponseBody
+    public String userLogin(User user, Map<String, Object> map, HttpSession session, Principal principal) {
+        user.setSessionid(session.getId());
+        String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
+        if (user.getUsername().matches(regex)) {
+            log.debug("通过邮箱登录");
+            user.setEmail(EncryptUtil.execEncrypt(user.getUsername()));
+            user.setUsername(null);
+        }
+        User user2 = userService.getByName(principal.getName());
+        if (user2.getId() != null) {
+            map.put("user", user2);
+            session.setAttribute("user", user2);
+            return "success";
+        }
+        return "error";
+    }
+
+    @PostMapping("/sign_up")
+    @ResponseBody
+    public CommonResponse createUser(@Valid User user, BindingResult result) {
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "user: {}", user);
+        if (result.hasErrors()) {
+            StringBuilder message = new StringBuilder("提交信息有误:").append(PageConstant.BR);
+            result.getAllErrors().stream().iterator().forEachRemaining(
+                    objectError -> message.append(objectError.getDefaultMessage()).append(PageConstant.BR));
+            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " message : {}", message.toString());
+            return new CommonResponse(false, message.toString());
+        }
+        user.setEmail(EncryptUtil.execEncrypt(user.getEmail()));
+        if (StringUtils.hasChinese(user.getUsername())) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+            user.setAlias(simpleDateFormat.format(new Date()));
+        }
+        user.setPassword(EncryptUtil.execEncrypt(user.getPassword()));
+        List<Roles> roles = new ArrayList<>();
+        Roles userRole = rolesService.getByName(UserRoleMap.USER);
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " userRole : {}", userRole);
+        roles.add(userRole);
+        user.setRoles(roles);
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user);
+        if (userService.newOrUpdate(user)) {
+            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user.getId() : {}", user.getId());
+
+            SecurityContextHolder.getContext()
+                    .setAuthentication(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+            return new CommonResponse(true, "注册成功");
+        }
+        return new CommonResponse(false, "注册失败,请稍后再试");
+    }
+
+    /**
+     * 验证用户名.
+     * 如果用户名存在,写入true,否者写入false
+     *
+     * @param user 当更新时,表示更新用户
+     * @param username 当前用户输入或自动填充的用户名
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @PostMapping("/validateUserName")
+    @ResponseBody
+    public CommonResponse validateUserName(User user, @RequestParam("username") String username) {
+        if (StringUtils.isEmpty(username)) {
+            return new CommonResponse(false, "用户名为空");
+        }
+        //    id存在,用户更新
+        if (IntegerUtil.isPositiveValue(user.getId())) {
+            log.debug("用户更新: username  : {}", user.getUsername());
+            if (user.getUsername().equals(username)) {
+                return new CommonResponse(false, "用户名未改变");
+            }
+        }
+        if (userService.getByName(username) == null) {
+            return new CommonResponse(false, "用户名不存在");
+        }
+        return new CommonResponse(true, "用户名已存在");
+    }
+
+    /**
+     * 验证邮箱是否可用.
+     *
+     * @param emailString 邮箱字符串
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @PostMapping("/validateEmail")
+    @ResponseBody
+    public CommonResponse validateEmail(@RequestParam("email") String emailString) throws IOException {
+        if (StringUtils.isEmpty(emailString)) {
+            return new CommonResponse(false, "邮箱为空");
+        }
+        if (!MailUtils.isEmail(emailString)) {
+            return new CommonResponse(false, "邮箱格式不正确");
+        }
+        if (userService.getByEmail(EncryptUtil.execEncrypt(emailString)) == null) {
+            return new CommonResponse(true, "邮箱不存在");
+        }
+        return new CommonResponse(false, "邮箱已存在");
+    }
+
+    /**
      * 滚动翻页.
      *
      * @param session the session
@@ -319,8 +428,8 @@ public class ForwardHome{
      */
     @GetMapping("/scrollInPage")
     @ResponseBody
-    public CommonResponse scrollInPage(HttpSession session, HttpServletRequest request, HttpServletResponse response,
-            @SessionAttribute(name = "scrollInPage", required = false) boolean scrollInPage, Map<String, Object> map) {
+    public CommonResponse scrollInPage(@SessionAttribute(name = "scrollInPage", required = false) boolean scrollInPage,
+            Map<String, Object> map) {
         map.put("scrollInPage", !scrollInPage);
         return new CommonResponse(true, !scrollInPage ? "允许滚动翻页" : "禁止滚动翻页");
     }
@@ -358,5 +467,35 @@ public class ForwardHome{
     @GetMapping("about")
     public String about() {
         return "about";
+    }
+
+    /**
+     * 获取实时动态.
+     *
+     * @param session the session
+     * @return 新动态总数
+     */
+    @GetMapping("/user/realTimeTopic")
+    @ResponseBody
+    public String realTimeTopic(HttpSession session) {
+        long count = topicService.getCount();
+        long OldCount = (long) session.getAttribute("topicCount");
+        log.debug("新动态：" + (count - OldCount));
+        return String.valueOf((count - OldCount));
+    }
+
+    /**
+     * 获取实时通知.
+     *
+     * @param session the session
+     * @return 通知数
+     */
+    @GetMapping("/user/realTimeNotify")
+    @ResponseBody
+    public String realTimeNotify(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        Integer number = notifyService.getNotifiedNumber(user);
+        log.debug("新通知：" + number);
+        return String.valueOf(number);
     }
 }

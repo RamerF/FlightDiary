@@ -89,7 +89,11 @@
                     }
                 });
             }
-
+            $("input[id^='html5']").ssi_uploader({
+                url: '#',
+                dropZone: false,
+                allowed: ['jpg', 'gif', 'txt', 'png', 'pdf']
+            });
             /*]]>*/
         })
 
@@ -149,6 +153,17 @@
             text-overflow: ellipsis;
         }
     </style>
+    <link rel="stylesheet" href="js/ssi-uploader/ssi-uploader.min.css"/>
+    <script src="js/ssi-uploader/ssi-uploader.min.js"/>
+    <script>
+        $(function () {
+            $("input[id^='html5']").ssi_uploader({
+                url: '#',
+                dropZone: false,
+                allowed: ['jpg', 'gif', 'txt', 'png', 'pdf']
+            });
+        })
+    </script>
 </head>
 <body>
 <div class="container">

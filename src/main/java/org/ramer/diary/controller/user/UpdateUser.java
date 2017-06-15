@@ -1,22 +1,8 @@
 package org.ramer.diary.controller.user;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import org.ramer.diary.constant.PageConstant;
-import org.ramer.diary.domain.Roles;
+import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
-import org.ramer.diary.domain.dto.CommonResponse;
-import org.ramer.diary.domain.map.UserRoleMap;
 import org.ramer.diary.exception.SystemWrongException;
 import org.ramer.diary.exception.UserExistException;
 import org.ramer.diary.service.RolesService;
@@ -26,15 +12,18 @@ import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
 import org.ramer.diary.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 注册或更新类
@@ -42,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
-public class RegistOrUpdate{
+public class UpdateUser {
     @Resource
     private UserService userService;
     @Resource
@@ -70,39 +59,6 @@ public class RegistOrUpdate{
             log.debug("预加载user");
             map.put("user", userService.getById(userId));
         }
-    }
-
-    @PostMapping("/sign_up")
-    @ResponseBody
-    public CommonResponse createUser(@Valid User user, BindingResult result) {
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "user: {}", user);
-        if (result.hasErrors()) {
-            StringBuilder message = new StringBuilder("提交信息有误:").append(PageConstant.BR);
-            result.getAllErrors().stream().iterator().forEachRemaining(
-                    objectError -> message.append(objectError.getDefaultMessage()).append(PageConstant.BR));
-            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " message : {}", message.toString());
-            return new CommonResponse(false, message.toString());
-        }
-        user.setEmail(EncryptUtil.execEncrypt(user.getEmail()));
-        if (StringUtils.hasChinese(user.getUsername())) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
-            user.setAlias(simpleDateFormat.format(new Date()));
-        }
-        user.setPassword(EncryptUtil.execEncrypt(user.getPassword()));
-        List<Roles> roles = new ArrayList<>();
-        Roles userRole = rolesService.getByName(UserRoleMap.USER);
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " userRole : {}", userRole);
-        roles.add(userRole);
-        user.setRoles(roles);
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user);
-        if (userService.newOrUpdate(user)) {
-            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user.getId() : {}", user.getId());
-
-            SecurityContextHolder.getContext()
-                    .setAuthentication(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-            return new CommonResponse(true, "注册成功");
-        }
-        return new CommonResponse(false, "注册失败,请稍后再试");
     }
 
     //  由于需要上传文件form 带有属性enctype="multipart/form-data",因此无法使用PUT请求
