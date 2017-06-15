@@ -41,9 +41,12 @@ public class Topic implements Serializable{
     /** 图片. */
     @Column
     private String picture;
+
     //  标签
-    @Column
-    private String tags;
+    @ManyToOne
+    @JoinColumn(name = "tags")
+    private Tags tags;
+
     /** 点赞次数. */
     @Column
     private Integer upCounts;
