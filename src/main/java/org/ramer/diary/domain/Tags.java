@@ -37,6 +37,12 @@ public class Tags{
      * 标签热度
      */
     private Integer hot;
+    /**
+     * 对应topic
+     */
+    @ManyToOne
+    @JoinColumn(name = "topic")
+    private Topic topic;
     @CreationTimestamp
     private Date createDate;
     @UpdateTimestamp
