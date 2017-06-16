@@ -1,1 +1,5 @@
 ##版本修改日志
+1. 前端使用HTML+Thymeleaf模板引擎
+2. 添加spring-security + spring-boot + maven支持
+3. 修复代码错误.
+4. 部分页面UI改进

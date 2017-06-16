@@ -3,21 +3,18 @@ package org.ramer.diary.controller.user;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
-import org.ramer.diary.exception.DefaultException;
-import org.ramer.diary.exception.IllegalAccessException;
-import org.ramer.diary.exception.NoPictureException;
-import org.ramer.diary.exception.SQLExecException;
+import org.ramer.diary.exception.DiaryException;
 import org.ramer.diary.service.FollowService;
 import org.ramer.diary.service.NotifyService;
 import org.ramer.diary.service.TopicService;
 import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
@@ -30,12 +27,12 @@ import java.util.Map;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
-public class Publish{
-    @Autowired
+public class TopicController {
+    @Resource
     private FollowService followService;
-    @Autowired
+    @Resource
     private TopicService topicService;
-    @Autowired
+    @Resource
     private NotifyService notifyService;
 
     /**
@@ -56,15 +53,15 @@ public class Publish{
         //如果访问的临时用户存在,说明当前用户在他人的分享主页
         //用户将无法执行删除
         if (map.keySet().contains("other")) {
-            throw new IllegalAccessException("你没有删除该条分享的权限");
+            throw new DiaryException("你没有删除该条分享的权限");
         }
         Topic topic = topicService.getTopicById(topic_id);
         topicService.deleteTopic(topic);
         boolean flag = FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getUsername()));
         log.debug("-----删除图片 : " + flag + "-----");
         if (!flag) {
-            log.debug("method : deleteTopic -->deleteFile : Publish.java : 60.");
-            throw new DefaultException();
+            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " delete picture");
+            throw new DiaryException();
         }
         return "redirect:/user/personal";
     }
@@ -81,9 +78,9 @@ public class Publish{
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @PostMapping("/publish")
-    public String publish(@RequestParam("content") String content, @RequestParam(value = "tags") String tags,
-            @RequestParam(value = "personal", required = false, defaultValue = "") String personal,
-            @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {
+    public String createTopic(@RequestParam("content") String content, @RequestParam(value = "tags") String tags,
+                              @RequestParam(value = "personal", required = false, defaultValue = "") String personal,
+                              @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {
 
         User user = (User) session.getAttribute("user");
         log.debug("发表日记: \n\t用户名: " + user.getUsername());
@@ -91,7 +88,7 @@ public class Publish{
         //  当用户上传文件时保存文件
         if (file.isEmpty()) {
             log.debug("未选择图片");
-            throw new NoPictureException("请选择一张图片");
+            throw new DiaryException("请选择一张图片");
         }
         log.debug("保存图片");
         String pictureUrl = FileUtils.saveFile(file, session, false, StringUtils.hasChinese(user.getUsername()));
@@ -108,14 +105,15 @@ public class Publish{
             tags = tags.endsWith(";") ? tags.substring(0, tags.length() - 1) : tags;
             tags = tags.replace("；", ";");
         }
-        topic.setTags(tags);
+        // TODO: 处理tags
+        //        topic.setTagses(tags);
         //保存用户经历
         topic = topicService.publish(topic);
         //为空说明sql执行出错
         if (topic.getId() == null) {
             //删除文件，写入出错信息
             FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getUsername()));
-            throw new SQLExecException("系统被程序猿玩儿坏啦，当前无法发表分享 ！！！");
+            throw new DiaryException("系统被程序猿玩儿坏啦，当前无法发表分享 ！！！");
         }
         //    获取所有关注'我'的人
         List<User> followUsers = followService.getFollowUser(user);

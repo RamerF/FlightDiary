@@ -152,10 +152,11 @@ span.username {
 }
 
 .container {
-    width: 100%;
+    width: 90%;
     overflow: hidden;
     float: left;
     margin-top: 100px;
+    margin-left: 5%
 }
 
 div.topic_panel {
@@ -323,21 +324,24 @@ div#addTime {
     box-shadow: 0px 0px 6px 3px rgba(50, 50, 50, 0.15)
 }
 
-.page_panel {
-    width: 108px;
-    float: left;
-    position: fixed;
-    top: 100px;
-    right: 0;
-    margin: 20px;
-    text-align: center;
+.last_page {
+    background: transparent;
+    opacity: .8;
+    margin-left: 5px
 }
 
-ul.page_panel li {
-    cursor: pointer;
-    padding: 10px;
-    list-style: none;
-    opacity: 0.5;
+.last_page, .next_page {
+    position: fixed;
+    margin-top: 30%;
+    z-index: 10000
+}
+
+.next_page {
+    width: 48px;
+    right: 0;
+    opacity: .8;
+    background: transparent;
+    margin-right: 5px
 }
 
 #removeScrollPage {
