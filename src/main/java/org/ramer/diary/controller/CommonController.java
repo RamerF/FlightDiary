@@ -3,21 +3,20 @@ package org.ramer.diary.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
-import org.ramer.diary.domain.FeedBack;
-import org.ramer.diary.domain.Roles;
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
+import org.ramer.diary.domain.*;
 import org.ramer.diary.domain.dto.CommonResponse;
 import org.ramer.diary.domain.map.UserRoleMap;
 import org.ramer.diary.exception.DiaryException;
 import org.ramer.diary.service.*;
 import org.ramer.diary.util.*;
+import org.ramer.diary.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -66,6 +65,13 @@ public class CommonController{
     private boolean SCROLL_IN_PAGE;
     @Resource
     private RolesService rolesService;
+    @Resource
+    private UserValidator userValidator;
+
+    @InitBinder("user")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(userValidator);
+    }
 
     /**
      * 主页.

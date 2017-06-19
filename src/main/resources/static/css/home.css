@@ -332,7 +332,7 @@ div#addTime {
 
 .last_page, .next_page {
     position: fixed;
-    margin-top: 30%;
+    top: 40%;
     z-index: 10000
 }
 

@@ -75,4 +75,4 @@ diary:
     xml:
       position: /xml/tags.xml
   page:
-    scroll: true
+    scroll: false

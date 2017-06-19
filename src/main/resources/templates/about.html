@@ -1,105 +1,1 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>关于Diary</title>
-    <link href="/css/about.css" rel="stylesheet"/>
-    <style>
-        .topic-panel {
-            box-shadow: 1px 1px 6px rgba(50, 50, 50, .8);
-            overflow: hidden;
-            width: 100%
-        }
-
-        .topic-tab {
-            padding: 0;
-            min-width: 85px;
-            margin: 0;
-            width: 10%;
-            float: left
-        }
-
-        .topic-tab li {
-            outline: none;
-            list-style: none
-        }
-
-        .topic-tab li a {
-            display: inline-block;
-            height: 100%;
-            line-height: 37px;
-            padding: 0px 10px;
-            border-bottom: 1px solid rgba(50, 50, 50, .2)
-        }
-
-        .topic-tab li a:hover {
-            color: white;
-            background: rgba(50, 50, 50, .2)
-        }
-
-        .topic-main {
-
-        }
-    </style>
-    <link rel="stylesheet" href="js/ssi-uploader/ssi-uploader.min.css"/>
-    <script type="application/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"/>
-    <script src="js/ssi-uploader/ssi-uploader.min.js"/>
-    <script>
-        $(function () {
-            $("#topicPic").ssi_uploader({url: '#', dropZone: false, allowed: ['jpg', 'gif', 'txt', 'png', 'pdf']});
-        })
-    </script>
-</head>
-<body>
-<div class="container">
-    <h2>关于 Diary</h2>
-    <p>
-        Diary是一个图片和文字分享网站。它给了你这样一个分享平台，你可以使用这个平台分享和查看他人分享的旅行经历，一张图片一段文字。
-        Diary作为一个旅行分享平台，同时推荐给你最受网友欢迎的城市和最擅于旅行的网友。作为登录用户使用该软件可以浏览，查看和评论他
-        人分享的旅行日记，同时可以给他发送一封私信，查看他收藏的分享和关注的人。使用该软件可以发表和删除已发表的旅行日记。登录用户可以修
-        改找回密码，编辑个人基本信息。
-    </p>
-    <p>
-        Diary注重与用户的交互，界面友好，性能稳定，可扩展性强。
-    </p>
-</div>
-
-<div class="topic-panel" id="topic_panel">
-    <ul class="topic-tab">
-        <li><a>添加图片</a></li>
-        <li><a>选择标签</a></li>
-        <li><a>添加评论</a></li>
-    </ul>
-    <div class="topic-main">
-        <input type="file" multiple="multiple" id="topicPic"/>
-    </div>
-
-</div>
-<!--<form actiocreateTopiclish" method="post" enctype="multipart/form-data">-->
-<!--<input type="hidden"-->
-<!--th:name="${_csrf.parameterName}"-->
-<!--id="_csrf"-->
-<!--th:value="${_csrf.token}"/>-->
-<!--<textarea rows="7" cols="30" name="content" class="topic_content"></textarea>-->
-<!--<div class="tool">-->
-<!--<div id="addPosition" class="add_position" data-balloon="添加当前位置" data-balloon-pos="right">-->
-<!--<img alt="" src="/pictures/position.png"/>-->
-<!--</div>-->
-<!--<div id="addTime" class="add_time" data-balloon="添加当前时间" data-balloon-pos="right">-->
-<!--<img alt="" src="/pictures/calendar.png"/>-->
-<!--</div>-->
-<!--</div>-->
-<!--<input class="upbtn" type="file" name="picture" accept="image/*" id="upPic" multiple="multiple"/>-->
-<!--<input class="upbtn2" placeholder="点击添加一张图片"/>-->
-<!--<div id="preview" class="preview"></div>-->
-<!--<div class="input_tag_panel">-->
-<!--<select id="tags">-->
-<!--<option value="no" id="optionTag">请选择</option>-->
-<!--</select>-->
-<!--<input type="text" name="tags" class="input_tags" placeholder="标签使用;隔开"/>-->
-<!--</div>-->
-<!--<input type="submit" value="分享" id="submitTopic"/>-->
-<!--<input type="reset" value="收起" class="hiddenTopic"/>-->
-<!--</form>-->
-</body>
-</html>
+<!DOCTYPE html><html><head>    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>    <title>关于Diary</title>    <link href="/css/default.css" rel="stylesheet"/>    <link href="/css/about.css" rel="stylesheet"/>    <link href="/picture-preview/picture-preview.css" rel="stylesheet"/>    <link href="/tab-toggle/tab-toggle.css" rel="stylesheet"/>    <style>        .topic-panel {            box-shadow: 1px 1px 6px rgba(50, 50, 50, .8);            overflow: hidden;            min-width: 350px;            padding: 10px;            width: 100%        }        .topic-tab {            padding: 0;            min-width: 85px;            margin: 0;            width: 10%;            float: left        }        .topic-tab li {            outline: none;            cursor: pointer;            list-style: none        }        .topic-tab li a {            display: inline-block;            height: 100%;            line-height: 37px;            padding: 0px 10px;            border-bottom: 1px solid rgba(50, 50, 50, .2)        }        .topic-tab li a:hover {            color: white;            background: rgba(50, 50, 50, .2)        }        .topic-main {            float: left;            min-width: 250px;            width: 88%        }        .preview {            width: 30%;            margin: 10px 10px 0 0;            box-shadow: 1px 1px 18px -4px rgba(0, 0, 0, 0.52);            position: relative;            float: left        }        .preview-container {            width: 100%;            float: left        }        img.preview-pic {            width: 100%        }        .trash-container {            opacity: 0;            position: absolute;            width: 100%;            height: 100%;            overflow: hidden;            background: rgba(0, 0, 0, 0.61)        }        .trash {            position: absolute;            top: 50%;            transform: translateY(-50%);            cursor: pointer;            width: 100%;            color: #ffe501;            font-size: 47px;            margin-left: -3px;            text-align: center        }        .opacitys {            opacity: 1        }        input {            background: none;            border: none;            padding: 0;            margin: 0        }        input[type='file'] {            display: none        }        .choose-pic {            display: inline-block;            background: #00BCD4;            box-shadow: 1px 1px 15px -3px rgb(0, 0, 0);            cursor: pointer;            margin-left: 10px;            width: 40px;            color: white;            border-radius: 102px;            height: 40px;            text-align: center;            line-height: 40px;            font-size: 41px        }        .tag-container li {            float: left;            list-style: none;            padding: 10px;            margin: 5px;            box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.48);            background: #009688;            color: white;            text-align: center;            text-shadow: 0px 0px 1px rgba(255, 255, 255, 0.53)        }        li.define-container {            padding: 0        }        .define-container input {            margin: 0;            height: 39px;            border-radius: 0;            background: #009688;            border: none;            color: white;            margin-right: 39px;            padding-left: 10px        }        li.add-define-tag {            margin-left: -39px;            box-shadow: none;            cursor: pointer;            border-left: 1px solid rgb(0, 97, 88)        }    </style>    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"/>    <script src="/picture-preview/picture-preview.js"/>    <script src="/tab-toggle/tab-toggle.js"/>    <script type="application/javascript" src="/js/TextAreaExpander.js"/>    <script>        Date.prototype.format = function (format) {            var o = {                "M+": this.getMonth() + 1, //month                "d+": this.getDate(), //day                "h+": this.getHours(), //hour                "m+": this.getMinutes(), //minute                "s+": this.getSeconds(), //second                "q+": Math.floor((this.getMonth() + 3) / 3), //quarter                "S": this.getMilliseconds() //millisecond            }            if (/(y+)/.test(format)) {                format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));            }            for (var k in o) {                if (new RegExp("(" + k + ")").test(format)) {                    format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));                }            }            return format;        }        fileArr = new Array();        $(function () {            $(".topic_content").TextAreaExpander(29, 500);            $(".tab-container").tabToggle();            $("#topicPic").picPreview({                fileArr: fileArr            });            token = "";            $.get("/upload/token", {}, function (result) {                token = result.uptoken;            });            var trash = $(".trash");            /*<![CDATA[*/            $("#publishTopic").click(function () {                var formData;                var files = fileArr;                console.log("file arr: " + fileArr);                for (var i = 0; i < files.length; i++) {                    formData = new FormData();                    formData.append("file", files[i]);                    var fileName = files[i].name.substr(0, files[i].name.lastIndexOf("."));                    var suffix = files[i].name.substr(fileName.length);                    var key = fileName + "-" + new Date().format("yyyyMMddhhmmss") + suffix;                    formData.append("key", key);                    formData.append("token", token);                    console.log("保存文件名: " + key);                    $.ajax({                        url: "http://up-z2.qiniu.com/",                        type: "post",                        data: formData,                        processData: false,                        contentType: false                    }).done(function (res) {                        var fileName = res.key.substr(0, res.key.lastIndexOf("."));                        var suffix = res.key.substr(fileName.length);                        var key = fileName + "-" + new Date().format("yyyyMMddhhmmss") + suffix;                        console.log(key)                    }).fail(function (res) {                    });                }                return false;            });            /*]]>*/        })    </script></head><body><div class="container">    <h2>关于 Diary</h2>    <p>        Diary是一个图片和文字分享网站。它给了你这样一个分享平台，你可以使用这个平台分享和查看他人分享的旅行经历，一张图片一段文字。        Diary作为一个旅行分享平台，同时推荐给你最受网友欢迎的城市和最擅于旅行的网友。作为登录用户使用该软件可以浏览，查看和评论他        人分享的旅行日记，同时可以给他发送一封私信，查看他收藏的分享和关注的人。使用该软件可以发表和删除已发表的旅行日记。登录用户可以修        改找回密码，编辑个人基本信息。    </p>    <p>        Diary注重与用户的交互，界面友好，性能稳定，可扩展性强。    </p></div><div class="tab-container">    <ul class="tab-title">        <li class="tab active" data-toggle="tab-1">添加图片</li>        <li class="tab" data-toggle="tab-2">添加文字</li>        <li class="tab" data-toggle="tab-3">添加标签</li>        <li class="tab" data-toggle="tab-4">即刻分享</li>    </ul>    <div class="tab-content">        <div id="tab-1" class="active">            <label for="topicPic" class="choose-pic">﹢</label>            <input type="file" id="topicPic"/>            <div id="preview-container" class="preview-container"></div>        </div>        <div id="tab-2">            <p>给你的图片配点美妙的文字吧</p>            <textarea class="topic_content"></textarea>        </div>        <div id="tab-3">            <ul class="tag-container">                <li>标签1</li>                <li>标签2</li>                <li>标签3</li>                <li>标签3</li>                <li>标签3</li>                <li>标签3</li>                <li>标签3</li>                <li class="define-container">                    <label for="define-tag"></label>                    <input id="define-tag" type="text"/>                </li>                <li class="add-define-tag">＋</li>                <li class="define-container">                    <label for="define-tag"></label>                    <input id="submit-define-tag" type="submit" value="分享"/>                </li>            </ul>        </div>    </div></div><!--<form actiocreateTopiclish" method="post" enctype="multipart/form-data">--><!--<input type="hidden"--><!--th:name="${_csrf.parameterName}"--><!--id="_csrf"--><!--th:value="${_csrf.token}"/>--><!--<textarea rows="7" cols="30" name="content" class="topic_content"></textarea>--><!--<div class="tool">--><!--<div id="addPosition" class="add_position" data-balloon="添加当前位置" data-balloon-pos="right">--><!--<img alt="" src="/pictures/position.png"/>--><!--</div>--><!--<div id="addTime" class="add_time" data-balloon="添加当前时间" data-balloon-pos="right">--><!--<img alt="" src="/pictures/calendar.png"/>--><!--</div>--><!--</div>--><!--<input class="upbtn" type="file" name="picture" accept="image/*" id="upPic" multiple="multiple"/>--><!--<input class="upbtn2" placeholder="点击添加一张图片"/>--><!--<div id="preview" class="preview"></div>--><!--<div class="input_tag_panel">--><!--<select id="tags">--><!--<option value="no" id="optionTag">请选择</option>--><!--</select>--><!--<input type="text" name="tags" class="input_tags" placeholder="标签使用;隔开"/>--><!--</div>--><!--<input type="submit" value="分享" id="submitTopic"/>--><!--<input type="reset" value="收起" class="hiddenTopic"/>--><!--</form>--></body></html>

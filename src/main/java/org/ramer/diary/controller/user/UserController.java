@@ -54,7 +54,7 @@ public class UserController{
     @Value("${diary.encrypt.strength}")
     private int ENCRYPT_STRENGTH;
 
-    @InitBinder
+    @InitBinder("user")
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(userValidator);
     }

@@ -12,8 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 异常拦截器
+ * 
  * @author ramer
- *
  */
 @ControllerAdvice
 @Slf4j
