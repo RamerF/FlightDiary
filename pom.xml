@@ -47,6 +47,22 @@
         <docker.image.prefix>ramer</docker.image.prefix>
     </properties>
     <dependencies>
+        <!-- springBoot-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+
+        </dependency>
+        <!-- email -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <!-- html模板 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-velocity</artifactId>
+        </dependency>
         <!--最新依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
