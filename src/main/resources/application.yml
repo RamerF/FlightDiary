@@ -59,7 +59,7 @@ diary:
   encrypt.strength: 10
   topic:
     page:
-      size: 36
+      size: 3
   topPeople:
     page:
       size: 6
@@ -67,8 +67,12 @@ diary:
     topic:
       page:
         size: 3
+  qiniu:
+    access: FYfmtmhBMAGZyxZothLB50hgn18an3T1PKLa4nVz
+    secret: YeX5dBtF1Gq2tA-35AosS22O9FalPglj5rRChPDR
+    bucketName: diary
   tags:
     xml:
       position: /xml/tags.xml
   page:
-    scroll: true
+    scroll: false
