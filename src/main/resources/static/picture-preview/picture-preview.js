@@ -5,7 +5,7 @@
      *  =========================================
      */
     $.fn.picPreview = function( opts ) {
-        var paras = $.extend( {
+        var _paras = $.extend( {
             /**
              * 用于存放文件数组的全局变量,必须指定.
              */
@@ -19,25 +19,35 @@
              */
             previewContainer : ".preview-container"
         } , opts || {} );
-        var _fileArr = paras.fileArr;
-        var previewContainer = paras.previewContainer;
-        var fileType = $( this );
+        var _fileArr = _paras.fileArr;
+        var _previewContainer = _paras.previewContainer;
+        var _fileType = $( this );
         $( this )
                 .change(
                         function() {
-                            if (_fileArr.indexOf( this.files ) === -1 && this.files != "") {
+                            var _exist = false;
+                            if (this.files[0] != "") {
+                                for (var i = 0; i < _fileArr.length; i++) {
+                                    if (_fileArr[i].name == this.files[0].name) {
+                                        _exist = true;
+                                        break;
+                                    }
+                                }
+                                if (_exist) {
+                                    return false;
+                                }
                                 _fileArr.push( this.files[0] );
                                 for (var i = 0; i < this.files.length; i++) {
-                                    var file = this.files[i];
-                                    var reader = new FileReader();
-                                    reader.readAsDataURL( file );
-                                    $( reader )
+                                    var _file = this.files[i];
+                                    var _reader = new FileReader();
+                                    _reader.readAsDataURL( _file );
+                                    $( _reader )
                                             .load(
                                                     function() {
-                                                        $( previewContainer )
+                                                        $( _previewContainer )
                                                                 .append(
                                                                         '<div class="preview"><input type="hidden" value="'
-                                                                                + file
+                                                                                + _file
                                                                                 + '" /><div class="trash-container"><i class="trash">×</i></div><img class="preview-pic" src="'
                                                                                 + this.result + '"></div>' );
                                                         $( ".preview" ).unbind();
@@ -52,7 +62,7 @@
                                                                             function() {
                                                                                 $( this ).remove();
                                                                             } );
-                                                                    fileType.val( "" );
+                                                                    _fileType.val( "" );
                                                                     _fileArr.splice( $.inArray( $( this ).parent()
                                                                             .prev( "input" ).val() , _fileArr ) , 1 );
                                                                 } );
