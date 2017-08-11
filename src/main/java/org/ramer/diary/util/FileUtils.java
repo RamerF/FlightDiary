@@ -55,7 +55,9 @@ public class FileUtils{
         User user = (User) session.getAttribute("user");
         String username = user.getUsername();
         String alias = user.getAlias();
-        String picture = topic.getPicture();
+        // TODO:  多图片支持
+        //        String picture = topic.getPicture();
+        String picture = "";
         String pictureName = picture.substring(picture.lastIndexOf(separator) + 1);
         log.debug("rootdir:\n\t" + rootdir + "\npictureName:\n\t" + pictureName);
         String realPath = rootdir + separator + username + separator + pictureName;
@@ -138,7 +140,8 @@ public class FileUtils{
             pictureUrl = "\\pictures" + separator + "createTopic" + separator + alias + separator + name + suffix;
         }
         if (head) {
-            pictureUrl = "\\pictures" + separator + "createTopic" + separator + username + separator + username + suffix;
+            pictureUrl = "\\pictures" + separator + "createTopic" + separator + username + separator + username
+                    + suffix;
             if (chn) {
                 pictureUrl = "\\pictures" + separator + "createTopic" + separator + alias + separator + alias + suffix;
             }

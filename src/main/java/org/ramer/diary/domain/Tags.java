@@ -1,8 +1,6 @@
 package org.ramer.diary.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,8 +14,6 @@ import java.util.Date;
 @Cacheable
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Tags{
 
     private static final long serialVersionUID = 1L;
@@ -44,7 +40,23 @@ public class Tags{
     @JoinColumn(name = "topic")
     private Topic topic;
     @CreationTimestamp
-    private Date createDate;
+    private Date createTime;
     @UpdateTimestamp
-    private Date updateDate;
+    private Date updateTime;
+
+    public Date getCreateTime() {
+        return (Date) createTime.clone();
+    }
+
+    public Date getUpdateTime() {
+        return (Date) updateTime.clone();
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = new Date(createTime.getTime());
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = new Date(updateTime.getTime());
+    }
 }

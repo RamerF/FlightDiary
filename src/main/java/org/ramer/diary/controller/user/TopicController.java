@@ -92,7 +92,8 @@ public class TopicController {
         }
         log.debug("保存图片");
         String pictureUrl = FileUtils.saveFile(file, session, false, StringUtils.hasChinese(user.getUsername()));
-        topic.setPicture(pictureUrl);
+        // TODO:  多图片支持
+//        topic.setPicture(pictureUrl);
         topic.setContent(content);
         topic.setDate(new Date());
         topic.setUser(user);

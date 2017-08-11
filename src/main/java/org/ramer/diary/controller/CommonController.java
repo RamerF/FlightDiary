@@ -85,6 +85,10 @@ public class CommonController{
     public String home(@RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, @SessionAttribute(name = "scrollInPage", required = false) String scrollInPage,
             HttpSession session) {
+        // 调试
+        User ramer = userService.getByName("ramer");
+        map.put("user", ramer);
+        //调试
         log.debug("主页");
         //初始化滚动翻页
         if (map.get("scrollInPage") == null) {

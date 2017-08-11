@@ -8,16 +8,20 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by RAMER on 5/26/2017.
+ *  TOPIC 套图
+ * Created by RAMER on 6/19/2017.
  */
 @Entity
 @Data
-public class Privilege{
+public class Albums{
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
+    private String url;
+    @ManyToOne
+    @JoinColumn(name = "topic")
+    private Topic topic;
     @CreationTimestamp
     private Date createTime;
     @UpdateTimestamp

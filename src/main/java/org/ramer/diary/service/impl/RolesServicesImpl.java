@@ -16,9 +16,21 @@ public class RolesServicesImpl implements RolesService{
     @Resource
     private RolesRepository rolesRepository;
 
+    @Transactional
+    @Override
+    public Roles saveOrUpdate(Roles roles) {
+        return rolesRepository.saveAndFlush(roles);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public Roles getByName(String name) {
         return rolesRepository.getByName(name);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public long countRole() {
+        return rolesRepository.count();
     }
 }

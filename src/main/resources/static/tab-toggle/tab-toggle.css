@@ -20,7 +20,7 @@
     -o-transition: all .3s;
     transition: all .3s;
     text-align: center;
-    padding: 10px;
+    padding: 20px;
     background: #00bcd4;
     color: white;
     cursor: pointer
@@ -32,13 +32,13 @@
 
 .tab-title li.active {
     background: white;
-    color: rgba(50, 50, 50, .87)
+    color: #757575
 }
 
 .tab-content {
     width: 80%;
     overflow: hidden;
-    padding: 10px;
+    padding: 4px;
     float: left
 }
 

@@ -1,12 +1,35 @@
 @CHARSET "UTF-8";
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/materialicons/v28/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
 
 body {
     min-width: 850px;
 }
 
-input[type='text'] {
-    display: inline;
-    border: none;
+.title {
+    height: 100%;
+    width: 100px;
+    background: url(/img/logo.png) -19px -14px !important;
 }
 
 input[type="submit"], input[type="reset"] {
@@ -15,53 +38,74 @@ input[type="submit"], input[type="reset"] {
     color: white;
 }
 
-.top {
-    top: 0px;
-    font-size: 2em;
-    position: fixed;
-    z-index: 10000;
-    overflow: hidden;
-    width: 100%;
-}
-
-.title {
-    text-align: right;
-    width: 55%;
-    float: left;
-    margin-top: 10px;
-}
-
 .about {
     text-align: right;
     font-size: .6em;
     margin: 15px 10px 0px;
 }
 
+.top {
+    line-height: 31px;
+    text-align: center;
+    font-size: 18px;
+    margin: 0 1%;
+    float: left;
+    /* width: 36%; */
+    /* min-width: 290px; */
+    height: 100%
+}
+
+/* 分享面板 */
 .category_panel {
     position: absolute;
-    height: 45px;
-    padding-top: 7px;
-    padding-bottom: 7px;
-    top: 55px;
+    height: 74px;
     width: 100%;
-    min-width: 850px;
-    box-shadow: 0px 3px 10px rgba(0, 0, 0, .1);
+    min-width: 750px;
+    background: #00BCD4;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.26)
+}
+
+.category_panel div, .category_panel ul {
+    background: transparent;
+    font-size: 22px;
+    line-height: 74px;
+    color: #fff
 }
 
 .category {
-    line-height: 32px;
     text-align: center;
-    font-size: 18px;
-    padding-left: 1%;
     float: left;
     width: 36%;
     height: 100%;
-    min-width: 310px;
-    margin: 0 auto;
+    min-width: 310px
 }
 
-.category span {
-    margin: auto 3%;
+ul.category li {
+    float: left;
+    list-style: none;
+    width: 25%;
+    height: 100%
+}
+
+.category_panel a {
+    color: rgba(255, 255, 255, 0.87);
+    display: block;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%
+}
+
+ul.category li {
+    float: left;
+    list-style: none;
+    width: 25%;
+    height: 100%;
+}
+
+.category_panel a:hover {
+    color: rgba(255, 255, 255, 1);
+    background: #00ACC1
 }
 
 .query {
@@ -69,18 +113,189 @@ input[type="submit"], input[type="reset"] {
     height: 100%;
     width: 29%;
     min-width: 250px;
-    position: relative;
-    margin: auto;
+    position: relative
 }
 
 input.querytopic {
+    color: rgba(255, 255, 255, .87);
     margin: 0;
+    width: 0%;
+    height: 50%;
+    outline: none;
+    border: none;
+    transform: translateY(-50%);
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -ms-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+    top: 50%;
+    position: absolute;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    cursor: pointer;
+    padding-left: 25px;
+    background: transparent;
+    border-bottom: 3px solid transparent
+}
+
+div.query i.material-icons {
+    line-height: 74px
+}
+
+input.extend-border-bottom {
+    transition: all .5s;
+    width: 100%;
+    border-bottom: 3px solid rgba(255, 255, 255, .87)
+}
+
+.choose-pic {
+    display: inline-block;
+    background: #00BCD4;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .26);
+    cursor: pointer;
+    color: white;
+    border-radius: 102px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 41px
+}
+
+input#topicPic:hover + label {
+    background: #00ACC1;
+    color: rgba(255, 255, 255, .87);
+    font-size: 40px
+}
+
+input[type='file'] {
+    display: none
+}
+
+.preview-container {
+    width: 100%;
+    float: left
+}
+
+.preview {
+    width: 30%;
+    margin: 10px 10px 0 0;
+    box-shadow: 1px 1px 18px -4px rgba(0, 0, 0, 0.52);
+    position: relative;
+    float: left
+}
+
+.trash-container {
+    opacity: 0;
+    position: absolute;
     width: 100%;
     height: 100%;
-    outline: none;
-    text-align: center;
-    border: none;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.61)
 }
+
+.trash {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 100%;
+    color: #ffffff;
+    font-size: 47px;
+    margin-left: -3px;
+    text-align: center
+}
+
+.opacitys {
+    opacity: 1
+}
+
+img.preview-pic {
+    width: 100%
+}
+
+textarea {
+    width: 100%;
+    height: 29px;
+    resize: none;
+    outline: none;
+    text-indent: 2em;
+    border: none;
+    border-bottom: 1px solid #9E9E9E;
+    line-height: 1.8em;
+    color: #9E9E9E
+}
+
+.tag-container li {
+    position: relative;
+    cursor: pointer;
+    float: left;
+    list-style: none;
+    margin: 5px;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.48);
+    background: #00BCD4;
+    color: white;
+    text-align: center;
+    text-shadow: 0px 0px 1px rgba(255, 255, 255, 0.53)
+}
+
+.tag-container li input {
+    display: none
+}
+
+.tag-container li.custom-container {
+    padding: 0
+}
+
+.tag-container li.add-custom-tag {
+    margin-left: -42px;
+    box-shadow: none;
+    cursor: pointer;
+    padding: 10px
+}
+
+.tag-container li.custom-container input {
+    display: inline-block;
+    margin: 0;
+    height: 39px;
+    border-radius: 0;
+    background: #00ACC1;
+    border: none;
+    color: white;
+    margin-right: 39px;
+    padding: 10px
+}
+
+.tab-container li label {
+    padding: 10px;
+    display: block
+}
+
+.tag-container li.publish-topic {
+    padding: 10px
+}
+
+.tag-container li input:checked + label:before {
+    position: absolute;
+    content: '✔';
+    height: 21px;
+    width: 21px;
+    top: -20%;
+    right: -5px;
+    color: #ffffff;
+    border-radius: 100px;
+    background: #00BCD4;
+}
+
+.tag-container li.add-custom-tag {
+    margin-left: -42px;
+    box-shadow: none;
+    cursor: pointer;
+    border-left: 1px solid #00BCD4
+}
+
+/* 分享面板 */
 
 .newTopic {
     background: url("/FlightDiary/pictures/new.png") no-repeat;
@@ -89,13 +304,14 @@ input.querytopic {
 }
 
 .signup {
-    line-height: 32px;
+    line-height: 31px;
     text-align: center;
     font-size: 18px;
+    padding-left: 1%;
     float: left;
-    width: 35%;
+    width: 10%;
     height: 100%;
-    min-width: 310px;
+    min-width: 100px;
     margin: 0 auto;
 }
 
@@ -114,7 +330,7 @@ input.querytopic {
 .user_panel {
     text-align: center;
     height: 100%;
-    line-height: 32px;
+    line-height: 31px;
     width: 33%;
     min-width: 286px;
     float: left;
@@ -160,27 +376,14 @@ span.username {
 }
 
 div.topic_panel {
-    display: none;
-    width: 400px;
-    min-width: 400px;
+    /*display: none;*/
+    width: 520px;
+    min-width: 520px;
     margin-top: 101px;
     position: absolute;
-    text-align: center;
     z-index: 100;
     right: 16%;
-    box-shadow: 0px 3px 6px #607D8B;
-    text-align: right;
-}
-
-.topic_content {
-    width: 100%;
-    resize: none;
-    text-indent: 2em;
-    border: none;
-    border-bottom: 1px solid #607D8B;;
-    line-height: 1.8em;
-    margin-bottom: 10px;
-    outline: none;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, .26)
 }
 
 .tool {
@@ -230,16 +433,6 @@ div#addTime {
     text-shadow: 0 1px 2px rgba(0, 0, 0, .1);
     border: none;
     background: #eee;
-}
-
-.preview {
-    position: absolute;
-    margin-top: -52px;
-    background: none;
-    display: none;
-    width: 131px;
-    height: 42px;
-    overflow: hidden;
 }
 
 .preview_pic {
@@ -387,25 +580,4 @@ div#addTime {
 
 form#tagForm {
     display: none;
-}
-
-a {
-    position: relative;
-}
-
-a::before {
-    position: absolute;
-    content: attr(data-toggle);
-    opacity: 0;
-    color: rgba(61, 80, 76, 0.63);
-    transform: scale(1.1) rotate(8deg) translateX(10px) translateY(-10px);
-    transition: all .5s;
-}
-
-a:hover::before {
-    position: absolute;
-    opacity: 1;
-    transform: scale(1) rotate(0deg) translateX(0px) translateY(0px);
-    color: #FFFFFF;
-/ / text-shadow: 0 px 0 px 0 px rgb(0, 0, 0);
 }

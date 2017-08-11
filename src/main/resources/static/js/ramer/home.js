@@ -138,7 +138,7 @@ $( function() {
         var number = new Number( $( "#number" ).val() ) + 1 - 1;
         if (number < 1) {
             layer.msg( "报告主人,上一页已结婚	(^v^)" , {
-                time : 1800
+                time : 0
             } );
             return false;
         }
@@ -190,9 +190,6 @@ $( function() {
         // 移除新动态标识
         $( "#newTopic" ).removeClass( "src" , "newTopic" );
     } );
-    /* 文本域自适应 */
-    $( ".topic_content" ).TextAreaExpander( 117 , 250 );
-
     /* 显示用户链接面板 */
     $( "#showProfile" ).click( function() {
         $( "#personal" ).show( 1000 );
@@ -365,5 +362,111 @@ $( function() {
             // alert("停止滚动");
         }
     }
+    /*
+    * =====================================================
+    *                                                 THE TOPIC CONTAINER
+    * =====================================================
+    * */
+    Date.prototype.format = function( format ) {
+        var o = {
+            "M+" : this.getMonth() + 1, //month
+            "d+" : this.getDate(), //day
+            "h+" : this.getHours(), //hour
+            "m+" : this.getMinutes(), //minute
+            "s+" : this.getSeconds(), //second
+            "q+" : Math.floor( (this.getMonth() + 3) / 3 ), //quarter
+            "S" : this.getMilliseconds()
+        //millisecond
+        }
+        if (/(y+)/.test( format )) {
+            format = format.replace( RegExp.$1 , (this.getFullYear() + "").substr( 4 - RegExp.$1.length ) );
+        }
+        for ( var k in o) {
+            if (new RegExp( "(" + k + ")" ).test( format )) {
+                format = format.replace( RegExp.$1 , RegExp.$1.length == 1 ? o[k] : ("00" + o[k])
+                        .substr( ("" + o[k]).length ) );
+            }
+        }
+        return format;
+    }
+    fileArr = new Array();
+    // 文本域自动扩展
+    $( ".topic_content" ).TextAreaExpander( 29 , 500 );
+    // tab 切换
+    $( ".tab-container" ).tabToggle();
+    // 图片预览
+    $( "#topicPic" ).picPreview( {
+        fileArr : fileArr
+    } );
+    // 添加自定义标签
+    $( ".add-custom-tag" ).click(
+            function() {
+                var val = $( "#custom-tag" ).val();
+                if (val != null && $.trim( val ) != "") {
+                    console.log( "<li>" + val + "</li>" );
+                    var liNode = $( "<li></li>" );
+                    var inputNode = $( "<input type='checkbox' name='tags' id='" + val
+                            + new Date().format( "yyyyMMddhhmmss" ) + "'  value='" + val + "'/>" );
+                    var labelNode = $( "<label for='" + val + new Date().format( "yyyyMMddhhmmss" ) + "'>" + val
+                            + "</label>" );
+                    liNode.append( inputNode ).append( labelNode );
+                    $( this ).prev().before( liNode );
+                }
+            } );
+    // 获取上传token
+    var token = "";
+    var downDomain = "";
+    $.get( "/upload/token" , {} , function( result ) {
+        token = result.uptoken;
+        downDomain = result.downDomain;
+    } );
+    // 发布Topic
+    var fileRemoteUrl = new Array();
+    $( "#publish-topic" ).click( function() {
+        // Topic 标签集
+        var tags = getTags();
+        // 上传文件到七牛
+        var formData;
+        var files = fileArr;
+        console.log( "file arr: " + fileArr );
+        for (var i = 0; i < files.length; i++) {
+            formData = new FormData();
+            formData.append( "file" , files[i] );
+            var fileName = files[i].name.substr( 0 , files[i].name.lastIndexOf( "." ) );
+            var suffix = files[i].name.substr( fileName.length );
+            var key = fileName + "-" + new Date().format( "yyyyMMddhhmmss" ) + suffix;
+            formData.append( "key" , key );
+            formData.append( "token" , token );
+            console.log( "保存文件名: " + key );
+            $.ajax( {
+                url : "http://up-z2.qiniu.com/",
+                type : "post",
+                async : false,
+                data : formData,
+                processData : false,
+                contentType : false
+            } ).done( function( res ) {
+                fileRemoteUrl.push( downDomain + res.key );
+                console.log( "文件上传完成: " + downDomain + res.key )
+            } ).fail( function( res ) {
+                alert( "无法保存图片,请稍后再试" )
+            } );
+        }
+        console.log( "Topic 信息: " );
+        console.log( "files[]: " + fileRemoteUrl );
+        console.log( "tags[]: " + tags );
+        return false;
+    } );
 
+    function getTags() {
+        var tags = new Array();
+        $( "input[name='tags']:checked" ).each( function() {
+            tags.push( $( this ).val() );
+        } );
+        return tags;
+    }
+    $( "input.querytopic" ).bind( "blur focus" , function() {
+        var extendStyle = "extend-border-bottom";
+        $( this ).toggleClass( extendStyle );
+    } )
 } )
