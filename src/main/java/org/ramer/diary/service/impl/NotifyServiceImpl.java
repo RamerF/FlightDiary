@@ -1,20 +1,18 @@
 package org.ramer.diary.service.impl;
 
-import java.util.Date;
-import java.util.Set;
-
 import org.ramer.diary.domain.Notify;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.repository.NotifyRepository;
 import org.ramer.diary.service.NotifyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.Set;
 
 @Service
-public class NotifyServiceImpl implements NotifyService {
+public class NotifyServiceImpl implements NotifyService{
 
     @Resource
     private NotifyRepository notifyRepository;
@@ -50,8 +48,7 @@ public class NotifyServiceImpl implements NotifyService {
         notify.setNotifiedUser(followUser);
         notify.setUser(user);
         notifyRepository.saveAndFlush(notify);
-        return true;
-
+        return notify.getId() != null;
     }
 
     @Override

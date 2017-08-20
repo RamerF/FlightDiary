@@ -35,7 +35,7 @@ body {
 
 div {
     background: #FFFFFF
-    /*  		text-transform:	capitalize;	 */
+    /*  		text-transform:	capitalize;;;;; */;
 }
 
 input[type='text'], input[type='password'] {
@@ -65,23 +65,19 @@ textarea {
     color: rgba(77, 171, 245, 0.75)
 }
 
-a:VISITED {
-    text-decoration: none;
-    color: rgba(61, 80, 76, 0.63)
-}
-
-a:hover {
-    color: #DDDEDD
+a:focus {
+    opacity: .5;
+    outline: 0
 }
 
 a {
     white-space: nowrap;
-    color: rgba(61, 80, 76, 0.63);
+    color: #424242;
     text-decoration: none
 }
 
 span {
-    color: rgba(61, 80, 76, 0.63)
+    color: #424242
 }
 
 input::-webkit-input-placeholder {

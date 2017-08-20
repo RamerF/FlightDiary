@@ -81,7 +81,7 @@ public class VisitController{
             throw new DiaryException("您访问的用户不存在");
         }
         // && UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))
-        if (UserUtils.checkLogin(session)) {
+        if (UserUtils.checkLogin()) {
             log.debug("已登录,写入信息");
             if (id == user.getId()) {
                 session.setAttribute("inOtherPage", false);
@@ -131,7 +131,7 @@ public class VisitController{
             throw new DiaryException("您访问的页面已经乘坐2333···号灰船逃离这个星球了 -.-!");
         }
         User user = (User) session.getAttribute("user");
-        if (UserUtils.checkLogin(session)) {
+        if (UserUtils.checkLogin()) {
             log.debug("已登录,写入信息");
             //获取收藏信息
             List<Integer> favourites = favouriteToList(user, topic.getUser(), session);
@@ -157,7 +157,7 @@ public class VisitController{
      */
 
     public List<Integer> favouriteToList(User user, User other, HttpSession session) {
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             return new ArrayList<>();
         }
         List<Integer> list = favouriteService.getFavouriteTopicIds(user, other);
@@ -177,7 +177,7 @@ public class VisitController{
      * @return list中存储的是当前用户点过赞的所有,当前被浏览用户,的分享的id.
      */
     public List<Integer> praiseToList(User user, User other, HttpSession session) {
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             return new ArrayList<>();
         }
         List<Integer> list = praiseService.getPraiseTopicIds(user, other);

@@ -59,7 +59,10 @@ diary:
   encrypt.strength: 10
   topic:
     page:
-      size: 3
+      size: 9
+    publish:
+      tags:
+        size: 20
   topPeople:
     page:
       size: 6

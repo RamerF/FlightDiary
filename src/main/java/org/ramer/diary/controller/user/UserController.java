@@ -73,7 +73,7 @@ public class UserController{
 
         session.setAttribute("inOtherPage", false);
         session.setAttribute("inTopicPage", false);
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             throw new DiaryException("您的登录已过期,请重新登录");
         }
         // 避免懒加载异常,重新获取user
@@ -115,7 +115,7 @@ public class UserController{
      */
     @GetMapping("/user/forwardModifyPassword")
     public String forwardModifyPassword(HttpSession session) {
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
             throw new DiaryException("您还未登录或登录已过期");
         }
@@ -162,7 +162,7 @@ public class UserController{
      */
     @GetMapping("/user/forwardModifyEmail")
     public String forwardModifyEmail(HttpSession session) {
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             throw new DiaryException("您的登录已过期,请重新登录");
         }
         return "modify_email";
@@ -180,7 +180,7 @@ public class UserController{
     @PostMapping("/user/modifyEmail/sendMail")
     public void sendEmailToModifyEmail(@RequestParam("newEmail") String newEmail, User user, HttpSession session,
             HttpServletResponse response) throws IOException {
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
             throw new DiaryException("您的登录已过期,请重新登录");
         }

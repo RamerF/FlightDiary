@@ -3,21 +3,18 @@ package org.ramer.diary.controller.user;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.domain.Topic;
 import org.ramer.diary.domain.User;
+import org.ramer.diary.domain.dto.CommonResponse;
 import org.ramer.diary.exception.DiaryException;
-import org.ramer.diary.service.FollowService;
-import org.ramer.diary.service.NotifyService;
-import org.ramer.diary.service.TopicService;
+import org.ramer.diary.service.*;
 import org.ramer.diary.util.FileUtils;
 import org.ramer.diary.util.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +24,7 @@ import java.util.Map;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
-public class TopicController {
+public class TopicController{
     @Resource
     private FollowService followService;
     @Resource
@@ -70,51 +67,18 @@ public class TopicController {
      * 用户发表分享.
      *
      * @param content 日记文本
-     * @param tags the tags
-     * @param personal the personal
-     * @param file the file
-     * @param session the session
      * @return 在主页发表分享返回主页,在个人页面发表分享返回个人页面
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @PostMapping("/publish")
-    public String createTopic(@RequestParam("content") String content, @RequestParam(value = "tags") String tags,
-                              @RequestParam(value = "personal", required = false, defaultValue = "") String personal,
-                              @RequestParam("picture") MultipartFile file, HttpSession session) throws IOException {
-
-        User user = (User) session.getAttribute("user");
-        log.debug("发表日记: \n\t用户名: " + user.getUsername());
-        Topic topic = new Topic();
-        //  当用户上传文件时保存文件
-        if (file.isEmpty()) {
-            log.debug("未选择图片");
-            throw new DiaryException("请选择一张图片");
-        }
-        log.debug("保存图片");
-        String pictureUrl = FileUtils.saveFile(file, session, false, StringUtils.hasChinese(user.getUsername()));
-        // TODO:  多图片支持
-//        topic.setPicture(pictureUrl);
-        topic.setContent(content);
-        topic.setDate(new Date());
-        topic.setUser(user);
-        topic.setUpCounts(0);
-
-        //    考虑到用户输入的各种问题，先处理tag才能保存
-        if (tags.contains("；")) {
-            //如果;在开头或结尾直接去掉
-            tags = tags.startsWith(";") ? tags.substring(1) : tags;
-            tags = tags.endsWith(";") ? tags.substring(0, tags.length() - 1) : tags;
-            tags = tags.replace("；", ";");
-        }
-        // TODO: 处理tags
-        //        topic.setTagses(tags);
+    @PostMapping("/user/publish")
+    @ResponseBody
+    public CommonResponse publishTopic(@RequestParam("content") String content, @RequestParam("tags[]") String[] tags,
+            @RequestParam("fileUrls[]") String[] fileUrls, @SessionAttribute("user") User user, HttpSession session) {
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "  发表新推文: [{}]", user.getUsername());
         //保存用户经历
-        topic = topicService.publish(topic);
-        //为空说明sql执行出错
-        if (topic.getId() == null) {
-            //删除文件，写入出错信息
-            FileUtils.deleteFile(topic, session, StringUtils.hasChinese(user.getUsername()));
-            throw new DiaryException("系统被程序猿玩儿坏啦，当前无法发表分享 ！！！");
+        Topic topic = topicService.publish(user, content, tags, fileUrls);
+        if (topic == null) {
+            return new CommonResponse(false, "系统繁忙,请稍后再试");
         }
         //    获取所有关注'我'的人
         List<User> followUsers = followService.getFollowUser(user);
@@ -125,10 +89,7 @@ public class TopicController {
             log.debug("通知用户: " + followUser.getId());
             notifyService.notifyFollowUser(user, followUser, message);
         }
-        if (personal.equals("true")) {
-            return "redirect:/user/personal";
-        }
-        return "redirect:/home";
+        return new CommonResponse(true, "发表成功");
     }
 
     @GetMapping("/user/upload")

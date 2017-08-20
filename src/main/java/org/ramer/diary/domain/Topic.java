@@ -40,7 +40,7 @@ public class Topic implements Serializable{
     //  标签
     @OrderBy("hot desc")
     @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "topic")
-    private List<Tags> tagses;
+    private Set<Tags> tagses;
     /** 点赞次数. */
     @Column
     private Integer upCounts;

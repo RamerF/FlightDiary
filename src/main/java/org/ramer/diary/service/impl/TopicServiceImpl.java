@@ -1,44 +1,67 @@
 package org.ramer.diary.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
+import lombok.extern.slf4j.Slf4j;
+import org.ramer.diary.domain.*;
 import org.ramer.diary.repository.TopicRepository;
-import org.ramer.diary.service.TopicService;
+import org.ramer.diary.service.*;
 import org.ramer.diary.util.Pagination;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.annotation.Resource;
+import java.util.*;
 
 @Slf4j
 @Service
-public class TopicServiceImpl implements TopicService {
-
+public class TopicServiceImpl implements TopicService{
     @Resource
     private TopicRepository topicRepository;
+    @Resource
+    private AlbumsService albumsService;
+    @Resource
+    private TagsService tagsService;
 
     @Override
     @Transactional
-    public Topic publish(Topic topic) {
-        Topic t = new Topic();
-        try {
-            t = topicRepository.save(topic);
-        } catch (Exception exception) {
-            return new Topic();
+    public Topic publish(User user, String content, String[] tags, String[] fileUrls) {
+        Topic topic = new Topic();
+        topic.setContent(content);
+        topic.setDate(new Date());
+        topic.setUser(user);
+        topic.setUpCounts(0);
+        Set<Tags> tagsList = new HashSet<>();
+        topicRepository.saveAndFlush(topic);
+        // 保存标签: 1. 已有: 标签热度加一,2. 没有: 新建标签
+        for (String tag : tags) {
+            Tags byName = tagsService.getByName(tag);
+            if (byName == null) {
+                byName = new Tags();
+                byName.setHot(1);
+                byName.setTagName(tag);
+            } else {
+                byName.setHot(byName.getHot() + 1);
+            }
+            tagsService.saveOrUpdate(byName);
+            tagsList.add(byName);
         }
-        return t;
+        topic.setTagses(tagsList);
+        List<Albums> albumsList = new ArrayList<>();
+        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "  topic图片: [{}]", fileUrls);
+
+        // 保存图片地址
+        for (String fileUrl : fileUrls) {
+            Albums albums = new Albums();
+            albums.setTopic(topic);
+            albums.setUrl(fileUrl);
+            albumsService.save(albums);
+            albumsList.add(albums);
+        }
+        topic.setAlbums(albumsList);
+        topicRepository.saveAndFlush(topic);
+        return topic;
     }
 
     @Override

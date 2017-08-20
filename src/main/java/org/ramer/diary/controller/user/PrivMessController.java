@@ -46,7 +46,7 @@ public class PrivMessController{
             HttpSession session) throws IOException {
         log.debug("发送私信");
         response.setCharacterEncoding("utf-8");
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             response.getWriter().write("需要先登录才能说悄悄话哦");
             log.debug("未登录");
             return;

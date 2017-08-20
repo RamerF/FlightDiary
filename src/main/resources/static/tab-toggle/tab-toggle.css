@@ -8,9 +8,10 @@
 }
 
 .tab-title {
+    width: 12%;
+    min-width: 45px;
     float: left;
-    overflow: hidden;
-    width: 20%
+    overflow: hidden
 }
 
 .tab-title li {
@@ -20,7 +21,7 @@
     -o-transition: all .3s;
     transition: all .3s;
     text-align: center;
-    padding: 20px;
+    padding: 20px 10px;
     background: #00bcd4;
     color: white;
     cursor: pointer
@@ -32,11 +33,12 @@
 
 .tab-title li.active {
     background: white;
-    color: #757575
+    color: #424242
 }
 
 .tab-content {
-    width: 80%;
+    width: 88%;
+    max-width: calc(100% - 45px);
     overflow: hidden;
     padding: 4px;
     float: left

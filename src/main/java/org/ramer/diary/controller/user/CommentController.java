@@ -54,7 +54,7 @@ public class CommentController{
     public String comment(@PathVariable("topic_id") Integer topic_id, @RequestParam("content") String content,
             Map<String, Object> map, HttpSession session) {
         log.debug("用户评论");
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             User user = userService.getById(((User) session.getAttribute("user")).getId());
             throw new DiaryException("要先登录,才能评论哦 !");
         }
@@ -133,7 +133,7 @@ public class CommentController{
     @PutMapping("/user/topic/comment/reply/{comment_id}")
     public String replyComment(@PathVariable("comment_id") String id, @RequestParam("content") String content,
             User user, HttpSession session, HttpServletResponse response) {
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
             throw new DiaryException("您还未登录,或登录已过期,请登录");
         }

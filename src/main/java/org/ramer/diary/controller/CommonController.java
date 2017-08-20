@@ -45,15 +45,18 @@ public class CommonController{
     private NotifyService notifyService;
     @Resource
     private FollowService followService;
+    @Resource
+    private TagsService tagsService;
 
-    //主页面
-    private final String HOME = PageConstant.HOME;
     //初始化在他人主页变量
     private boolean inOtherPage = false;
     // 初始化在分享页面变量
     private boolean inTopicPage = false;
     //数据格式错误信息
     private final String WRONG_FORMAT = MessageConstant.WRONG_FORMAT;
+    // 发表分享时显示的tags数
+    @Value("${diary.topic.publish.tags.size}")
+    private int TAGS_PUBLISH_SIZE;
     //分享页面大小
     @Value("${diary.topic.page.size}")
     private int TOPIC_PAGE_SIZE;
@@ -78,18 +81,15 @@ public class CommonController{
      *
      * @param pageNum 页号
      * @param map the map
-     * @param session the session
      * @return 引导到主页
      */
     @GetMapping("/home")
     public String home(@RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, @SessionAttribute(name = "scrollInPage", required = false) String scrollInPage,
-            HttpSession session) {
-        // 调试
-        User ramer = userService.getByName("ramer");
-        map.put("user", ramer);
-        //调试
-        log.debug("主页");
+            @SessionAttribute(value = "topics", required = false) Page<Topic> oldTopics,
+            @SessionAttribute(value = "user", required = false) User user) {
+        List<Tags> tagsPage = tagsService.getTagsPage(0, TAGS_PUBLISH_SIZE);
+        map.put("tags", tagsPage);
         //初始化滚动翻页
         if (map.get("scrollInPage") == null) {
             map.put("scrollInPage", SCROLL_IN_PAGE);
@@ -99,8 +99,6 @@ public class CommonController{
         map.put("inOtherPage", inOtherPage);
         map.put("inTopicPage", inTopicPage);
         //当页面页号属于人为构造时，用于判断页号是否存在
-        @SuppressWarnings("unchecked")
-        Page<Topic> oldTopics = (Page<Topic>) session.getAttribute("topics");
         try {
             page = Integer.parseInt(pageNum);
             if (page < 1) {
@@ -116,8 +114,7 @@ public class CommonController{
         //记录最新的topicid，用于判断是否有新动态
         map.put("topicCount", topicService.getCount());
         map.put("topics", topics);
-        if (UserUtils.checkLogin(session)) {
-            User user = (User) session.getAttribute("user");
+        if (UserUtils.checkLogin()) {
             //获取用户统计数据
             int notifiedNumber = notifyService.getNotifiedNumber(user);
             int topicNumber = topicService.getTopicNumber(user);
@@ -130,14 +127,14 @@ public class CommonController{
         //清除访问的临时用户信息
         map.remove("other");
         map.remove("topic");
-        session.removeAttribute("details");
+        map.remove("details");
         //  标识为显示分享分类
-        map.put("showTopic", "true");
+        map.put("showTopic", true);
         //  取消标识为达人分类
-        map.put("showTopPeople", "false");
+        map.put("showTopPeople", false);
         //  取消标识为热门标签分类
-        map.put("showPopularTags", "false");
-        return HOME;
+        map.put("showPopularTags", false);
+        return PageConstant.HOME;
     }
 
     /**
@@ -172,7 +169,7 @@ public class CommonController{
         //获取分页分享
         Page<Topic> topics = topicService.getTopicsPageOrderByFavourite(page, TOPIC_PAGE_SIZE);
         map.put("topics", topics);
-        if (UserUtils.checkLogin(session)) {
+        if (UserUtils.checkLogin()) {
             User user = (User) session.getAttribute("user");
             //获取用户统计数据
             int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -193,7 +190,7 @@ public class CommonController{
         map.put("showTopPeople", "false");
         //    取消标识为热门标签分类
         map.put("showPopularTags", "false");
-        return HOME;
+        return PageConstant.HOME;
     }
 
     /**
@@ -221,7 +218,7 @@ public class CommonController{
         //    获取达人的分页信息
         Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLE_PAGE_SIZE);
         map.put("topPeoples", topPeoples);
-        if (UserUtils.checkLogin(session)) {
+        if (UserUtils.checkLogin()) {
             User user = (User) session.getAttribute("user");
             //获取用户统计数据
             int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -241,7 +238,7 @@ public class CommonController{
         map.put("showTopic", "false");
         //    取消标识为热门标签分类
         map.put("showPopularTags", "false");
-        return HOME;
+        return PageConstant.HOME;
     }
 
     /**
@@ -278,7 +275,7 @@ public class CommonController{
         } catch (Exception e) {
             page = 1;
         }
-        if (UserUtils.checkLogin(session)) {
+        if (UserUtils.checkLogin()) {
             User user = (User) session.getAttribute("user");
             //获取用户统计数据
             int notifiedNumber = notifyService.getNotifiedNumber(user);
@@ -316,7 +313,7 @@ public class CommonController{
         map.put("showTopic", "false");
         //    标识为热门标签分类
         map.put("showPopularTags", "true");
-        return HOME;
+        return PageConstant.HOME;
     }
 
     /**

@@ -43,7 +43,7 @@ public class FavouriteController{
     public void favourite(@PathVariable("topic_id") Integer topic_id, User user, HttpServletResponse response,
             HttpSession session) throws IOException {
         response.setCharacterEncoding("UTF-8");
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             response.getWriter().write("麻麻说没登录不能收藏哒 !");
             return;
         }

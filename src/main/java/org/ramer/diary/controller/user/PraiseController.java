@@ -48,7 +48,7 @@ public class PraiseController{
             HttpServletResponse response, HttpSession session) throws IOException {
         response.setCharacterEncoding("utf-8");
         User user = (User) map.get("user");
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             //            if (!UserUtils.multiLogin(session, u)) {
             //                response.getWriter().write("账号异地登陆！ 当前登陆失效，如果不是本人操作，请及时修改密码 !");
             //                return;
@@ -82,7 +82,7 @@ public class PraiseController{
             HttpSession session) throws IOException {
         log.debug("取消点赞");
         response.setCharacterEncoding("utf-8");
-        if (!UserUtils.checkLogin(session)) {
+        if (!UserUtils.checkLogin()) {
             User u = userService.getById(((User) session.getAttribute("user")).getId());
             throw new DiaryException("没登录的哦");
         }

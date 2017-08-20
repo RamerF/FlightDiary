@@ -288,6 +288,7 @@ $( function() {
         var propertyNum = propertyStr.substring( 0 , propertyStr.indexOf( "p" ) );
         return propertyNum;
     }
+
     console.log( "支持滚动翻页： " + (scrollInPage == true) );
     if (scrollInPage == true) {
         // 滚动条滚动时记录滚动条高度,判断滚动条是否停止滚动，滑动到底部翻页
@@ -353,6 +354,7 @@ $( function() {
             return false;
         }
     }
+
     // 测试滚动条是否滚动
     function checkScroll() {
         if ($( document ).scrollTop() == scroll) {
@@ -362,11 +364,12 @@ $( function() {
             // alert("停止滚动");
         }
     }
+
     /*
-    * =====================================================
-    *                                                 THE TOPIC CONTAINER
-    * =====================================================
-    * */
+     * =====================================================
+     *                                               THE TOPIC CONTAINER
+     * =====================================================
+     * */
     Date.prototype.format = function( format ) {
         var o = {
             "M+" : this.getMonth() + 1, //month
@@ -425,6 +428,7 @@ $( function() {
     $( "#publish-topic" ).click( function() {
         // Topic 标签集
         var tags = getTags();
+        var content = $( "#topicContent" ).val();
         // 上传文件到七牛
         var formData;
         var files = fileArr;
@@ -455,6 +459,20 @@ $( function() {
         console.log( "Topic 信息: " );
         console.log( "files[]: " + fileRemoteUrl );
         console.log( "tags[]: " + tags );
+        console.log( "content: " + content );
+        $.post( "/user/publish" , {
+            "tags[]" : tags,
+            "content" : content,
+            "fileUrls[]" : fileRemoteUrl,
+            "_csrf" : $( "#_csrf" ).val()
+        } , function( data ) {
+            if (data.result == true) {
+                layer.msg( "发表成功" , {
+                    time : 1800
+                } )
+                window.location.reload();
+            }
+        } );
         return false;
     } );
 
@@ -465,6 +483,7 @@ $( function() {
         } );
         return tags;
     }
+
     $( "input.querytopic" ).bind( "blur focus" , function() {
         var extendStyle = "extend-border-bottom";
         $( this ).toggleClass( extendStyle );
