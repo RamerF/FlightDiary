@@ -190,22 +190,6 @@ $( function() {
         // 移除新动态标识
         $( "#newTopic" ).removeClass( "src" , "newTopic" );
     } );
-    /* 显示用户链接面板 */
-    $( "#showProfile" ).click( function() {
-        $( "#personal" ).show( 1000 );
-    } );
-    $( "#personal" ).mouseleave( function() {
-        $( "#personal" ).hide( 1000 );
-    } );
-    /* 用户发表分享面板 */
-    $( "#saySomething" ).click( function() {
-        if ($( "#topic_panel" ).is( ":visible" )) {
-            $( "#preview" ).css( "display" , "none" );
-            $( "#upPic" ).attr( "value" , "" );
-            $( "#preview" ).html( "" );
-        }
-        $( "#topic_panel" ).toggle( 1000 );
-    } );
     // 隐藏分享面板
     $( ".hiddenTopic" ).click( function() {
         $( "#topic_panel" ).hide( 1000 );
@@ -213,16 +197,6 @@ $( function() {
         $( "#preview" ).html( '<span></span>' );
         $( "#upPic" ).attr( "value" , "" );
         $( "#preview" ).html( "" );
-    } );
-    /* 图片预览 */
-    $( "#upPic" ).change( function() {
-        var file = this.files[0];
-        var reader = new FileReader();
-        reader.readAsDataURL( file );
-        $( reader ).load( function() {
-            $( "#preview" ).css( "display" , "block" );
-            $( "#preview" ).html( '<img	class="preview_pic"	src="' + this.result + '">' );
-        } )
     } );
     // 取消显示更多标签
     $( "html" ).click( function( e ) {

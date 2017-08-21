@@ -71,7 +71,10 @@ input[type="submit"], input[type="reset"] {
 }
 
 div.topic_panel {
-    width: 100%
+    width: 100%;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none
 }
 
 .user_panel span {
@@ -239,13 +242,13 @@ input.extend-border-bottom {
     height: 40px;
     width: 40px;
     line-height: 39px;
-    font-size: 39px;
+    font-size: 39px
 }
 
 .choose-pic:hover {
     background: #00ACC1;
     color: rgba(255, 255, 255, .87);
-    font-size: 39px;
+    font-size: 39px
 }
 
 input[type='file'] {
@@ -402,23 +405,48 @@ textarea {
     right: 10px;
 }
 
-.user_link {
-    display: none;
-    position: absolute;
-    left: 77%;
-    text-align: left;
-    margin-top: 101px;
-    z-index: 10;
-    padding: 10px;
-    box-shadow: 0px 3px 6px #607D8B;
+section.publish-section {
+    overflow: hidden;
+    width: 80%;
+    float: left
 }
 
-.user_link div {
-    padding: 10px 0px;
+section.user-section {
+    overflow: hidden;
+    width: 20%;
+    float: left;
+    border-left: 1px solid #eee
 }
 
-.user_link div span {
-    margin-left: 50px;
+ul.user-link {
+    width: 100%
+}
+
+ul.user-link li {
+    font-family: "Microsoft YaHei";
+    font-size: 13px;
+    border-bottom: 1px solid #eee;
+    border-top: 1px solid transparent;
+    padding: 5px 20px
+}
+
+ul.user-link li:hover {
+    color: rgba(0, 0, 0, .26);
+    background: #eee
+}
+
+ul.user-link li:last-of-type {
+    border-bottom: none
+}
+
+ul.user-link li i {
+    float: left;
+    font-size: 18px;
+    margin-right: 5px
+}
+
+ul.user-link li span {
+    float: right
 }
 
 .container {

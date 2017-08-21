@@ -4,7 +4,7 @@
 .tab-container {
     transition: all .5s;
     overflow: hidden;
-    box-shadow: 0px 0px 51px -11px rgba(0, 0, 0, 0.47)
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.26)
 }
 
 .tab-title {

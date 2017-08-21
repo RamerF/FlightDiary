@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class CustomUserService implements UserDetailsService {
+public class CustomUserService implements UserDetailsService{
     @Resource
     private UserService userService;
     @Resource
@@ -64,15 +64,22 @@ public class CustomUserService implements UserDetailsService {
         Roles roles = new Roles();
         roles.setName("ROLE_USER");
         List<Privilege> privileges = new ArrayList<>();
-        Privilege privilege = new Privilege();
+        Privilege userPrivilege = new Privilege();
         // 用户资源访问权限
-        privilege.setName("user:*");
-        privileges.add(privilege);
+        userPrivilege.setName("user:*");
+        privileges.add(userPrivilege);
         roles.setPrivileges(privileges);
-
-        roles.setName("ROLE_ADMIN");
+        rolesService.saveOrUpdate(roles);
+        privilegeService.saveBatch(privileges);
         // 管理员资源访问权限
-        privilege.setName("global:*");
-        //管理员角色
+        roles = new Roles();
+        roles.setName("ROLE_ADMIN");
+        Privilege adminPrivilege = new Privilege();
+        adminPrivilege.setName("global:*");
+        privileges = new ArrayList<>();
+        privileges.add(adminPrivilege);
+        roles.setPrivileges(privileges);
+        rolesService.saveOrUpdate(roles);
+        privilegeService.saveBatch(privileges);
     }
 }

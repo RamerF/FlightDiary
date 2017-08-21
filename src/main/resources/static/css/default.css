@@ -28,14 +28,17 @@ fieldset, legend, input, textarea, p, blockquote, th, td {
 }
 
 body {
-    text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px;
+    /*text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px;*/
     background: rgba(255, 255, 255, 1);
     transition: all .6s
 }
 
+ul li {
+    list-style-type: none
+}
+
 div {
     background: #FFFFFF
-    /*  		text-transform:	capitalize;;;;; */;
 }
 
 input[type='text'], input[type='password'] {
