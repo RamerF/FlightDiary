@@ -326,7 +326,7 @@ public class CommonController{
      */
     @PostMapping(value = "/sign_in")
     @ResponseBody
-    public String userLogin(User user, Map<String, Object> map, HttpSession session, Principal principal) {
+    public CommonResponse userLogin(User user, Map<String, Object> map, HttpSession session, Principal principal) {
         user.setSessionid(session.getId());
         String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
         if (user.getUsername().matches(regex)) {
@@ -334,13 +334,14 @@ public class CommonController{
             user.setEmail(EncryptUtil.execEncrypt(user.getUsername()));
             user.setUsername(null);
         }
-        User user2 = userService.getByName(principal.getName());
-        if (user2.getId() != null) {
-            map.put("user", user2);
-            session.setAttribute("user", user2);
-            return "success";
+        User u = userService.getByName(principal.getName());
+        if (u != null && u.getId() != null) {
+            map.put("user", u);
+            session.setAttribute("user", u);
+            return new CommonResponse(true, "登录成功");
         }
-        return "error";
+        session.removeAttribute("user");
+        return new CommonResponse(false, "用户名或密码有误");
     }
 
     /**

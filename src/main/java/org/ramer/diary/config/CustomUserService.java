@@ -2,8 +2,6 @@ package org.ramer.diary.config;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.domain.Privilege;
-import org.ramer.diary.domain.Roles;
 import org.ramer.diary.service.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
@@ -29,13 +27,11 @@ public class CustomUserService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (rolesService.countRole() < 1) {
-            initRoleAndPrivilege();
-        }
         log.debug(" 登录: {}", username);
         org.ramer.diary.domain.User user = userService.getByName(username);
         if (user == null) {
-            throw new UsernameNotFoundException("用户名不存在");
+            return new org.springframework.security.core.userdetails.User(username, "",
+                    new ArrayList<SimpleGrantedAuthority>());
         }
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> {
@@ -59,27 +55,4 @@ public class CustomUserService implements UserDetailsService{
                 authorities);
     }
 
-    private void initRoleAndPrivilege() {
-        // 用户角色
-        Roles roles = new Roles();
-        roles.setName("ROLE_USER");
-        List<Privilege> privileges = new ArrayList<>();
-        Privilege userPrivilege = new Privilege();
-        // 用户资源访问权限
-        userPrivilege.setName("user:*");
-        privileges.add(userPrivilege);
-        roles.setPrivileges(privileges);
-        rolesService.saveOrUpdate(roles);
-        privilegeService.saveBatch(privileges);
-        // 管理员资源访问权限
-        roles = new Roles();
-        roles.setName("ROLE_ADMIN");
-        Privilege adminPrivilege = new Privilege();
-        adminPrivilege.setName("global:*");
-        privileges = new ArrayList<>();
-        privileges.add(adminPrivilege);
-        roles.setPrivileges(privileges);
-        rolesService.saveOrUpdate(roles);
-        privilegeService.saveBatch(privileges);
-    }
 }

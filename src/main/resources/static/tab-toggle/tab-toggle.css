@@ -2,19 +2,27 @@
  * THE TAB TOGGLE
  */
 .tab-container {
+    width: 100%;
     transition: all .5s;
     overflow: hidden;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.26)
 }
 
-.tab-title {
+.tab-container .tab-title {
     width: 12%;
     min-width: 45px;
     float: left;
     overflow: hidden
 }
 
-.tab-title li {
+.tab-container.horizontal .tab-title {
+    float: none;
+    width: 100%;
+    display: table;
+    margin: 0px auto
+}
+
+.tab-container .tab-title li {
     -webkit-transition: all .3s;
     -moz-transition: all .3s;
     -ms-transition: all .3s;
@@ -27,7 +35,12 @@
     cursor: pointer
 }
 
-.tab-title li:last-of-type {
+.tab-container.horizontal .tab-title li {
+    float: left;
+    padding: 10px 20px
+}
+
+.tab-container .tab-title li:last-of-type {
     border-right: none
 }
 
@@ -36,12 +49,17 @@
     color: #424242
 }
 
-.tab-content {
+.tab-container .tab-content {
     width: 88%;
     max-width: calc(100% - 45px);
     overflow: hidden;
     padding: 4px;
     float: left
+}
+
+.tab-container.horizontal .tab-content {
+    max-width: 100%;
+    width: 100%
 }
 
 .tab-content > div {

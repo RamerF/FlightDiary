@@ -462,4 +462,14 @@ $( function() {
         var extendStyle = "extend-border-bottom";
         $( this ).toggleClass( extendStyle );
     } )
+    $( "button.regist_nav_button" ).on( "click" , function( e ) {
+        $( this ).parent().removeClass( "is_active" ).next().addClass( "is_active" );
+        e.preventDefault();
+        $( "li[class*='is_active']" ).removeClass( "is_active" ).next().addClass( "is_active" );
+
+        if ($( this ).parent().index() === 2) {
+            $( "ul.regist_title li" ).first().addClass( "is_active" );
+            $( "fieldset.regist_main" ).first().addClass( "is_active" );
+        }
+    } )
 } )

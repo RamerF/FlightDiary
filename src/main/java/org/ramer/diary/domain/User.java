@@ -37,6 +37,9 @@ public class User implements Serializable{
     /** 用户别名. */
     @Column(unique = true)
     private String alias;
+    /** 用户信息不完全,首页显示注册导航 */
+    @Column(name = "regist_nav", columnDefinition = "BIT DEFAULT 0")
+    private boolean registNav;
     /** 密码. */
     @Column(nullable = false)
     private String password;
@@ -80,20 +83,20 @@ public class User implements Serializable{
     /** 分享. */
     // 按时间降序排列
     @OrderBy(value = "date desc")
-    @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Topic> topics = new HashSet<>();
 
     /** 关注. */
-    @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Follow> follows;
 
     /** 收藏. */
-    @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Favourite> favourites;
 
     /** 通知. */
     @OrderBy(value = "date desc")
-    @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "notifiedUser", fetch = FetchType.LAZY)
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "notifiedUser", fetch = FetchType.LAZY)
     private Set<Notify> notifies;
     @Transient
     private Set<Notify> readedNotifies = new HashSet<>();

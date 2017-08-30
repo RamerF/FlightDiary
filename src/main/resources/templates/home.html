@@ -146,10 +146,8 @@
     <form action="/home/tag" id="tagForm">
         <input type="text" name="tag" id="tagName"/>
     </form>
-    <div class="signup" th:if="${session.user eq null}">
-        <span>
-            <a href="/user">登录/注册</a>
-        </span>
+    <div class="profile">
+        <i class="material-icons md-36">clear_all</i>
     </div>
 </div>
 <!-- 用户容器 -->
@@ -168,7 +166,6 @@
     <!-- 发表分享 -->
     <section class="publish-section">
         <div class="tab-container topic_panel" id="topic_panel">
-
             <ul class="tab-title">
                 <li class="tab active" data-toggle="tab-1"><i class="material-icons">photo</i></li>
                 <li class="tab" data-toggle="tab-2"><i class="material-icons">text_format</i></li>
@@ -202,7 +199,7 @@
         </div>
     </section>
     <!-- 用户链接面板 -->
-    <section class="user-section">
+    <section th:if="${session.user.registNav eq true}" class="user-section">
         <ul class="user-link">
             <li>
                 <i class="material-icons">photo</i>
@@ -237,10 +234,90 @@
             </li>
         </ul>
     </section>
+    <!-- 用户注册信息完善 -->
+    <section th:if="not ${session.user.registNav eq true}" class="user-section">
+        <div class="regist_container regist">
+            <form action="#" class="regist_form">
+                <fieldset class="regist_main is_active">
+                    <h3>完善你的基本信息</h3>
+                    <label for="born">出生年月</label>
+                    <input id="born" type="date" name="born" placeholder="出生年月"/>
+                    <button class="regist_nav_button">下一步</button>
+                </fieldset>
+                <fieldset class="regist_main">
+                    <h3>学习经历</h3>
+                    <input type="text" id="senior" placeholder="曾/在读高中" pattern="\d{3}"
+                           oninvalid="setCustomValidity('please input three numbers')"
+                           oninput="setCustomValidity('')"/>
+                    <input type="text" id="college" placeholder="曾/在读大学"/>
+                    <button class="regist_nav_button">下一步</button>
+                </fieldset>
+                <fieldset class="regist_main">
+                    <h3>Your Email</h3>
+                    <input type="text" id="username" placeholder="UserName"/>
+                    <input type="password" id="password" placeholder="Password"/>
+                    <button class="regist_nav_button">完成</button>
+                </fieldset>
+            </form>
+        </div>
+    </section>
     <input type="hidden"
            th:name="${_csrf.parameterName}"
            id="_csrf"
            th:value="${_csrf.token}"/>
+</div>
+<!-- 用户注册容器 -->
+<div th:if="${session.user eq null}" class="user-container tab-container horizontal" id="user-login-regist">
+    <ul class="tab-title">
+        <li class="tab active" data-toggle="tab-user-login">登录</li>
+        <li class="tab" data-toggle="tab-user-regist">注册</li>
+    </ul>
+    <div class="tab-content regist">
+        <div class="user-login active material-form" id="tab-user-login">
+            <form action="/login" method="post">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       id="_csrf"
+                       th:value="${_csrf.token}"/>
+                <div>
+                    <input type="text" name="username" class="username" id="username"/>
+                    <label for="username">用户名</label>
+                </div>
+                <div>
+                    <input type="password" name="password" id="password" class="password"/>
+                    <label for="password">密码</label>
+                </div>
+                <div>
+                    <input type="reset" class="reset" value="清空"/>
+                    <input type="submit" class="submit" value="登录"/>
+                </div>
+            </form>
+        </div>
+        <div class="user-regist material-form" id="tab-user-regist">
+            <form action="/sign_up" method="post">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       id="_csrf"
+                       th:value="${_csrf.token}"/>
+                <div>
+                    <input type="text" name="username" class="username" id="username"/>
+                    <label for="username">用户名</label>
+                </div>
+                <div>
+                    <input type="password" name="password" id="password" class="password"/>
+                    <label for="password">密码</label>
+                </div>
+                <div>
+                    <input type="text" name="email" id="email" class="email"/>
+                    <label for="email">邮箱</label>
+                </div>
+                <div>
+                    <input type="reset" class="reset" value="清空"/>
+                    <input type="submit" class="submit" value="注册"/>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <!-- 上一页 -->
 <div class="last_page" th:if="${session.scrollInPage eq false}">

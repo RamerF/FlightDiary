@@ -25,8 +25,8 @@ public class PrivilegeServicesImpl implements PrivilegeService{
 
     @Transactional
     @Override
-    public List<Privilege> saveBatch(List<Privilege> privileges) {
-        return privilegeRepository.save(privileges);
+    public boolean saveBatch(List<Privilege> privileges) {
+        return privilegeRepository.save(privileges).size() > 0;
     }
 
 }

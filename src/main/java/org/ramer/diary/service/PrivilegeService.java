@@ -10,5 +10,5 @@ import java.util.List;
 public interface PrivilegeService{
     Privilege saveOrUpdate(Privilege privilege);
 
-    List<Privilege> saveBatch(List<Privilege> privileges);
+    boolean saveBatch(List<Privilege> privileges);
 }

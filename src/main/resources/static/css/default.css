@@ -41,6 +41,28 @@ div {
     background: #FFFFFF
 }
 
+fieldset {
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #666;
+    text-align: center;
+    transition: all .9s
+}
+
+button:focus {
+    outline: none
+}
+
+input[type='date'] {
+    outline: none;
+    border: 1px solid #EEEEEE;
+    padding: 5px
+}
+
+input[type='radio'] {
+    display: none
+}
+
 input[type='text'], input[type='password'] {
     border: 1px solid #eee;
     border-radius: 2px;
