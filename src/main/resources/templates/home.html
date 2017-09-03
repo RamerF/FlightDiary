@@ -146,12 +146,51 @@
     <form action="/home/tag" id="tagForm">
         <input type="text" name="tag" id="tagName"/>
     </form>
-    <div class="profile">
-        <i class="material-icons md-36">clear_all</i>
+    <!-- 已登录用户,未完善用户信息 -->
+    <div th:if="not ${session.user eq null} and ${session.user.id gt 0} and ${session.user.registNav eq true}"
+         class="profile">
+        <img th:src="${session.user.head}" onerror="javascript:this.src='/pictures/userHead.jpg'"/>
     </div>
 </div>
-<!-- 用户容器 -->
-<div th:if="not ${session.user eq null}" class="user-container">
+<!-- 已登录用户,未完善用户信息,用户链接面板 -->
+<section th:if="not ${session.user eq null} and ${session.user.id gt 0} and ${session.user.registNav eq true}"
+         class="user-section-nav">
+    <ul class="user-link">
+        <li>
+            <i class="material-icons">photo</i>
+            <a href="user/personal">分享</a>
+            <span th:text="${topicNumber eq null ? 0 : topicNumber}"></span>
+        </li>
+        <li>
+            <i class="material-icons">visibility</i>
+            <a href="user/personal">关注</a>
+            <span th:text="${followedNumber eq null ? 0 : followedNumber}"></span>
+        </li>
+        <li>
+            <i class="material-icons">chat</i>
+            <a href="user/personal">私信</a>
+            <span th:text="${notifiedNumber eq null ? 0 : notifiedNumber}"></span>
+        </li>
+        <li>
+            <i class="material-icons">vpn_key</i>
+            <a href="user/forwardModifyPassword">密码管理</a>
+        </li>
+        <li>
+            <i class="material-icons">contact_mail</i>
+            <a href="user/forwardModifyEmail">绑定邮箱</a>
+        </li>
+        <li>
+            <i class="material-icons">account_circle</i>
+            <a th:href="|user/${session.user.id}|">个人信息</a>
+        </li>
+        <li>
+            <i class="material-icons">settings</i>
+            <a href="/settings">系统设置</a>
+        </li>
+    </ul>
+</section>
+<!-- 已登录用户容器 -->
+<div th:if="not ${session.user eq null} and ${session.user.id gt 0}" class="user-container">
     <!-- 用户信息 -->
     <div class="user_panel">
         <span>
@@ -199,7 +238,8 @@
         </div>
     </section>
     <!-- 用户链接面板 -->
-    <section th:if="${session.user.registNav eq true}" class="user-section">
+
+    <section th:if="not ${session.user.registNav eq true}" class="user-section">
         <ul class="user-link">
             <li>
                 <i class="material-icons">photo</i>
@@ -234,10 +274,11 @@
             </li>
         </ul>
     </section>
+
     <!-- 用户注册信息完善 -->
-    <section th:if="not ${session.user.registNav eq true}" class="user-section">
+    <section th:if="${session.user.registNav eq true}" class="user-section">
         <div class="regist_container regist">
-            <form action="#" class="regist_form">
+            <form action="/sign_up" class="regist_form">
                 <fieldset class="regist_main is_active">
                     <h3>完善你的基本信息</h3>
                     <label for="born">出生年月</label>
@@ -253,32 +294,24 @@
                     <button class="regist_nav_button">下一步</button>
                 </fieldset>
                 <fieldset class="regist_main">
-                    <h3>Your Email</h3>
-                    <input type="text" id="username" placeholder="UserName"/>
-                    <input type="password" id="password" placeholder="Password"/>
+                    <h3>就职信息</h3>
+                    <input type="text" id="workstation" placeholder="工作地点"/>
                     <button class="regist_nav_button">完成</button>
                 </fieldset>
             </form>
         </div>
     </section>
-    <input type="hidden"
-           th:name="${_csrf.parameterName}"
-           id="_csrf"
-           th:value="${_csrf.token}"/>
 </div>
-<!-- 用户注册容器 -->
-<div th:if="${session.user eq null}" class="user-container tab-container horizontal" id="user-login-regist">
+<!-- 未登录用户容器 -->
+<div th:if="${session.user eq null or session.user.id lt 1}" class="user-container tab-container horizontal"
+     id="user-login-regist">
     <ul class="tab-title">
         <li class="tab active" data-toggle="tab-user-login">登录</li>
         <li class="tab" data-toggle="tab-user-regist">注册</li>
     </ul>
     <div class="tab-content regist">
         <div class="user-login active material-form" id="tab-user-login">
-            <form action="/login" method="post">
-                <input type="hidden"
-                       th:name="${_csrf.parameterName}"
-                       id="_csrf"
-                       th:value="${_csrf.token}"/>
+            <form action="/login" method="post" id="_signInForm">
                 <div>
                     <input type="text" name="username" class="username" id="username"/>
                     <label for="username">用户名</label>
@@ -289,16 +322,12 @@
                 </div>
                 <div>
                     <input type="reset" class="reset" value="清空"/>
-                    <input type="submit" class="submit" value="登录"/>
+                    <input type="submit" class="submit" value="登录" id="signInBtn"/>
                 </div>
             </form>
         </div>
         <div class="user-regist material-form" id="tab-user-regist">
-            <form action="/sign_up" method="post">
-                <input type="hidden"
-                       th:name="${_csrf.parameterName}"
-                       id="_csrf"
-                       th:value="${_csrf.token}"/>
+            <form action="/sign_up" method="post" id="_signUpForm">
                 <div>
                     <input type="text" name="username" class="username" id="username"/>
                     <label for="username">用户名</label>
@@ -313,7 +342,7 @@
                 </div>
                 <div>
                     <input type="reset" class="reset" value="清空"/>
-                    <input type="submit" class="submit" value="注册"/>
+                    <input type="submit" class="submit" value="注册" id="signUpBtn"/>
                 </div>
             </form>
         </div>
@@ -322,7 +351,8 @@
 <!-- 上一页 -->
 <div class="last_page" th:if="${session.scrollInPage eq false}">
     <a th:href="|?pageNum=${topics.number + 1 - 1}|" id="lastPage">
-        <img alt="error" src="/pictures/previous.png"/>
+        <i class="material-icons md-48">navigate_before</i>
+        <!--<img alt="error" src="/pictures/previous.png"/>-->
     </a>
 </div>
 <!-- 显示分享 -->
@@ -377,10 +407,15 @@
 <!-- 下一页 -->
 <div class="next_page" th:if="${session.scrollInPage eq false}">
     <a th:href="|?pageNum=${topics.number + 1 + 1}|" id="nextPage">
-        <img alt="error" src="/pictures/next.png"/>
+        <i class="material-icons md-48">navigate_next</i>
+        <!--<img alt="error" src="/pictures/next.png"/>-->
     </a>
 </div>
 <input type="hidden" id="positionVal"/>
+<input type="hidden"
+       th:name="${_csrf.parameterName}"
+       id="_csrf"
+       th:value="${_csrf.token}"/>
 </body>
 <script layout:fragment="page_js">
     <!-- 瀑布流动画js -->

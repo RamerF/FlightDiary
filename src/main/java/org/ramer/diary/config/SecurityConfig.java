@@ -1,6 +1,5 @@
 package org.ramer.diary.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -28,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         http.authorizeRequests()
                 .antMatchers("/user/css/**", "/css/**", "/home", "userInput", "success", "error", "about", "feedback")
                 .permitAll().antMatchers("/user/**").hasRole("USER").and().formLogin().loginPage("/login")
-                .successForwardUrl("/sign_in").failureUrl("/error");
+                .successForwardUrl("/sign_in").failureUrl("/sign_in");
     }
 
     @Override

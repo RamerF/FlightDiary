@@ -19,19 +19,14 @@ import java.util.List;
 public class CustomUserService implements UserDetailsService{
     @Resource
     private UserService userService;
-    @Resource
-    private RolesService rolesService;
-    @Resource
-    private PrivilegeService privilegeService;
     private static final String[] PRIVILEGE_SUFFIXES = { "view", "edit" };
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.debug(" 登录: {}", username);
         org.ramer.diary.domain.User user = userService.getByName(username);
         if (user == null) {
-            return new org.springframework.security.core.userdetails.User(username, "",
-                    new ArrayList<SimpleGrantedAuthority>());
+            log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "  用户名不存在: [{}]", username);
+            throw new UsernameNotFoundException("用户名不存在 : " + username);
         }
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> {

@@ -200,7 +200,6 @@ $( function() {
     } );
     // 取消显示更多标签
     $( "html" ).click( function( e ) {
-        console.log( $( "#showData" ).size() == 0 );
         if ($( ".more" ).css( "top" ) != "300px" && $( "#showData" ).size() > 0) {
             $( ".more" ).removeClass( "moreNew" );
             $( ".more" ).text( "更多" );
@@ -471,5 +470,35 @@ $( function() {
             $( "ul.regist_title li" ).first().addClass( "is_active" );
             $( "fieldset.regist_main" ).first().addClass( "is_active" );
         }
+    } )
+    // 登录,注册
+    $( "#signInBtn,#signUpBtn" ).click( function() {
+        var _form = $( this ).parents( "form" );
+        var username = $( _form ).find( "#username" ).val();
+        var password = $( _form ).find( "#password" ).val();
+        var email = $( _form ).find( "#email" ).val();
+        var args = typeof (email) != "undefined" ? {
+            "username" : username,
+            "password" : password,
+            "email" : email,
+            "_csrf" : csrf
+        } : {
+            "username" : username,
+            "password" : password,
+            "_csrf" : csrf
+        }
+        $.post( $( _form ).prop( "action" ) , args , function( data ) {
+            if (data.result == true) {
+                window.location.reload()
+            } else {
+                layer.msg( data.message , {
+                    time : 1800
+                } )
+            }
+        } );
+        return false;
+    } )
+    $( ".profile" ).click( function() {
+        $( "section.user-section-nav" ).slideToggle( 500 );
     } )
 } )

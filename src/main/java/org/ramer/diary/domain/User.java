@@ -38,7 +38,7 @@ public class User implements Serializable{
     @Column(unique = true)
     private String alias;
     /** 用户信息不完全,首页显示注册导航 */
-    @Column(name = "regist_nav", columnDefinition = "BIT DEFAULT 0")
+    @Column(name = "regist_nav", columnDefinition = "BIT DEFAULT 1")
     private boolean registNav;
     /** 密码. */
     @Column(nullable = false)

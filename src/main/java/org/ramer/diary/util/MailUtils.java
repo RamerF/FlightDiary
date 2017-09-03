@@ -71,14 +71,13 @@ public class MailUtils{
      * @return true, 如果是邮箱
      */
     public static boolean isEmail(String email) {
-        Pattern pattern = Pattern.compile(
-                "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
+        Pattern pattern = Pattern.compile("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
         Matcher matcher = pattern.matcher(email);
         if (matcher.matches()) {
-            log.debug("邮箱格式正确");
+            log.debug("是邮箱");
             return true;
         }
-        log.debug("邮箱格式不正确");
+        log.debug("不是邮箱");
         return false;
     }
 

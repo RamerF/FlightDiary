@@ -9,9 +9,7 @@ import org.ramer.diary.domain.User;
 import org.ramer.diary.repository.FeedBackRepository;
 import org.ramer.diary.repository.UserRepository;
 import org.ramer.diary.service.UserService;
-import org.ramer.diary.util.EncryptUtil;
-import org.ramer.diary.util.IntegerUtil;
-import org.ramer.diary.util.Pagination;
+import org.ramer.diary.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,8 +67,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public User getByName(String username) {
-        String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
-        if (username.matches(regex)) {
+        if (MailUtils.isEmail(username)) {
             return userRepository.getByEmail(EncryptUtil.execEncrypt(username));
         }
         return userRepository.getByUsername(username);

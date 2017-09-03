@@ -319,29 +319,19 @@ public class CommonController{
     /**
      * 用户登录.
      *
-     * @param user the user
      * @param map the map
      * @param session the session
      * @return 登录成功返回主页,失败返回错误页面
      */
-    @PostMapping(value = "/sign_in")
+    @RequestMapping("/sign_in")
     @ResponseBody
-    public CommonResponse userLogin(User user, Map<String, Object> map, HttpSession session, Principal principal) {
-        user.setSessionid(session.getId());
-        String regex = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
-        if (user.getUsername().matches(regex)) {
-            log.debug("通过邮箱登录");
-            user.setEmail(EncryptUtil.execEncrypt(user.getUsername()));
-            user.setUsername(null);
+    public CommonResponse userLogin(Map<String, Object> map, HttpSession session, Principal principal) {
+        if (principal == null) {
+            return new CommonResponse(false, "用户名或密码有误");
         }
-        User u = userService.getByName(principal.getName());
-        if (u != null && u.getId() != null) {
-            map.put("user", u);
-            session.setAttribute("user", u);
-            return new CommonResponse(true, "登录成功");
-        }
-        session.removeAttribute("user");
-        return new CommonResponse(false, "用户名或密码有误");
+        User user = userService.getByName(principal.getName());
+        map.put("user", user);
+        return new CommonResponse(true, "登录成功");
     }
 
     /**

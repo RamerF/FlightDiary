@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @ControllerAdvice
 @Slf4j
-public class MyExceptionHandler implements HandlerExceptionResolver{
+public class DiaryExceptionHandler implements HandlerExceptionResolver{
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object object,
