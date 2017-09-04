@@ -68,3 +68,4 @@ bin/*
 .idea/*
 FlightDiary.iml
 diary.iml
+logs/*
