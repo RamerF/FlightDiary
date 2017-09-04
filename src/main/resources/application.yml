@@ -4,6 +4,7 @@ spring:
     properties:
       hibernate:
         enable_lazy_load_no_trans: true
+        format_sql: true
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -46,11 +47,13 @@ logging:
     org.ramer.diary.repository: debug
     org.springframework.boot.autoconfigure: info
     org.springframework.sercurity: debug
-    jdbc.resultset: info
-    jdbc.audit: info
-    jdbc.sqlonly: info
-    jdbc.sqltiming: debug
+    jdbc.resultset: off
+    jdbc.audit: off
+    jdbc.sqlonly: off
+    jdbc.sqltiming: info
     jdbc.connection: info
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
 server:
   session:
     tracking-modes: COOKIE
