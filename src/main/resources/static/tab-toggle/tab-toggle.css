@@ -1,0 +1,71 @@
+/**
+ * THE TAB TOGGLE
+ */
+.tab-container {
+    width: 100%;
+    transition: all .5s;
+    overflow: hidden;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.26)
+}
+
+.tab-container .tab-title {
+    width: 12%;
+    min-width: 45px;
+    float: left;
+    overflow: hidden
+}
+
+.tab-container.horizontal .tab-title {
+    float: none;
+    width: 100%;
+    display: table;
+    margin: 0px auto
+}
+
+.tab-container .tab-title li {
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -ms-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+    text-align: center;
+    padding: 20px 10px;
+    background: #00bcd4;
+    color: white;
+    cursor: pointer
+}
+
+.tab-container.horizontal .tab-title li {
+    float: left;
+    padding: 10px 20px
+}
+
+.tab-container .tab-title li:last-of-type {
+    border-right: none
+}
+
+.tab-title li.active {
+    background: white;
+    color: #424242
+}
+
+.tab-container .tab-content {
+    width: 88%;
+    max-width: calc(100% - 45px);
+    overflow: hidden;
+    padding: 4px;
+    float: left
+}
+
+.tab-container.horizontal .tab-content {
+    max-width: 100%;
+    width: 100%
+}
+
+.tab-content > div {
+    display: none
+}
+
+.tab-content div.active {
+    display: block
+}

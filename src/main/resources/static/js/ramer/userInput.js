@@ -238,8 +238,8 @@ $( function() {
                     "password" : $( "#password" ).val(),
                     "_csrf" : csrf,
                 };
-                $.post( url , args , function( message ) {
-                    if (message == "success") {
+                $.post( url , args , function( data ) {
+                    if (data.result == true) {
                         location.href = "/home";
                         return false;
                     } else {
@@ -266,7 +266,7 @@ $( function() {
                     } else {
                         layer.alert( data.message , {
                             btn : [ '知道了' ],
-                            title: "错误提示 !",
+                            title : "错误提示 !",
                             color : "red"
                         } );
                         return false;

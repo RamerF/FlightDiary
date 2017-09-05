@@ -2,7 +2,6 @@ package org.ramer.diary.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
-import org.ramer.diary.domain.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpSession;
@@ -38,19 +37,16 @@ public class UserUtils{
     /**
      * 检测用户是否登录.
      *
-     * @param session the session
      * @return 已登录返回true,否则返回false
      */
-    public static boolean checkLogin(HttpSession session) {
+    public static boolean checkLogin() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " principal : {}", principal);
         if (principal.equals("anonymousUser")) {
-            session.setAttribute("user", new User());
-            log.debug("\t未登录");
             return false;
         }
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user.getUsername());
+        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + "  login user: [{}]", user.getUsername());
         return true;
     }
 }

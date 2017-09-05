@@ -138,7 +138,7 @@ $( function() {
         var number = new Number( $( "#number" ).val() ) + 1 - 1;
         if (number < 1) {
             layer.msg( "报告主人,上一页已结婚	(^v^)" , {
-                time : 1800
+                time : 0
             } );
             return false;
         }
@@ -190,25 +190,6 @@ $( function() {
         // 移除新动态标识
         $( "#newTopic" ).removeClass( "src" , "newTopic" );
     } );
-    /* 文本域自适应 */
-    $( ".topic_content" ).TextAreaExpander( 117 , 250 );
-
-    /* 显示用户链接面板 */
-    $( "#showProfile" ).click( function() {
-        $( "#personal" ).show( 1000 );
-    } );
-    $( "#personal" ).mouseleave( function() {
-        $( "#personal" ).hide( 1000 );
-    } );
-    /* 用户发表分享面板 */
-    $( "#saySomething" ).click( function() {
-        if ($( "#topic_panel" ).is( ":visible" )) {
-            $( "#preview" ).css( "display" , "none" );
-            $( "#upPic" ).attr( "value" , "" );
-            $( "#preview" ).html( "" );
-        }
-        $( "#topic_panel" ).toggle( 1000 );
-    } );
     // 隐藏分享面板
     $( ".hiddenTopic" ).click( function() {
         $( "#topic_panel" ).hide( 1000 );
@@ -217,19 +198,8 @@ $( function() {
         $( "#upPic" ).attr( "value" , "" );
         $( "#preview" ).html( "" );
     } );
-    /* 图片预览 */
-    $( "#upPic" ).change( function() {
-        var file = this.files[0];
-        var reader = new FileReader();
-        reader.readAsDataURL( file );
-        $( reader ).load( function() {
-            $( "#preview" ).css( "display" , "block" );
-            $( "#preview" ).html( '<img	class="preview_pic"	src="' + this.result + '">' );
-        } )
-    } );
     // 取消显示更多标签
     $( "html" ).click( function( e ) {
-        console.log( $( "#showData" ).size() == 0 );
         if ($( ".more" ).css( "top" ) != "300px" && $( "#showData" ).size() > 0) {
             $( ".more" ).removeClass( "moreNew" );
             $( ".more" ).text( "更多" );
@@ -291,31 +261,32 @@ $( function() {
         var propertyNum = propertyStr.substring( 0 , propertyStr.indexOf( "p" ) );
         return propertyNum;
     }
-    console.log( "支持滚动翻页： " + (scrollInPage == "true") );
-    if (scrollInPage == "true") {
+
+    console.log( "支持滚动翻页： " + (scrollInPage == true) );
+    if (scrollInPage == true) {
         // 滚动条滚动时记录滚动条高度,判断滚动条是否停止滚动，滑动到底部翻页
         $( window ).scroll( scrollPage );
     }
 
     // 移除滚动翻页事件
-    $( "#removeScrollPage" ).click( function() {
+    $( "#toggleScrollInPage" ).click( function() {
         // 如果支持滚动翻页，禁止
         if (scrollInPage == true) {
             $( this ).text( "开启滚动翻页" );
             $( window ).unbind( "scroll" );
             var url = "/scrollInPage", args = {
-                "_csrf" : csrf,
-                "scrollInPage" : "false"
+                "_csrf" : csrf
             }
             $.get( url , args , null );
+            scrollInPage = false;
         } else {
             $( this ).text( "禁止滚动翻页" );
             $( window ).scroll( scrollPage );
             var url = "/scrollInPage", args = {
-                "_csrf" : csrf,
-                "scrollInPage" : "true"
+                "_csrf" : csrf
             }
             $.get( url , args , null );
+            scrollInPage = true;
         }
         return false;
     } );
@@ -356,6 +327,7 @@ $( function() {
             return false;
         }
     }
+
     // 测试滚动条是否滚动
     function checkScroll() {
         if ($( document ).scrollTop() == scroll) {
@@ -366,4 +338,167 @@ $( function() {
         }
     }
 
+    /*
+     * =====================================================
+     *                                               THE TOPIC CONTAINER
+     * =====================================================
+     * */
+    Date.prototype.format = function( format ) {
+        var o = {
+            "M+" : this.getMonth() + 1, //month
+            "d+" : this.getDate(), //day
+            "h+" : this.getHours(), //hour
+            "m+" : this.getMinutes(), //minute
+            "s+" : this.getSeconds(), //second
+            "q+" : Math.floor( (this.getMonth() + 3) / 3 ), //quarter
+            "S" : this.getMilliseconds()
+        //millisecond
+        }
+        if (/(y+)/.test( format )) {
+            format = format.replace( RegExp.$1 , (this.getFullYear() + "").substr( 4 - RegExp.$1.length ) );
+        }
+        for ( var k in o) {
+            if (new RegExp( "(" + k + ")" ).test( format )) {
+                format = format.replace( RegExp.$1 , RegExp.$1.length == 1 ? o[k] : ("00" + o[k])
+                        .substr( ("" + o[k]).length ) );
+            }
+        }
+        return format;
+    }
+    fileArr = new Array();
+    // 文本域自动扩展
+    $( ".topic_content" ).TextAreaExpander( 29 , 500 );
+    // tab 切换
+    $( ".tab-container" ).tabToggle();
+    // 图片预览
+    $( "#topicPic" ).picPreview( {
+        fileArr : fileArr
+    } );
+    // 添加自定义标签
+    $( ".add-custom-tag" ).click(
+            function() {
+                var val = $( "#custom-tag" ).val();
+                if (val != null && $.trim( val ) != "") {
+                    console.log( "<li>" + val + "</li>" );
+                    var liNode = $( "<li></li>" );
+                    var inputNode = $( "<input type='checkbox' name='tags' id='" + val
+                            + new Date().format( "yyyyMMddhhmmss" ) + "'  value='" + val + "'/>" );
+                    var labelNode = $( "<label for='" + val + new Date().format( "yyyyMMddhhmmss" ) + "'>" + val
+                            + "</label>" );
+                    liNode.append( inputNode ).append( labelNode );
+                    $( this ).prev().before( liNode );
+                }
+            } );
+    // 获取上传token
+    var token = "";
+    var downDomain = "";
+    $.get( "/upload/token" , {} , function( result ) {
+        token = result.uptoken;
+        downDomain = result.downDomain;
+    } );
+    // 发布Topic
+    var fileRemoteUrl = new Array();
+    $( "#publish-topic" ).click( function() {
+        // Topic 标签集
+        var tags = getTags();
+        var content = $( "#topicContent" ).val();
+        // 上传文件到七牛
+        var formData;
+        var files = fileArr;
+        console.log( "file arr: " + fileArr );
+        for (var i = 0; i < files.length; i++) {
+            formData = new FormData();
+            formData.append( "file" , files[i] );
+            var fileName = files[i].name.substr( 0 , files[i].name.lastIndexOf( "." ) );
+            var suffix = files[i].name.substr( fileName.length );
+            var key = fileName + "-" + new Date().format( "yyyyMMddhhmmss" ) + suffix;
+            formData.append( "key" , key );
+            formData.append( "token" , token );
+            console.log( "保存文件名: " + key );
+            $.ajax( {
+                url : "http://up-z2.qiniu.com/",
+                type : "post",
+                async : false,
+                data : formData,
+                processData : false,
+                contentType : false
+            } ).done( function( res ) {
+                fileRemoteUrl.push( downDomain + res.key );
+                console.log( "文件上传完成: " + downDomain + res.key )
+            } ).fail( function( res ) {
+                alert( "无法保存图片,请稍后再试" )
+            } );
+        }
+        console.log( "Topic 信息: " );
+        console.log( "files[]: " + fileRemoteUrl );
+        console.log( "tags[]: " + tags );
+        console.log( "content: " + content );
+        $.post( "/user/publish" , {
+            "tags[]" : tags,
+            "content" : content,
+            "fileUrls[]" : fileRemoteUrl,
+            "_csrf" : $( "#_csrf" ).val()
+        } , function( data ) {
+            if (data.result == true) {
+                layer.msg( "发表成功" , {
+                    time : 1800
+                } )
+                window.location.reload();
+            }
+        } );
+        return false;
+    } );
+
+    function getTags() {
+        var tags = new Array();
+        $( "input[name='tags']:checked" ).each( function() {
+            tags.push( $( this ).val() );
+        } );
+        return tags;
+    }
+
+    $( "input.querytopic" ).bind( "blur focus" , function() {
+        var extendStyle = "extend-border-bottom";
+        $( this ).toggleClass( extendStyle );
+    } )
+    $( "button.regist_nav_button" ).on( "click" , function( e ) {
+        $( this ).parent().removeClass( "is_active" ).next().addClass( "is_active" );
+        e.preventDefault();
+        $( "li[class*='is_active']" ).removeClass( "is_active" ).next().addClass( "is_active" );
+
+        if ($( this ).parent().index() === 2) {
+            $( "ul.regist_title li" ).first().addClass( "is_active" );
+            $( "fieldset.regist_main" ).first().addClass( "is_active" );
+        }
+    } )
+    // 登录,注册
+    $( "#signInBtn,#signUpBtn" ).click( function() {
+        var _form = $( this ).parents( "form" );
+        var username = $( _form ).find( "#username" ).val();
+        var password = $( _form ).find( "#password" ).val();
+        var email = $( _form ).find( "#email" ).val();
+        var args = typeof (email) != "undefined" ? {
+            "username" : username,
+            "password" : password,
+            "email" : email,
+            "_csrf" : csrf
+        } : {
+            "username" : username,
+            "password" : password,
+            "_csrf" : csrf
+        }
+        $.post( $( _form ).prop( "action" ) , args , function( data ) {
+            if (data.result == true) {
+                window.location.reload()
+            } else {
+                layer.msg( data.message , {
+                    time : 1800
+                } )
+            }
+        } );
+        return false;
+    } )
+    $( ".profile" ).click( function() {
+        $( "section.user-section-nav" ).slideToggle( 500 );
+    } )
 } )

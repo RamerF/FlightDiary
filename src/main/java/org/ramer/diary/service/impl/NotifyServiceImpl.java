@@ -1,27 +1,26 @@
 package org.ramer.diary.service.impl;
 
-import java.util.Date;
-import java.util.Set;
-
 import org.ramer.diary.domain.Notify;
 import org.ramer.diary.domain.User;
 import org.ramer.diary.repository.NotifyRepository;
 import org.ramer.diary.service.NotifyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-public class NotifyServiceImpl implements NotifyService {
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.Set;
 
-    @Autowired
+@Service
+public class NotifyServiceImpl implements NotifyService{
+
+    @Resource
     private NotifyRepository notifyRepository;
 
     @Override
     @Transactional(readOnly = true)
     public Set<Notify> getNotifies(User user, String hasCheck) {
-        Set<Notify> notifies = notifyRepository.getByNotifiedUserAndHasCheckOrderByDateDesc(user, hasCheck);
-        return notifies;
+        return notifyRepository.getByNotifiedUserAndHasCheckOrderByDateDesc(user, hasCheck);
     }
 
     @Override
@@ -48,25 +47,19 @@ public class NotifyServiceImpl implements NotifyService {
         notify.setNotifiedUser(followUser);
         notify.setUser(user);
         notifyRepository.saveAndFlush(notify);
-        return true;
-
+        return notify.getId() != null;
     }
 
     @Override
     @Transactional
     public boolean sendPrivMess(Notify notify) {
-        Notify n = notifyRepository.saveAndFlush(notify);
-        if (n == null) {
-            return false;
-        }
-        return true;
+        return notifyRepository.saveAndFlush(notify) != null;
     }
 
     @Override
     @Transactional
     public boolean updateNotify(Notify notify) {
-        Notify n = notifyRepository.saveAndFlush(notify);
-        return n == null ? false : true;
+        return notifyRepository.saveAndFlush(notify) != null;
     }
 
     @Override

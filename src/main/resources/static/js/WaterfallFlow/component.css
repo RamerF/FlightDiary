@@ -1,0 +1,41 @@
+.grid {
+ max-width: 100%;
+ list-style: none;
+ margin: 10px auto;
+ /*  padding: .8; */
+}
+
+.grid li {
+ display: block;
+ float: left;
+ padding: 10px;
+ width: 50%;
+ margin-bottom: 15px;
+}
+
+.grid li.shown, .no-js .grid li, .no-cssanimations .grid li {
+ /*  opacity: 1; */
+ 
+}
+
+.grid li a, .grid li img {
+ outline: none;
+ border: none;
+ max-width: 100%;
+}
+
+.grid.effect-2 li.animate {
+ -webkit-transform: translateY(200px);
+ transform: translateY(200px);
+ -webkit-animation: moveUp 0.65s cubic-bezier(0.71, 0.57, 0.72, 1.15)   forwards;
+ animation: moveUp 0.65s cubic-bezier(0.71, 0.57, 0.72, 1.15)   forwards;
+}
+
+@-webkit-keyframes moveUp { 
+ 0% {}
+100%{-webkit-transform:translateY(0);opacity:1;}
+}
+@keyframes moveUp {
+ 0% {}
+100%{-webkit-transform: translateY(0);opacity:1;}
+}

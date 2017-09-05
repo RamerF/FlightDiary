@@ -51,11 +51,13 @@ public class FileUtils{
         } else {
             location = new File(session.getServletContext().getRealPath("/")).getCanonicalPath();
         }
-        String rootdir = location + separator + "pictures" + separator + "publish";
+        String rootdir = location + separator + "pictures" + separator + "createTopic";
         User user = (User) session.getAttribute("user");
         String username = user.getUsername();
         String alias = user.getAlias();
-        String picture = topic.getPicture();
+        // TODO:  多图片支持
+        //        String picture = topic.getPicture();
+        String picture = "";
         String pictureName = picture.substring(picture.lastIndexOf(separator) + 1);
         log.debug("rootdir:\n\t" + rootdir + "\npictureName:\n\t" + pictureName);
         String realPath = rootdir + separator + username + separator + pictureName;
@@ -82,6 +84,7 @@ public class FileUtils{
      * @return 返回数据库中的图片路径
      * @throws IOException Signals that an I/O exception has occurred.
      */
+    @Deprecated
     public static String saveFile(MultipartFile file, HttpSession session, boolean head, boolean chn)
             throws IOException {
         String separator = File.separator;
@@ -93,7 +96,7 @@ public class FileUtils{
         } else {
             location = new File(session.getServletContext().getRealPath("/")).getAbsolutePath();
         }
-        String rootdir = location + separator + "pictures" + separator + "publish";
+        String rootdir = location + separator + "pictures" + separator + "createTopic";
         User user = (User) session.getAttribute("user");
         log.debug("用户名: " + user.getUsername());
         String username = user.getUsername();
@@ -103,7 +106,7 @@ public class FileUtils{
             userFolder = new File(rootdir + separator + alias);
         }
         if (!userFolder.exists()) {
-            userFolder.mkdirs();
+            boolean mkdirs = userFolder.mkdirs();
         }
         //获取图片的名称
         String name = file.getOriginalFilename();
@@ -124,27 +127,37 @@ public class FileUtils{
         }
         log.debug("上传的图片信息 : \n\t" + pathname);
         File saveFile = new File(pathname);
-        saveFile.createNewFile();
-        InputStream inputStream = file.getInputStream();
-        OutputStream outputStream = new FileOutputStream(saveFile);
-        byte[] bys = new byte[inputStream.available()];
-        int length = 0;
-        while ((length = inputStream.read(bys)) != -1) {
-            outputStream.write(bys, 0, length);
+        if (!saveFile.createNewFile()) {
+            log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + "  文件已存在,无法保存图片");
+            return null;
         }
-        outputStream.close();
-        String pictureUrl = "\\pictures" + separator + "publish" + separator + username + separator + name + suffix;
-        if (chn) {
-            pictureUrl = "\\pictures" + separator + "publish" + separator + alias + separator + name + suffix;
-        }
-        if (head) {
-            pictureUrl = "\\pictures" + separator + "publish" + separator + username + separator + username + suffix;
-            if (chn) {
-                pictureUrl = "\\pictures" + separator + "publish" + separator + alias + separator + alias + suffix;
+        try (InputStream inputStream = file.getInputStream();
+                OutputStream outputStream = new FileOutputStream(saveFile);) {
+            byte[] bys = new byte[inputStream.available()];
+            int length = 0;
+            while ((length = inputStream.read(bys)) != -1) {
+                outputStream.write(bys, 0, length);
             }
+            outputStream.close();
+            String pictureUrl = "\\pictures" + separator + "createTopic" + separator + username + separator + name
+                    + suffix;
+            if (chn) {
+                pictureUrl = "\\pictures" + separator + "createTopic" + separator + alias + separator + name + suffix;
+            }
+            if (head) {
+                pictureUrl = "\\pictures" + separator + "createTopic" + separator + username + separator + username
+                        + suffix;
+                if (chn) {
+                    pictureUrl = "\\pictures" + separator + "createTopic" + separator + alias + separator + alias
+                            + suffix;
+                }
+            }
+            log.debug("数据库中的图片路径:" + pictureUrl);
+            return pictureUrl;
+        } catch (IOException e) {
+            log.error("保存图片异常", e);
         }
-        log.debug("数据库中的图片路径:" + pictureUrl);
-        return pictureUrl;
+        return null;
     }
 
     /**
@@ -155,20 +168,23 @@ public class FileUtils{
      * @throws Exception the exception
      */
     public static Set<String> readTag(String file) throws Exception {
-
         Set<String> tagsList = new HashSet<>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        InputStream inputStream = new FileInputStream(file);
-        Document document = builder.parse(inputStream);
-        NodeList tagsNode = document.getElementsByTagName("tag");
-        for (int i = 0; i < tagsNode.getLength(); i++) {
-            Node item = tagsNode.item(i);
-            Element element = (Element) item;
-            String name = element.getAttribute("name");
-            tagsList.add(name);
+        try (InputStream inputStream = new FileInputStream(file)) {
+            Document document = builder.parse(inputStream);
+            NodeList tagsNode = document.getElementsByTagName("tag");
+            for (int i = 0; i < tagsNode.getLength(); i++) {
+                Node item = tagsNode.item(i);
+                Element element = (Element) item;
+                String name = element.getAttribute("name");
+                tagsList.add(name);
+            }
+            return tagsList;
+        } catch (IOException e) {
+            log.error("读取Tag异常", e);
         }
-        return tagsList;
+        return null;
     }
 
     /**
@@ -178,6 +194,7 @@ public class FileUtils{
      * @param file 文件路径
      * @throws Exception the exception
      */
+    @Deprecated
     public static void writeTag(List<String> tags, String file) throws Exception {
         //    系统换行符
         String endLine = System.getProperty("line.separator");
@@ -189,12 +206,12 @@ public class FileUtils{
         while ((line = reader.readLine()) != null) {
             if (line.indexOf("</tags>") >= 0) {
                 reader.seek(reader.getFilePointer() - 8);
-                reader.write(endLine.getBytes());
+                reader.writeUTF(endLine);
                 for (String tag : tags) {
                     tagString = "    <tag username=\"" + tag + "\" />" + endLine;
-                    reader.write(tagString.getBytes());
+                    reader.writeUTF(tagString);
                 }
-                reader.write("</tags>".getBytes());
+                reader.writeUTF("</tags>");
                 break;
             }
         }

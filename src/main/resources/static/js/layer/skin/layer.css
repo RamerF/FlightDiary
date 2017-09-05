@@ -647,7 +647,7 @@ opacity
 	word-break: break-all;
 	font-size: 14px;
 	overflow: auto;
-    color: rgba(50,50,50,.9);
+	background: #00BCD4
 }
 
 .layui-layer-dialog .layui-layer-content .layui-layer-ico {
@@ -703,13 +703,14 @@ opacity
 	background-color: rgba(0, 0, 0, .6);
 	color: #fff;
 	border: none;
-	-webkit-box-shadow:  1px 1px 6px rgba(50,50,50,.8);
-	-moz-box-shadow:  1px 1px 6px rgba(50,50,50,.8);
-	box-shadow:  1px 1px 6px rgba(50,50,50,.8);
+	-webkit-box-shadow:   2px 2px 5px rgba(0,0,0,.26);
+	-moz-box-shadow:   2px 2px 5px rgba(0,0,0,.26);
+	box-shadow:  2px 2px 5px rgba(0,0,0,.26)
 }
 
 .layui-layer-hui .layui-layer-content {
 	padding: 12px 25px;
+	color: #E0F7FA;
 	text-align: center
 }
 

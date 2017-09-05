@@ -67,3 +67,5 @@ bin/*
 /target/
 .idea/*
 FlightDiary.iml
+diary.iml
+/logs/

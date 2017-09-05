@@ -1,10 +1,11 @@
 package org.ramer.diary.domain;
 
-import javax.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 收藏.
@@ -14,8 +15,6 @@ import lombok.NoArgsConstructor;
 @Cacheable
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Favourite{
 
     /** UID. */
@@ -33,6 +32,26 @@ public class Favourite{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic")
     private Topic topic;
+    @CreationTimestamp
+    private Date createTime;
+    @UpdateTimestamp
+    private Date updateTime;
+
+    public Date getCreateTime() {
+        return (Date) createTime.clone();
+    }
+
+    public Date getUpdateTime() {
+        return (Date) updateTime.clone();
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = new Date(createTime.getTime());
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = new Date(updateTime.getTime());
+    }
 
     @Override
     public String toString() {

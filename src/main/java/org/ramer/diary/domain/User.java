@@ -1,12 +1,12 @@
 package org.ramer.diary.domain;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 用户.
@@ -37,6 +37,9 @@ public class User implements Serializable{
     /** 用户别名. */
     @Column(unique = true)
     private String alias;
+    /** 用户信息不完全,首页显示注册导航 */
+    @Column(name = "regist_nav", columnDefinition = "BIT DEFAULT 1")
+    private boolean registNav;
     /** 密码. */
     @Column(nullable = false)
     private String password;
@@ -67,7 +70,10 @@ public class User implements Serializable{
     /** The sessionid. */
     @Column
     private String sessionid;
-
+    @CreationTimestamp
+    private Date createTime;
+    @UpdateTimestamp
+    private Date updateTime;
     @Column
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
@@ -77,23 +83,39 @@ public class User implements Serializable{
     /** 分享. */
     // 按时间降序排列
     @OrderBy(value = "date desc")
-    @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Topic> topics = new HashSet<>();
 
     /** 关注. */
-    @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Follow> follows;
 
     /** 收藏. */
-    @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Favourite> favourites;
 
     /** 通知. */
     @OrderBy(value = "date desc")
-    @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "notifiedUser", fetch = FetchType.LAZY)
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "notifiedUser", fetch = FetchType.LAZY)
     private Set<Notify> notifies;
     @Transient
     private Set<Notify> readedNotifies = new HashSet<>();
+
+    public Date getCreateTime() {
+        return (Date) createTime.clone();
+    }
+
+    public Date getUpdateTime() {
+        return (Date) updateTime.clone();
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = new Date(createTime.getTime());
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = new Date(updateTime.getTime());
+    }
 
     @Override
     public String toString() {

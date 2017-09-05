@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>日记</title>
+    <link href="img/favicon.ico" rel="icon"/>
+    <!-- 瀑布流导入 -->
+    <link rel="stylesheet" type="text/css" href="/css/default.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/component.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/home.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/balloon.min.css"/>
+    <script type="application/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"/>
+    <!-- 瀑布流 -->
+    <script type="application/javascript" src="/js/WaterfallFlow/modernizr.custom.js"/>
+    <script src="/js/WaterfallFlow/masonry.pkgd.min.js"/>
+    <script src="/js/WaterfallFlow/imagesloaded.js"/>
+    <script src="/js/WaterfallFlow/classie.js"/>
+    <script src="/js/WaterfallFlow/AnimOnScroll.js"/>
+    <!-- cookie -->
+    <script type="application/javascript" src="/js/js.cookie.js"></script>
+    <!-- 文本域自动扩展 -->
+    <script type="application/javascript" src="/js/TextAreaExpander.js"/>
+    <!-- layer弹窗 -->
+    <script src="/js/layer/layer.js"/>
+    <!-- 自定义 -->
+    <script type="application/javascript" th:inline="javascript">
+        $(function () {
+            /*<![CDATA[*/
+            scrollInPage = /*[[${session.scrollInPage}]]*/;
+            /*]]>*/
+        })
+    </script>
+    <script src="/js/ramer/home.js"/>
+    <style type="text/css">
+        .more {
+            position: absolute;
+            top: 300px;
+            left: 0;
+            padding: 10px;
+            background: #009f95;
+            transition: all 1s;
+            z-index: 10000;
+            width: 122px;
+            color: rgba(255, 255, 255, .5);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .moreAm {
+            animation: ramerAnimateTwo 1s linear;
+        }
+
+        .moreNew {
+            margin-left: -50px;
+            width: 120px;
+            animation: ramerAnimate 1s linear;
+            transform: scale(5);
+            left: 50%;
+            top: 50%;
+            box-shadow: 0px 0px 30px rgb(0, 159, 149);
+        }
+
+        .showdata {
+            background: none;
+            opacity: 0;
+            color: #FFFFFF;
+            overflow: hidden;
+            position: absolute;
+            top: 40%;
+            left: 40px;
+            padding: 10px;
+            width: 600px;
+            transition: all .5s;
+            z-index: 10001;
+        }
+
+        .showdata ul {
+            line-height: 1.2em;
+            width:: 100%;
+            overflow: hidden;
+        }
+
+        .showdata ul li {
+            padding: 10px;
+            list-style: none;
+            float: left;
+        }
+
+        .showdata a {
+            color: #FFFFFF;
+        }
+
+        @keyframes ramerAnimateTwo {
+            0% {
+                top: 50%;
+                left: 50%;
+            }
+            100% {
+                top: 300px;
+                left: 0%;
+            }
+        }
+
+        @keyframes ramerAnimate {
+            0% {
+                left: 0;
+                top: 300px;
+            }
+            100% {
+                left: 50%;
+                top: 50%;
+            }
+        }
+    </style>
+    <link href="/picture-preview/picture-preview.css" rel="stylesheet"/>
+    <link href="/tab-toggle/tab-toggle.css" rel="stylesheet"/>
+    <script src="/picture-preview/picture-preview.js"/>
+    <script src="/tab-toggle/tab-toggle.js"/>
+</head>
+<body>
+<!-- 分类面板 -->
+<div class="category_panel">
+    <!-- 标题面板 -->
+    <div class="top">
+        <div class="title textshadow"></div>
+        <!--<div class="about">-->
+        <!--<span>-->
+        <!--<a href="/about" class="textshadow">关于</a>-->
+        <!--</span> /-->
+        <!--<span>-->
+        <!--<a href="/feedback" class="textshadow">反馈</a>-->
+        <!--</span>-->
+        <!--</div>-->
+    </div>
+    <ul class="category">
+        <li>
+            <a href="/home" data-toggle="默认">默认</a>
+            <span id="newTopic" style="position: absolute; margin: 0px;"></span>
+        </li>
+        <li>
+            <a href="/home/hot" data-toggle="热门">热门</a>
+        </li>
+        <li>
+            <a href="/home/people" data-toggle="达人">达人</a>
+        </li>
+        <li>
+            <a href="/home/tag" id="topTags" data-toggle="标签">标签</a>
+        </li>
+    </ul>
+    <!-- 通过用户输入标签获取分享 -->
+    <div class="query">
+        <input type="text" name="tag" class="querytopic" autocomplete="false"/>
+        <i class="material-icons">search</i>
+        <!--<i class="icon-search search"></i>-->
+    </div>
+    <!-- 通过标签获取分享表单 -->
+    <form action="/home/tag" id="tagForm">
+        <input type="text" name="tag" id="tagName"/>
+    </form>
+    <div class="signup" th:if="${session.user.id ==null or session.user.id &lt; 0}">
+        <span>
+            <a href="/user">登录/注册</a>
+        </span>
+    </div>
+</div>
+<!-- 用户链接面板 -->
+<div class="user_link" id="personal">
+    <div>
+        <a href="user/personal">我的主页</a>
+    </div>
+    <div>
+        <a href="user/personal">我的分享</a>
+        <span th:text="${topicNumber eq null ? 0 : topicNumber}"></span>
+    </div>
+    <div>
+        <a href="user/personal">我的关注</a>
+        <span th:text="${followedNumber eq null ? 0 : followedNumber}"></span>
+    </div>
+    <div>
+        <a href="user/personal">我的通知</a>
+        <span th:text="${notifiedNumber eq null ? 0 : notifiedNumber}"></span>
+    </div>
+    <div>
+        <a href="user/forwardModifyPassword">修改我的密码</a>
+    </div>
+    <div>
+        <a href="user/forwardModifyEmail">修改绑定邮箱</a>
+    </div>
+    <div>
+        <a th:href="|user/${session.user.id}|">编辑个人信息</a>
+    </div>
+</div>
+<!-- 用户容器 -->
+<div class="user-container">
+    <!-- 用户信息 -->
+    <div class="user_panel" th:if="${session.user.id &gt; 0}">
+        <span>
+            <a href="javascript:void(0);" id="saySomething" class="share_link ">分享</a>
+        </span>
+        <span class="username" id="showProfile" th:text="|${session.user.username}|"></span>
+        <span id="newNotify" style="position: absolute; margin: 0px; margin-left: -30px;visibility: hidden"></span>
+        <span class="logoff">
+            <a href="/logOff" id="logOff">注销</a>
+        </span>
+    </div>
+    <!-- 发表分享 -->
+    <div class="tab-container topic_panel" id="topic_panel">
+        <ul class="tab-title">
+            <li class="tab active" data-toggle="tab-1"><i class="material-icons">photo</i></li>
+            <li class="tab" data-toggle="tab-2"><i class="material-icons">text_format</i></li>
+            <li class="tab" data-toggle="tab-3"><i class="material-icons">loyalty</i></li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab-1" class="active">
+                <input type="file" id="topicPic"/>
+                <label for="topicPic" class="choose-pic">﹢</label>
+                <div id="preview-container" class="preview-container"></div>
+            </div>
+            <div id="tab-2">
+                <p>给你的图片配点美妙的文字吧</p>
+                <textarea class="topic_content"></textarea>
+            </div>
+            <div id="tab-3">
+                <ul class="tag-container">
+                    <li>
+                        <input type="checkbox" readonly="readonly" id="bq-1" name="tags" value="标签1"/>
+                        <label for="bq-1">标签1</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" readonly="readonly" id="bq-2" name="tags" value="标签2"/>
+                        <label for="bq-2">标签2</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" readonly="readonly" id="bq-3" name="tags" value="标签3"/>
+                        <label for="bq-3">标签3</label>
+                    </li>
+                    <li class="custom-container">
+                        <input id="custom-tag" type="text"/>
+                    </li>
+                    <li class="add-custom-tag">＋</li>
+                    <li id="publish-topic" class="publish-topic">分享</li>
+                </ul>
+            </div>
+        </div>
+        <!--<form action="/publish" method="post" enctype="multipart/form-data">-->
+        <!--<input type="hidden"-->
+        <!--th:name="${_csrf.parameterName}"-->
+        <!--id="_csrf"-->
+        <!--th:value="${_csrf.token}"/>-->
+        <!--<textarea rows="7" cols="30" name="content" class="topic_content"></textarea>-->
+        <!--<div class="tool">-->
+        <!--<div id="addPosition" class="add_position" data-balloon="添加当前位置" data-balloon-pos="right">-->
+        <!--<img alt="" src="/pictures/position.png"/>-->
+        <!--</div>-->
+        <!--<div id="addTime" class="add_time" data-balloon="添加当前时间" data-balloon-pos="right">-->
+        <!--<img alt="" src="/pictures/calendar.png"/>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<input class="upbtn" type="file" name="picture" accept="image/*" id="upPic" multiple="multiple"/>-->
+        <!--<input class="upbtn2" placeholder="点击添加一张图片"/>-->
+        <!--<div id="preview" class="preview"></div>-->
+        <!--<div class="input_tag_panel">-->
+        <!--<select id="tags">-->
+        <!--<option value="no" id="optionTag">请选择</option>-->
+        <!--</select>-->
+        <!--<input type="text" name="tags" class="input_tags" placeholder="标签使用;隔开"/>-->
+        <!--</div>-->
+        <!--<input type="submit" value="分享" id="submitTopic"/>-->
+        <!--<input type="reset" value="收起" class="hiddenTopic"/>-->
+        <!--</form>-->
+    </div>
+</div>
+<!-- 上一页 -->
+<div class="last_page">
+    <th:block th:if="${session.scrollInPage eq false}">
+        <a th:href="|?pageNum=${topics.number + 1 - 1}|" id="lastPage">
+            <img alt="error" src="/pictures/previous.png"/>
+        </a>
+    </th:block>
+</div>
+<!-- 显示分享 -->
+<div class="container" th:if="${showTopic eq 'true' }">
+    <ul class="grid effect-2" id="grid">
+        <th:block th:each="t,tStat:${topics.content}">
+            <li>
+                <div class="user_mess textshadow">
+                    <div class="tags_panel">
+                        <th:block th:each="tag:${t.tagses}">
+                            <i class="icon-tags"></i>
+                            <span class="tags" th:text="${tag.name}"></span>
+                        </th:block>
+                    </div>
+                    <div class="topic-picture">
+                        <a th:href="|user/topic/${t.id}|">
+                            <th:block th:if="${tStat.even eq true}" th:each="album,aStat:${t.albums}">
+                                <div th:if="${aStat.even eq true}" class="skew_left_container">
+                                    <img th:src="${album.url}" alt="error" class="skew_left_content"/>
+                                </div>
+                                <div th:if="${aStat.odd eq true}" class="skew_right_container">
+                                    <img th:src="${album.url}" alt="error" class="skew_right_content"/>
+                                </div>
+                            </th:block>
+                            <th:block th:if="${tStat.odd eq true}" th:each="album,aStat:${t.albums}">
+                                <div th:if="${aStat.odd eq true}" class="skew_right_container">
+                                    <img th:src="${album.url}" alt="error" class="skew_right_content"/>
+                                </div>
+                                <div th:if="${aStat.even eq true}" class="skew_left_container">
+                                    <img th:src="${album.url}" alt="error" class="skew_left_content"/>
+                                </div>
+                            </th:block>
+                        </a>
+                    </div>
+                    <div class="name_panel">
+                        <a th:href="|user/personal/${t.user.id}|">
+                            <img th:src="${t.user.head}" class="head"
+                                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+                        </a>
+                        <div class="t_content ">
+                            <p th:text="${t.content}"></p>
+                            <sub th:text="${'-- '+t.user.username}"></sub>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </th:block>
+    </ul>
+    <!-- 存储记录的总页数 -->
+    <input id="totalPages" type="hidden" th:value="${topics.totalPages }"/>
+    <!-- 存储当前页号 -->
+    <input id="number" type="hidden" th:value="${topics.number}"/>
+</div>
+<!-- 下一页 -->
+<div class="next_page">
+    <th:block th:if="${session.scrollInPage eq false}">
+        <a th:href="|?pageNum=${topics.number + 1 + 1}|" id="nextPage">
+            <img alt="error" src="/pictures/next.png"/>
+        </a>
+    </th:block>
+    <!--<li>-->
+    <!--<a id="toggleScrollInPage" th:href="'/scrollInPage?'+${_csrf.parameterName}+'=' +${_csrf.token}">-->
+    <!--<img alt="error" src="/pictures/option.png"/>-->
+    <!--</a>-->
+    <!--</li>-->
+</div>
+<!-- 显示达人 -->
+<div class="container" th:if="${showTopPeople eq 'true' }">
+    <ul class="grid effect-2" id="grid">
+        <th:block th:each="u:${topPeoples.content}">
+            <li>
+                <div class="user_mess">
+                    <a th:href="|/user/personal/${u.id}|">
+                        <img th:src="${u.topics[0].picture}" alt="error"
+                             onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+                    </a>
+                    <div class="name_panel">
+                        <a th:href="|/user/personal/${u.id}|">
+                            <img th:src="${u.head}" class="head"
+                                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+                            <br/>
+                            <span class="name" th:text="${u.username}"></span>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </th:block>
+    </ul>
+    <!-- 存储记录的总页数 -->
+    <input id="totalPages" type="hidden" th:value="${topPeoples.totalPages }"/>
+    <!-- 存储当前页号 -->
+    <input id="number" type="hidden" th:value="${topPeoples.number}"/>
+</div>
+<!-- 分页 -->
+<ul class="page_panel" th:if="${showTopPeople eq 'true' }">
+    <li class="lastPage">
+        <a th:href="|?pageNum=${topPeoples.number + 1 - 1}|" id="lastPage">
+            <img alt="error" src="/pictures/previous.png"/>
+        </a>
+    </li>
+    <li class="nextPage">
+        <a th:href="|?pageNum=${topPeoples.number + 1 + 1}|" id="nextPage">
+            <img alt="error" src="/pictures/next.png"/>
+        </a>
+    </li>
+    <li>
+        <a id="removeScrollPage" th:if="${scrollInPage eq true}">禁止滚动翻页</a>
+        <a id="removeScrollPage" th:if="${scrollInPage ne true}">开启滚动翻页</a>
+    </li>
+</ul>
+<!-- 显示热门标签 -->
+<div class="" id="showData" th:if="${showPopularTags eq 'true' }">
+    <ul class="tag_panel" id="tagPanel">
+        <th:block th:each="tag:${tags }">
+            <li class="tagname">
+                <a th:href="|/home/tag/${tag}|" class="tag" th:attr="data-toggle=${tag}" th:text="${tag}"></a>
+            </li>
+        </th:block>
+    </ul>
+</div>
+<span class="more" data-toggle="更多" id="showMore" th:if="${showPopularTags eq 'true' }">更多</span>
+<!-- 显示热门标签分享 -->
+<div class="container" th:if="${showPopularTags eq 'true'  and tagTopics ne null}">
+    <ul class="grid effect-2" id="grid">
+        <th:block th:each="t:${tagTopics.content}">
+            <li>
+                <div class="user_mess">
+                    <a th:href="|/user/topic/${t.id}|">
+                        <img th:src="${t.picture}" alt="error"/>
+                    </a>
+                    <div class="name_panel">
+                        <a th:href="|/user/personal/${t.user.id}|">
+                            <img th:src="${t.user.head}" class="head"
+                                 onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+                            <br/>
+                            <span class="name" th:text="${t.user.username}"></span>
+                        </a>
+                        <div class="t_content " th:text="${t.content}"></div>
+                    </div>
+                </div>
+            </li>
+        </th:block>
+    </ul>
+    <!-- 存储记录的总页数 -->
+    <input id="totalPages" type="hidden" th:value="${tagTopics.totalPages }"/>
+    <!-- 存储当前页号 -->
+    <input id="number" type="hidden" th:value="${tagTopics.number}"/>
+</div>
+<!-- 分页 -->
+<ul class="page_panel" th:if="${showPopularTags eq 'true'}">
+    <li class="lastPage">
+        <a th:href="|?pageNum=${tagTopics.number + 1 - 1}|" id="lastPage">
+            <img alt="error" src="/pictures/previous.png"/>
+        </a>
+    </li>
+    <li class="nextPage">
+        <a th:href="|?pageNum=${tagTopics.number + 1 + 1}|" id="nextPage">
+            <img alt="error" src="/pictures/next.png"/>
+        </a>
+    </li>
+    <li>
+        <a id="removeScrollPage" th:if="${scrollInPage eq true}">禁止滚动翻页</a>
+        <a id="removeScrollPage" th:if="${scrollInPage ne true}">开启滚动翻页</a>
+    </li>
+</ul>
+<input type="hidden" id="positionVal"/>
+</body>
+<!-- 瀑布流动画js -->
+<script>
+    new AnimOnScroll(document.getElementById('grid'), {
+        minDuration: 0.4,
+        maxDuration: 0.7,
+        viewportFactor: 0.2
+    });
+</script>
+</html>

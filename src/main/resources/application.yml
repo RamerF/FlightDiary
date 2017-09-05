@@ -4,9 +4,10 @@ spring:
     properties:
       hibernate:
         enable_lazy_load_no_trans: true
+#        format_sql: true
     hibernate:
       ddl-auto: update
-    show-sql: true
+#    show-sql: true
   redis:
     host: localhost
     port: 6379
@@ -43,14 +44,16 @@ logging:
   level:
     root: info
     org.ramer.diary: debug
-    org.ramer.diary.repository: debug
+    org.ramer.diary.repository: info
     org.springframework.boot.autoconfigure: info
-    org.springframework.sercurity: debug
-    jdbc.resultset: info
-    jdbc.audit: info
-    jdbc.sqlonly: info
-    jdbc.sqltiming: debug
+    org.springframework.sercurity: info
+    jdbc.resultset: off
+    jdbc.audit: off
+    jdbc.sqlonly: off
+    jdbc.sqltiming: info
     jdbc.connection: info
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
 server:
   session:
     tracking-modes: COOKIE
@@ -59,7 +62,10 @@ diary:
   encrypt.strength: 10
   topic:
     page:
-      size: 36
+      size: 9
+    publish:
+      tags:
+        size: 20
   topPeople:
     page:
       size: 6
@@ -67,8 +73,13 @@ diary:
     topic:
       page:
         size: 3
+  qiniu:
+    access: FYfmtmhBMAGZyxZothLB50hgn18an3T1PKLa4nVz
+    secret: YeX5dBtF1Gq2tA-35AosS22O9FalPglj5rRChPDR
+    bucketName: diary
+    downDomain: http://oqdpapa6l.bkt.clouddn.com/
   tags:
     xml:
       position: /xml/tags.xml
   page:
-    scroll: true
+    scroll: false

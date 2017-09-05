@@ -28,14 +28,39 @@ fieldset, legend, input, textarea, p, blockquote, th, td {
 }
 
 body {
-    text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px;
+    /*text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px;*/
     background: rgba(255, 255, 255, 1);
     transition: all .6s
 }
 
+ul li {
+    list-style-type: none
+}
+
 div {
     background: #FFFFFF
-    /*  		text-transform:	capitalize;	 */
+}
+
+fieldset {
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #666;
+    text-align: center;
+    transition: all .9s
+}
+
+button:focus {
+    outline: none
+}
+
+input[type='date'] {
+    outline: none;
+    border: 1px solid #EEEEEE;
+    padding: 5px
+}
+
+input[type='radio'] {
+    display: none
 }
 
 input[type='text'], input[type='password'] {
@@ -65,23 +90,19 @@ textarea {
     color: rgba(77, 171, 245, 0.75)
 }
 
-a:VISITED {
-    text-decoration: none;
-    color: rgba(61, 80, 76, 0.63)
-}
-
-a:hover {
-    color: #DDDEDD
+a:focus {
+    opacity: .5;
+    outline: 0
 }
 
 a {
     white-space: nowrap;
-    color: rgba(61, 80, 76, 0.63);
+    color: #424242;
     text-decoration: none
 }
 
 span {
-    color: rgba(61, 80, 76, 0.63)
+    color: #424242
 }
 
 input::-webkit-input-placeholder {
@@ -103,13 +124,13 @@ input:-webkit-autofill {
     *margin-right: .3em;
     line-height: 14px;
     vertical-align: text-top;
-    background-image: url("../img/icons-halflings.png");
+    background-image: url("http://oqdpapa6l.bkt.clouddn.com/icons-halflings.png");
     background-position: 14px 14px;
     background-repeat: no-repeat
 }
 
 .icon-white {
-    background-image: url("../img/icons-white.png")
+    background-image: url("http://oqdpapa6l.bkt.clouddn.com/icons-white.png")
 }
 
 /*	拇指向上图标空心	*/

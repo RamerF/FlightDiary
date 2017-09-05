@@ -1,15 +1,12 @@
 package org.ramer.diary.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * 分享类.
@@ -19,8 +16,6 @@ import lombok.NoArgsConstructor;
 @Cacheable
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Topic implements Serializable{
 
     /**
@@ -40,10 +35,12 @@ public class Topic implements Serializable{
     private Date date;
     /** 图片. */
     @Column
-    private String picture;
+    @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "topic")
+    private List<Albums> albums;
     //  标签
-    @Column
-    private String tags;
+    @OrderBy("hot desc")
+    @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "topic")
+    private Set<Tags> tagses;
     /** 点赞次数. */
     @Column
     private Integer upCounts;
@@ -67,11 +64,31 @@ public class Topic implements Serializable{
     @Column
     @OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "topic")
     private Set<Praise> praises = new HashSet<>();
+    @CreationTimestamp
+    private Date createTime;
+    @UpdateTimestamp
+    private Date updateTime;
+
+    public Date getCreateTime() {
+        return (Date) createTime.clone();
+    }
+
+    public Date getUpdateTime() {
+        return (Date) updateTime.clone();
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = new Date(createTime.getTime());
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = new Date(updateTime.getTime());
+    }
 
     @Override
     public String toString() {
-        return "Topic{" + "id=" + id + ", content='" + content + '\'' + ", date=" + date + ", picture='" + picture
-                + '\'' + ", tags='" + tags + '\'' + ", upCounts=" + upCounts + '}';
+        return "Topic{" + "id=" + id + ", content='" + content + '\'' + ", date=" + date + '\'' + ", upCounts="
+                + upCounts + '}';
     }
 
     @Override
@@ -91,10 +108,6 @@ public class Topic implements Serializable{
             return false;
         if (date != null ? !date.equals(topic.date) : topic.date != null)
             return false;
-        if (picture != null ? !picture.equals(topic.picture) : topic.picture != null)
-            return false;
-        if (tags != null ? !tags.equals(topic.tags) : topic.tags != null)
-            return false;
         return upCounts != null ? upCounts.equals(topic.upCounts) : topic.upCounts == null;
     }
 
@@ -104,8 +117,6 @@ public class Topic implements Serializable{
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (picture != null ? picture.hashCode() : 0);
-        result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (upCounts != null ? upCounts.hashCode() : 0);
         return result;
     }
