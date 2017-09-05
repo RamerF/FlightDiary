@@ -83,7 +83,7 @@ public class VisitController{
         // && UserUtils.multiLogin(session, userService.getById(((User) session.getAttribute("user")).getId()))
         if (UserUtils.checkLogin()) {
             log.debug("已登录,写入信息");
-            if (id == user.getId()) {
+            if (id.equals(user.getId())) {
                 session.setAttribute("inOtherPage", false);
                 //获取点赞信息
                 log.debug("访问个人空间");

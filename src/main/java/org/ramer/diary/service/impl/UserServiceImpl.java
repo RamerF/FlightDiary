@@ -54,8 +54,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public boolean newOrUpdate(User user) {
-        user = userRepository.saveAndFlush(user);
-        return IntegerUtil.isPositiveValue(user.getId());
+        return IntegerUtil.isPositiveValue(userRepository.saveAndFlush(user).getId());
     }
 
     @Override

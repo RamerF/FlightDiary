@@ -83,7 +83,6 @@ public class PraiseController{
         log.debug("取消点赞");
         response.setCharacterEncoding("utf-8");
         if (!UserUtils.checkLogin()) {
-            User u = userService.getById(((User) session.getAttribute("user")).getId());
             throw new DiaryException("没登录的哦");
         }
         Topic topic = new Topic();

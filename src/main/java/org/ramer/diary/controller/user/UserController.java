@@ -3,13 +3,10 @@ package org.ramer.diary.controller.user;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
-import org.ramer.diary.domain.Notify;
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
+import org.ramer.diary.domain.*;
+import org.ramer.diary.domain.dto.CommonResponse;
 import org.ramer.diary.exception.DiaryException;
-import org.ramer.diary.service.NotifyService;
-import org.ramer.diary.service.TopicService;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.service.*;
 import org.ramer.diary.util.*;
 import org.ramer.diary.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,10 +22,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 注册或更新类
@@ -110,16 +104,13 @@ public class UserController{
     /**
      * 重定向到修改密码页面.
      *
-     * @param session the session 
      * @return 引导到修改密码页面 string
      */
     @GetMapping("/user/forwardModifyPassword")
-    public String forwardModifyPassword(HttpSession session) {
+    public String forwardModifyPassword() {
         if (!UserUtils.checkLogin()) {
-            User u = userService.getById(((User) session.getAttribute("user")).getId());
             throw new DiaryException("您还未登录或登录已过期");
         }
-        log.debug("引导到修改用户密码页面");
         return "modify_pass";
     }
 
@@ -129,29 +120,22 @@ public class UserController{
      * @param oldPassword 原始密码 
      * @param newPassword 新密码 
      * @param user 用户 
-     * @param map the map 
      * @return 密码修改成功 : 返回个人主页,失败: 返回密码修改页面 
      */
     @PutMapping("/user/modifyPassword")
-    public String modifyPassword(@RequestParam("oldPassword") String oldPassword,
-            @RequestParam("newPassword") String newPassword, User user, Map<String, Object> map, HttpSession session) {
-        if (!EncryptUtil.execEncrypt(oldPassword).equals(user.getPassword())) {
-            log.debug("原始密码错误");
-            map.put("error_modifyPass", "原始密码错误");
-            return "modify_pass";
+    public CommonResponse modifyPassword(@RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword, @SessionAttribute("user") User user) {
+        if (!EncryptUtil.matches(oldPassword, user.getPassword())) {
+            return new CommonResponse(false, "原始密码错误");
         }
-        if (oldPassword.equals(newPassword)) {
-            log.debug("密码未改变");
-            session.setAttribute("succMessage", "密码修改成功");
-            return SUCCESS;
+        if (EncryptUtil.matches(newPassword, user.getPassword())) {
+            return new CommonResponse(true, "密码未更改");
         }
         user.setPassword(EncryptUtil.execEncrypt(newPassword));
-        userService.newOrUpdate(user);
-        if (user == null) {
-            throw new DiaryException();
+        if (userService.newOrUpdate(user)) {
+            return new CommonResponse(true, "密码更改成功");
         }
-        session.setAttribute("succMessage", "密码修改成功");
-        return SUCCESS;
+        return new CommonResponse(false, "系统异常,请稍后再试");
     }
 
     /**
@@ -173,30 +157,24 @@ public class UserController{
      *
      * @param newEmail 新邮箱
      * @param user     the user
-     * @param session  the session
-     * @param response the response
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @PostMapping("/user/modifyEmail/sendMail")
-    public void sendEmailToModifyEmail(@RequestParam("newEmail") String newEmail, User user, HttpSession session,
-            HttpServletResponse response) throws IOException {
+    public CommonResponse sendEmailToModifyEmail(@RequestParam("newEmail") String newEmail,
+            @SessionAttribute("user") User user, HttpSession session) {
         if (!UserUtils.checkLogin()) {
-            User u = userService.getById(((User) session.getAttribute("user")).getId());
             throw new DiaryException("您的登录已过期,请重新登录");
         }
         log.debug("发送邮件,修改邮箱");
-        response.setCharacterEncoding("utf-8");
-        if (newEmail.trim() == null || newEmail.trim().equals("")) {
-            response.getWriter().write("臣妾还不知道发到哪儿呐");
-            return;
+        if (!StringUtils.hasText(newEmail)) {
+            return new CommonResponse(false, "臣妾还不知道发到哪儿呐");
         }
         if (!MailUtils.isEmail(newEmail)) {
-            response.getWriter().write("您输入的不是邮箱哒 ^o^||");
-            return;
+            return new CommonResponse(false, "您输入的不是邮箱哒 ^o^||");
         }
         //判断邮箱在数据库中是否存在
         if (MailUtils.exist(newEmail, userService)) {
-            throw new DiaryException("邮箱已存在");
+            return new CommonResponse(false, "邮箱已存在");
         }
         Calendar calendar = Calendar.getInstance();
         //    时间是五分钟之后
@@ -211,7 +189,7 @@ public class UserController{
                 + servletName + "/user/modifyEmail/" + newEmail + "</a>";
         String top = "来自旅行日记的更改邮箱邮件";
         MailUtils.sendMail(newEmail, top, content);
-        response.getWriter().write("嗖.......... 到家啦 ^v^,查收邮件后再继续操作哦");
+        return new CommonResponse(true, "嗖.......... 到家啦 ^v^,查收邮件后再继续操作哦");
     }
 
     /**
@@ -365,7 +343,7 @@ public class UserController{
     @GetMapping(value = "/user/{id}")
     public String input(@PathVariable("id") Integer id, Map<String, Object> map) {
         User user = (User) map.get("user");
-        if (user != null && user.getId() == id) {
+        if (user != null && user.getId().equals(id)) {
             map.put("user", userService.getById(user.getId()));
             return PageConstant.USER_INPUT;
         }

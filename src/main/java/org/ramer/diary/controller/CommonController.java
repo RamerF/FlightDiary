@@ -119,7 +119,8 @@ public class CommonController{
             int notifiedNumber = notifyService.getNotifiedNumber(user);
             int topicNumber = topicService.getTopicNumber(user);
             int followedNumber = followService.getFollowedNumber(user);
-            log.debug("获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
+            log.info("method[" + Thread.currentThread().getStackTrace()[1].getMethodName()
+                    + "]:获取统计数据: notifiedNumber[{}],topicNumber[{}]", notifiedNumber, topicNumber);
             map.put("notifiedNumber", notifiedNumber);
             map.put("topicNumber", topicNumber);
             map.put("followedNumber", followedNumber);

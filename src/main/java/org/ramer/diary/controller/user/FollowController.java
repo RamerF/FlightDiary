@@ -23,7 +23,7 @@ import java.io.IOException;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", }, types = { User.class, Topic.class })
 @Controller
-public class FollowController {
+public class FollowController{
 
     @Resource
     private FollowService followService;
@@ -43,8 +43,7 @@ public class FollowController {
     public void follow(User user, Topic topic, HttpServletResponse response, HttpSession session) throws IOException {
         log.debug("添加关注");
         response.setCharacterEncoding("UTF-8");
-        User followedUser = new User();
-        followedUser = (topic.getId() == null) ? (User) session.getAttribute("other") : topic.getUser();
+        User followedUser = (topic.getId() == null) ? (User) session.getAttribute("other") : topic.getUser();
         log.debug("topic: " + topic.getContent());
         log.debug("被关注用户: " + followedUser.getUsername());
         // 虽然在访问他人的主页时,topic没有显示写入到map中,但是在页面EL和foreach迭代输出的时候,产生了topic,
@@ -70,8 +69,7 @@ public class FollowController {
         log.debug("取消关注");
         response.setCharacterEncoding("UTF-8");
         User user = (User) session.getAttribute("user");
-        User followedUser = new User();
-        followedUser = (topic.getId() == null) ? (User) session.getAttribute("other") : topic.getUser();
+        User followedUser = (topic.getId() == null) ? (User) session.getAttribute("other") : topic.getUser();
         log.debug("被关注用户: " + followedUser.getUsername());
         // 虽然在访问他人的主页时,topic没有显示写入到map中,但是在页面EL和foreach迭代输出的时候,产生了topic,
         //springmvc会将此topic封装,因此这里的topic是最后一个被迭代的topic对象

@@ -20,8 +20,7 @@ public class NotifyServiceImpl implements NotifyService{
     @Override
     @Transactional(readOnly = true)
     public Set<Notify> getNotifies(User user, String hasCheck) {
-        Set<Notify> notifies = notifyRepository.getByNotifiedUserAndHasCheckOrderByDateDesc(user, hasCheck);
-        return notifies;
+        return notifyRepository.getByNotifiedUserAndHasCheckOrderByDateDesc(user, hasCheck);
     }
 
     @Override
@@ -54,18 +53,13 @@ public class NotifyServiceImpl implements NotifyService{
     @Override
     @Transactional
     public boolean sendPrivMess(Notify notify) {
-        Notify n = notifyRepository.saveAndFlush(notify);
-        if (n == null) {
-            return false;
-        }
-        return true;
+        return notifyRepository.saveAndFlush(notify) != null;
     }
 
     @Override
     @Transactional
     public boolean updateNotify(Notify notify) {
-        Notify n = notifyRepository.saveAndFlush(notify);
-        return n == null ? false : true;
+        return notifyRepository.saveAndFlush(notify) != null;
     }
 
     @Override

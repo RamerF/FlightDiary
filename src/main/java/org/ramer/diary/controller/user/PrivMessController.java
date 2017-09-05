@@ -1,12 +1,11 @@
 package org.ramer.diary.controller.user;
 
 import lombok.extern.slf4j.Slf4j;
-import org.ramer.diary.domain.Notify;
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
+import org.ramer.diary.domain.*;
+import org.ramer.diary.domain.dto.CommonResponse;
 import org.ramer.diary.exception.DiaryException;
 import org.ramer.diary.service.NotifyService;
-import org.ramer.diary.service.UserService;
+import org.ramer.diary.util.StringUtils;
 import org.ramer.diary.util.UserUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +28,6 @@ public class PrivMessController{
 
     @Resource
     private NotifyService notifyService;
-    @Resource
-    private UserService userService;
 
     /**
      * 发送私信.
@@ -42,38 +39,26 @@ public class PrivMessController{
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @PostMapping("/user/personal/sendPrivMess")
-    public void sendPrivMess(User user, @RequestParam("content") String content, HttpServletResponse response,
+    @ResponseBody
+    public CommonResponse sendPrivMess(User user, @RequestParam("content") String content, HttpServletResponse response,
             HttpSession session) throws IOException {
         log.debug("发送私信");
         response.setCharacterEncoding("utf-8");
         if (!UserUtils.checkLogin()) {
-            response.getWriter().write("需要先登录才能说悄悄话哦");
-            log.debug("未登录");
-            return;
+            return new CommonResponse(false, "需要先登录才能说悄悄话哦");
         }
-        if (content.trim() == null || content.trim() == "") {
-            log.debug("消息为空");
-            response.getWriter().write("消息不能为空");
-            return;
+        if (StringUtils.hasText(content)) {
+            return new CommonResponse(false, "消息不能为空");
         }
-        User notifiedUser = new User();
-        notifiedUser = (User) session.getAttribute("other");
         //log.debug("被通知用户 = " + notifiedUser);
         Notify notify = new Notify();
         notify.setUser(user);
-        notify.setNotifiedUser(notifiedUser);
+        notify.setNotifiedUser((User) session.getAttribute("other"));
         notify.setContent(content);
         notify.setDate(new Date());
         notify.setHasCheck("false");
-        boolean flag = notifyService.sendPrivMess(notify);
-        response.setCharacterEncoding("utf-8");
-        if (!flag) {
-            log.debug("消息发送失败");
-            response.getWriter().write("系统正在打麻将,请稍后再试");
-            return;
-        }
-        log.debug("消息发送成功");
-        response.getWriter().write("消息发送成功");
+        return notifyService.sendPrivMess(notify) ? new CommonResponse(false, "消息发送成功")
+                : new CommonResponse(false, "系统正在打麻将,请稍后再试");
     }
 
     /**
@@ -98,7 +83,7 @@ public class PrivMessController{
             notify.setHasCheck("true");
             boolean flag = notifyService.updateNotify(notify);
             if (!flag) {
-                throw new DiaryException();
+                throw new DiaryException("通知标记为已读失败");
             }
         } else {
             throw new DiaryException("数据格式有误");

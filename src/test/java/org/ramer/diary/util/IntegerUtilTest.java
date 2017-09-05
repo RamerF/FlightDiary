@@ -13,10 +13,10 @@ import static org.hamcrest.Matchers.equalTo;
 public class IntegerUtilTest{
     @Test(expected = NullPointerException.class)
     public void testInteger() throws Exception {
-        Integer i1 = new Integer(2);
+        Integer i1 = Integer.valueOf(2);
         Integer i2 = null;
-        Integer i3 = new Integer(-2);
-        Integer i4 = new Integer(0);
+        Integer i3 = Integer.valueOf(-2);
+        Integer i4 = Integer.valueOf(0);
         Assert.assertThat(true, equalTo(IntegerUtil.isPositiveValue(i1)));
         Assert.assertThat(false, equalTo(IntegerUtil.isPositiveValue(i2)));
         Assert.assertThat(false, equalTo(IntegerUtil.isPositiveValue(i3)));

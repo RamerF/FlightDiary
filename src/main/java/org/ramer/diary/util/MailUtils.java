@@ -74,10 +74,9 @@ public class MailUtils{
         Pattern pattern = Pattern.compile("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
         Matcher matcher = pattern.matcher(email);
         if (matcher.matches()) {
-            log.debug("是邮箱");
+            log.debug("邮箱");
             return true;
         }
-        log.debug("不是邮箱");
         return false;
     }
 

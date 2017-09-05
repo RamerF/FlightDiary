@@ -43,11 +43,10 @@ public class UserUtils{
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " principal : {}", principal);
         if (principal.equals("anonymousUser")) {
-            log.debug("\t未登录");
             return false;
         }
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
-        log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + " user : {}", user.getUsername());
+        log.info(Thread.currentThread().getStackTrace()[1].getMethodName() + "  login user: [{}]", user.getUsername());
         return true;
     }
 }

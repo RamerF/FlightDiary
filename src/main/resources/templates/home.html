@@ -416,6 +416,17 @@
        th:name="${_csrf.parameterName}"
        id="_csrf"
        th:value="${_csrf.token}"/>
+<!-- 中英文切换 -->
+<!--<select th:inline="text">-->
+<!--<th:block th:if="${#locale.toString() eq 'zh'}">-->
+<!--<option value="zh" selected="selected">中文</option>-->
+<!--<option value="en">English</option>-->
+<!--</th:block>-->
+<!--<th:block th:if="${#locale.toString() == 'en'}">-->
+<!--<option value="zh">中文</option>-->
+<!--<option value="en" selected="selected">English</option>-->
+<!--</th:block>-->
+<!--</select>-->
 </body>
 <script layout:fragment="page_js">
     <!-- 瀑布流动画js -->

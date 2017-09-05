@@ -1,24 +1,18 @@
 package org.ramer.diary.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.ramer.diary.domain.Favourite;
-import org.ramer.diary.domain.Topic;
-import org.ramer.diary.domain.User;
+import lombok.extern.slf4j.Slf4j;
+import org.ramer.diary.domain.*;
 import org.ramer.diary.repository.FavouriteRepository;
 import org.ramer.diary.service.FavouriteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.annotation.Resource;
+import java.util.List;
 
 @Slf4j
 @Service
-public class FavouriteServiceImpl implements FavouriteService {
+public class FavouriteServiceImpl implements FavouriteService{
 
     @Resource
     private FavouriteRepository favouriteRepository;
@@ -41,9 +35,7 @@ public class FavouriteServiceImpl implements FavouriteService {
     @Override
     @Transactional(readOnly = true)
     public List<Integer> getFavouriteTopicIds(User user, User other) {
-        List<Integer> list = new ArrayList<>();
-        list = favouriteRepository.getTopicIdsByUserIdAndOtherId(user.getId(), other.getId());
-        return list;
+        return favouriteRepository.getTopicIdsByUserIdAndOtherId(user.getId(), other.getId());
     }
 
     @Override

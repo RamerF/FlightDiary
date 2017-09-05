@@ -132,9 +132,8 @@ public class CommentController{
      */
     @PutMapping("/user/topic/comment/reply/{comment_id}")
     public String replyComment(@PathVariable("comment_id") String id, @RequestParam("content") String content,
-            User user, HttpSession session, HttpServletResponse response) {
+            @SessionAttribute("user") User user, HttpSession session, HttpServletResponse response) {
         if (!UserUtils.checkLogin()) {
-            User u = userService.getById(((User) session.getAttribute("user")).getId());
             throw new DiaryException("您还未登录,或登录已过期,请登录");
         }
         Integer comment_id = 0;
@@ -168,7 +167,6 @@ public class CommentController{
         }
         log.debug("在个人主页评论");
         return "redirect:/user/personal";
-
     }
 
     /**
