@@ -146,8 +146,8 @@ public class CommonController{
      * @param session the session
      * @return 引导到主页
      */
-    @GetMapping("/home/orderbyUpCounts")
-    public String homeTopicOrderByUpcounts(
+    @GetMapping("/home/hot")
+    public String homeTopicHot(
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
         //初始化滚动翻页
@@ -198,7 +198,7 @@ public class CommonController{
      * 达人
      * @return
      */
-    @GetMapping("/home/topPeople")
+    @GetMapping("/home/people")
     public String homeTopPeople(@RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
         //初始化滚动翻页
