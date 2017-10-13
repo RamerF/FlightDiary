@@ -6,12 +6,10 @@ import org.ramer.diary.constant.PageConstant;
 import org.ramer.diary.domain.*;
 import org.ramer.diary.domain.dto.CommonResponse;
 import org.ramer.diary.domain.map.UserRoleMap;
-import org.ramer.diary.exception.DiaryException;
 import org.ramer.diary.service.*;
 import org.ramer.diary.util.*;
 import org.ramer.diary.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -30,8 +28,8 @@ import java.util.*;
 
 /**
  * 定位到主页.
- * @author ramer
  *
+ * @author ramer
  */
 @Slf4j
 @SessionAttributes(value = { "user", "topics", "topicCount", "scrollInPage" }, types = { User.class, Topic.class })
@@ -71,6 +69,11 @@ public class CommonController{
     @Resource
     private UserValidator userValidator;
 
+    /**
+     * Init binder.
+     *
+     * @param binder the binder
+     */
     @InitBinder("user")
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(userValidator);
@@ -79,181 +82,115 @@ public class CommonController{
     /**
      * 主页.
      *
-     * @param pageNum 页号
-     * @param map the map
-     * @return 引导到主页
+     * @param user         the user
+     * @param pageNum      页号
+     * @param map          the map
+     * @param scrollInPage the scroll in page
+     * @return 引导到主页 string
      */
     @GetMapping("/home")
-    public String home(@RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
-            Map<String, Object> map, @SessionAttribute(name = "scrollInPage", required = false) String scrollInPage,
-            @SessionAttribute(value = "topics", required = false) Page<Topic> oldTopics,
-            @SessionAttribute(value = "user", required = false) User user) {
+    public String home(@SessionAttribute(value = "user", required = false) User user,
+            @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
+            Map<String, Object> map, @SessionAttribute(name = "scrollInPage", required = false) String scrollInPage) {
         List<Tags> tagsPage = tagsService.getTagsPage(0, TAGS_PUBLISH_SIZE);
         map.put("tags", tagsPage);
         //初始化滚动翻页
-        if (map.get("scrollInPage") == null) {
+        if (StringUtils.isEmpty(scrollInPage)) {
             map.put("scrollInPage", SCROLL_IN_PAGE);
         }
-        int page = 1;
-        //重置标识信息
-        map.put("inOtherPage", inOtherPage);
-        map.put("inTopicPage", inTopicPage);
-        //当页面页号属于人为构造时，用于判断页号是否存在
+        long topicCount = topicService.getCount();
+        map.put("topicCount", topicCount);
+        int page = getPageNum(pageNum, TOPIC_PAGE_SIZE, topicCount);
+        map.put("topics", topicService.getTopicsPage(page, TOPIC_PAGE_SIZE));
+        if (UserUtils.checkLogin()) {
+            writeUserStatistics(user, map);
+        }
+        return PageConstant.HOME;
+    }
+
+    /**
+     * 规范页码
+     * @param pageNum
+     * @return
+     */
+    private int getPageNum(String pageNum, int pageSize, long totalCount) {
+        int page;
+        int totalPage = (int) Math.ceil(totalCount * 1.0 / pageSize);
         try {
             page = Integer.parseInt(pageNum);
-            if (page < 1) {
-                page = 1;
-            } else if (oldTopics != null && page > oldTopics.getTotalPages()) {
-                page = oldTopics.getTotalPages() > 0 ? oldTopics.getTotalPages() : 1;
-            }
+            page = page < 1 ? 1 : page > totalPage ? totalPage : page;
         } catch (Exception e) {
             page = 1;
         }
-        //获取分页分享
-        Page<Topic> topics = topicService.getTopicsPage(page, TOPIC_PAGE_SIZE);
-        //记录最新的topicid，用于判断是否有新动态
-        map.put("topicCount", topicService.getCount());
-        map.put("topics", topics);
-        if (UserUtils.checkLogin()) {
-            //获取用户统计数据
-            int notifiedNumber = notifyService.getNotifiedNumber(user);
-            int topicNumber = topicService.getTopicNumber(user);
-            int followedNumber = followService.getFollowedNumber(user);
-            log.info("method[" + Thread.currentThread().getStackTrace()[1].getMethodName()
-                    + "]:获取统计数据: notifiedNumber[{}],topicNumber[{}]", notifiedNumber, topicNumber);
-            map.put("notifiedNumber", notifiedNumber);
-            map.put("topicNumber", topicNumber);
-            map.put("followedNumber", followedNumber);
-        }
-        //清除访问的临时用户信息
-        map.remove("other");
-        map.remove("topic");
-        map.remove("details");
-        //  标识为显示分享分类
-        map.put("showTopic", true);
-        //  取消标识为达人分类
-        map.put("showTopPeople", false);
-        //  取消标识为热门标签分类
-        map.put("showPopularTags", false);
-        return PageConstant.HOME;
+        return page;
     }
 
     /**
      * 主页: 分享按热度排序.
      *
-     * @param pageNum 页号
-     * @param map the map
-     * @param session the session
-     * @return 引导到主页
+     * @param user         the user
+     * @param scrollInPage the scroll in page
+     * @param pageNum      页号
+     * @param map          the map
+     * @param session      the session
+     * @return 引导到主页 string
      */
     @GetMapping("/home/hot")
-    public String homeTopicHot(
+    public String homeHot(@SessionAttribute(value = "user", required = false) User user,
+            @SessionAttribute(name = "scrollInPage", required = false) String scrollInPage,
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
-        //初始化滚动翻页
-        if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
+        if (StringUtils.isEmpty(scrollInPage)) {
+            map.put("scrollInPage", SCROLL_IN_PAGE);
         }
-
-        log.debug("热门主页");
-        int page = 1;
-        session.setAttribute("inOtherPage", false);
-        session.setAttribute("inTopicPage", false);
-        try {
-            page = Integer.parseInt(pageNum);
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            throw new DiaryException("非法参数");
-        }
-        //获取分页分享
-        Page<Topic> topics = topicService.getTopicsPageOrderByFavourite(page, TOPIC_PAGE_SIZE);
-        map.put("topics", topics);
+        long topicCount = topicService.getCount();
+        map.put("topicCount", topicCount);
+        int page = getPageNum(pageNum, TOPIC_PAGE_SIZE, topicCount);
+        map.put("topics", topicService.getTopicsPageOrderByFavourite(page, TOPIC_PAGE_SIZE));
         if (UserUtils.checkLogin()) {
-            User user = (User) session.getAttribute("user");
-            //获取用户统计数据
-            int notifiedNumber = notifyService.getNotifiedNumber(user);
-            int topicNumber = topicService.getTopicNumber(user);
-            int followedNumber = followService.getFollowedNumber(user);
-            log.debug("获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
-            map.put("notifiedNumber", notifiedNumber);
-            map.put("topicNumber", topicNumber);
-            map.put("followedNumber", followedNumber);
+            writeUserStatistics(user, map);
         }
-        //清除访问的临时用户信息
-        map.remove("other");
-        map.remove("topic");
-        session.removeAttribute("details");
-        //    标识为显示分享分类
-        map.put("showTopic", "true");
-        //  取消标识为达人分类
-        map.put("showTopPeople", "false");
-        //    取消标识为热门标签分类
-        map.put("showPopularTags", "false");
-        return PageConstant.HOME;
+        return PageConstant.HOME_HOT;
     }
 
     /**
      * 达人
-     * @return
+     *
+     * @param pageNum the page num
+     * @param map     the map
+     * @param session the session
+     * @return string string
      */
     @GetMapping("/home/people")
-    public String homeTopPeople(@RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
+    public String homePeople(@SessionAttribute(value = "user", required = false) User user,
+            @SessionAttribute(name = "scrollInPage", required = false) String scrollInPage,
+            @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, HttpSession session) {
-        //初始化滚动翻页
-        if (session.getAttribute("scrollInPage") == null) {
-            session.setAttribute("scrollInPage", SCROLL_IN_PAGE);
+        if (StringUtils.isEmpty(scrollInPage)) {
+            map.put("scrollInPage", SCROLL_IN_PAGE);
         }
-
-        log.debug("达人主页");
-        int page = 1;
-        try {
-            page = Integer.parseInt(pageNum);
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            throw new DiaryException(WRONG_FORMAT);
-        }
-        //    获取达人的分页信息
-        Pagination<User> topPeoples = userService.getTopPeople(page, PEOPLE_PAGE_SIZE);
-        map.put("topPeoples", topPeoples);
+        int page = getPageNum(pageNum, TOPIC_PAGE_SIZE, userService.getCount());
+        map.put("topPeoples", userService.getTopPeople(page, PEOPLE_PAGE_SIZE));
         if (UserUtils.checkLogin()) {
-            User user = (User) session.getAttribute("user");
-            //获取用户统计数据
-            int notifiedNumber = notifyService.getNotifiedNumber(user);
-            int topicNumber = topicService.getTopicNumber(user);
-            int followedNumber = followService.getFollowedNumber(user);
-            log.debug("获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
-            map.put("notifiedNumber", notifiedNumber);
-            map.put("topicNumber", topicNumber);
-            map.put("followedNumber", followedNumber);
+            writeUserStatistics(user, map);
         }
-        map.remove("other");
-        map.remove("topic");
-        session.removeAttribute("details");
-        //    标识为达人分类
-        map.put("showTopPeople", "true");
-        //    取消标识为分享分类
-        map.put("showTopic", "false");
-        //    取消标识为热门标签分类
-        map.put("showPopularTags", "false");
-        return PageConstant.HOME;
+        return PageConstant.HOME_PEOPLE;
     }
 
     /**
      * 热门标签:
-     *  先获取所有标签，剔除重复的标签，按统计的次数排序,
-     *  取得第一个标签名,并获取对应的分享.
-     *  通过标签获取分享.
+     * 先获取所有标签，剔除重复的标签，按统计的次数排序,
+     * 取得第一个标签名,并获取对应的分享.
+     * 通过标签获取分享.
+     *
      * @param pageNum 页号
-     * @param session
-     * @param map
-     * @return
-     * @throws UnsupportedEncodingException
+     * @param tag     the tag
+     * @param session the session
+     * @param map     the map
+     * @return string string
+     * @throws UnsupportedEncodingException the unsupported encoding exception
      */
-    @RequestMapping(value = "/home/tag", method = RequestMethod.GET)
+    @GetMapping("/home/tag")
     public String homeTagsGetTopicsByTag(
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             @RequestParam(value = "tag", required = false, defaultValue = "default") String tag, HttpSession session,
@@ -318,11 +255,29 @@ public class CommonController{
     }
 
     /**
+     *  写入用户统计信息
+     * @param user
+     * @param map
+     */
+    private void writeUserStatistics(User user, Map<String, Object> map) {
+        if (UserUtils.checkLogin()) {
+            int notifiedNumber = notifyService.getNotifiedNumber(user);
+            int topicNumber = topicService.getTopicNumber(user);
+            int followedNumber = followService.getFollowedNumber(user);
+            log.debug("获取统计数据: " + "\tnotifiedNUmber : " + notifiedNumber + "\ttopicNumber : " + topicNumber);
+            map.put("notifiedNumber", notifiedNumber);
+            map.put("topicNumber", topicNumber);
+            map.put("followedNumber", followedNumber);
+        }
+    }
+
+    /**
      * 用户登录.
      *
-     * @param map the map
-     * @param session the session
-     * @return 登录成功返回主页,失败返回错误页面
+     * @param map       the map
+     * @param session   the session
+     * @param principal the principal
+     * @return 登录成功返回主页, 失败返回错误页面 common response
      */
     @RequestMapping("/sign_in")
     @ResponseBody
@@ -338,14 +293,22 @@ public class CommonController{
     /**
      * 表单回显,用于用户注册或登录.
      *
-     * @param map the map
-     * @return 引导用户登录界面或注册界面
+     * @param user the user
+     * @param map  the map
+     * @return 引导用户登录界面或注册界面 string
      */
     @GetMapping("/login")
     public String input(User user, Map<String, Object> map) {
         return PageConstant.USER_INPUT;
     }
 
+    /**
+     * Create user common response.
+     *
+     * @param user   the user
+     * @param result the result
+     * @return the common response
+     */
     @PostMapping("/sign_up")
     @ResponseBody
     public CommonResponse createUser(@Valid User user, BindingResult result) {
@@ -383,8 +346,8 @@ public class CommonController{
      * 注销用户;.
      *
      * @param session the session
-     * @param map the map
-     * @return 主页;
+     * @param map     the map
+     * @return 主页 ;
      */
     @GetMapping("/logOff")
     public String logOff(HttpSession session, Map<String, Object> map) {
@@ -398,8 +361,9 @@ public class CommonController{
      * 验证用户名.
      * 如果用户名存在,写入true,否者写入false
      *
-     * @param user 当更新时,表示更新用户
+     * @param user     当更新时,表示更新用户
      * @param username 当前用户输入或自动填充的用户名
+     * @return the common response
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @PostMapping("/validateUserName")
@@ -425,6 +389,7 @@ public class CommonController{
      * 验证邮箱是否可用.
      *
      * @param emailString 邮箱字符串
+     * @return the common response
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @PostMapping("/validateEmail")
@@ -445,6 +410,9 @@ public class CommonController{
     /**
      * 滚动翻页.
      *
+     * @param scrollInPage the scroll in page
+     * @param map          the map
+     * @return the common response
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @GetMapping("/scrollInPage")
@@ -455,6 +423,11 @@ public class CommonController{
         return new CommonResponse(true, !scrollInPage ? "允许滚动翻页" : "禁止滚动翻页");
     }
 
+    /**
+     * Forward feedback string.
+     *
+     * @return the string
+     */
     @GetMapping("/feedback")
     public String forwardFeedback() {
         return "feedback";
@@ -464,10 +437,11 @@ public class CommonController{
      * 用户反馈.
      *
      * @param session the session
-     * @param os the os
+     * @param os      the os
      * @param browser the browser
      * @param content the content
-     * @throws IOException
+     * @return the common response
+     * @throws IOException the io exception
      */
     @PostMapping("/user/feedback")
     @ResponseBody
@@ -485,6 +459,11 @@ public class CommonController{
         return new CommonResponse(false, "系统繁忙，请稍后再试");
     }
 
+    /**
+     * About string.
+     *
+     * @return the string
+     */
     @GetMapping("about")
     public String about() {
         return "about";
@@ -494,7 +473,7 @@ public class CommonController{
      * 获取实时动态.
      *
      * @param session the session
-     * @return 新动态总数
+     * @return 新动态总数 string
      */
     @GetMapping("/user/realTimeTopic")
     @ResponseBody
@@ -509,7 +488,7 @@ public class CommonController{
      * 获取实时通知.
      *
      * @param session the session
-     * @return 通知数
+     * @return 通知数 string
      */
     @GetMapping("/user/realTimeNotify")
     @ResponseBody

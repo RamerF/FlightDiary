@@ -99,11 +99,9 @@ body {
 }
 
 .name {
-    text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px
-        1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px, rgba(133, 145, 143, .1)
-        3px 3px 0px, rgba(133, 145, 143, .1) 4px 4px 0px,
-        rgba(133, 145, 143, .1) 5px 5px 0px, rgba(133, 145, 143, .1) 6px 6px 0px,
-        rgba(133, 145, 143, .1) 7px 7px 0px, rgba(133, 145, 143, .1) 8px 8px 0px;
+    text-shadow: rgba(133, 145, 143, .1) 0px 0px 0px, rgba(133, 145, 143, .1) 1px 1px 0px, rgba(133, 145, 143, .1) 2px 2px 0px, rgba(133, 145, 143, .1) 3px 3px 0px, rgba(133, 145, 143, .1) 4px 4px 0px,
+    rgba(133, 145, 143, .1) 5px 5px 0px, rgba(133, 145, 143, .1) 6px 6px 0px,
+    rgba(133, 145, 143, .1) 7px 7px 0px, rgba(133, 145, 143, .1) 8px 8px 0px;
     font-size: 25px;
 }
 
@@ -363,6 +361,46 @@ textarea.topic_content {
 .side {
     width: 106px;
     float: left;
+}
+
+/* topic 图片*/
+.topic-picture {
+    display: block;
+    overflow: hidden;
+    border-bottom: 1px solid #EEEEEE
+}
+
+.skew_left_container {
+    transform-origin: 100% 0;
+    transform: skewX(-23deg) translateX(-24%);
+    width: 100%;
+    overflow: hidden
+}
+
+.skew_right_container {
+    margin-top: calc(-100% - 6px);
+    margin-left: 50%;
+    transform-origin: 100% 0;
+    transform: skewX(-23deg) translateX(9%);
+    width: 100%;
+    overflow: hidden
+}
+
+.skew_left_content {
+    transform: skewX(23deg);
+    transform-origin: 100% 0
+}
+
+.skew_right_content {
+    transform: skewX(23deg);
+    transform-origin: 0 100%
+}
+
+.topic-picture div > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden
 }
 
 .img {

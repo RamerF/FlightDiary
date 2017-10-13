@@ -45,7 +45,7 @@
 <div class="user_info_panel">
     <div class="head">
         <a th:href="|/user/personal/${topic.user.id}|">
-            <img alt="error" th:src="|/${topic.user.head}|" onerror="javascript:this.src='/pictures/userHead.jpg'"/>
+            <img alt="error" th:src="|${topic.user.head}|" onerror="javascript:this.src='/pictures/userHead.jpg'"/>
         </a>
     </div>
     <div class="selfinfo">
@@ -113,10 +113,36 @@
     </div>
     <div class="main">
         <div class="content">
-            <div class="img">
-                <img alt="error" th:src="${topic.picture}" class="topic_pic"/>
+            <th:block th:if="not ${#lists.isEmpty(topic.albums)}">
+                <div class="topic-picture">
+                    <th:block th:each="album,aStat:${topic.albums}">
+                        <th:block th:if="${aStat.even eq true}">
+                            <th:block th:if="${aStat.count ne aStat.size}">
+                                <div th:if="${aStat.even eq true}" class="skew_left_container">
+                                    <img th:src="${album.url}" alt="error" class="skew_left_content"/>
+                                </div>
+                                <div th:if="${aStat.odd eq true}" class="skew_right_container">
+                                    <img th:src="${album.url}" alt="error" class="skew_right_content"/>
+                                </div>
+                            </th:block>
+                            <th:block th:if="${aStat.count eq aStat.size}">
+                                <div>
+                                    <img th:src="${album.url}" alt="error" class=""/>
+                                </div>
+                            </th:block>
+                        </th:block>
+                        <th:block th:if="${aStat.odd eq true}">
+                            <div th:if="${aStat.even eq true}" class="skew_left_container">
+                                <img th:src="${album.url}" alt="error" class="skew_left_content"/>
+                            </div>
+                            <div th:if="${aStat.odd eq true}" class="skew_right_container">
+                                <img th:src="${album.url}" alt="error" class="skew_right_content"/>
+                            </div>
+                        </th:block>
+                    </th:block>
+                </div>
                 <p class="desc"></p>
-            </div>
+            </th:block>
             <div class="text" th:text="${topic.content}"></div>
         </div>
     </div>

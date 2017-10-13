@@ -40,6 +40,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public long getCount() {
+        return userRepository.count();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public User login(User user) {
         User u = null;
@@ -85,7 +90,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional(readOnly = false)
     public boolean feedback(FeedBack feedBack) {
         FeedBack f = feedBackRepository.saveAndFlush(feedBack);
         if (f == null) {
