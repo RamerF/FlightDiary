@@ -153,7 +153,7 @@
     </div>
 </div>
 <!-- 已登录用户,未完善用户信息,用户链接面板 -->
-<section th:if="not ${session.user eq null} and ${session.user.id gt 0} and ${session.user.registNav eq true}"
+<section th:if="not ${session.user eq null} and ${session.user.id gt 0}"
          class="user-section-nav">
     <ul class="user-link">
         <li>
@@ -187,167 +187,13 @@
             <i class="material-icons">settings</i>
             <a href="/settings">系统设置</a>
         </li>
+        <li>
+            <i class="material-icons">input</i>
+            <a href="/logOff">注销</a>
+        </li>
     </ul>
 </section>
-<!-- 已登录用户容器 -->
-<div th:if="not ${session.user eq null} and ${session.user.id gt 0}" class="user-container">
-    <!-- 用户信息 -->
-    <div class="user_panel">
-        <span>
-            <a href="user/personal">主页</a>
-        </span>
-        <span class="username" th:text="${session.user.username}"/>
-        <span id="newNotify" style="position: absolute; margin: 0px; margin-left: -30px;visibility: hidden"/>
-        <span class="logoff">
-            <a href="/logOff" id="logOff">注销</a>
-        </span>
-    </div>
-    <!-- 发表分享 -->
-    <section class="publish-section">
-        <div class="tab-container topic_panel" id="topic_panel">
-            <ul class="tab-title">
-                <li class="tab active" data-toggle="tab-1"><i class="material-icons">photo</i></li>
-                <li class="tab" data-toggle="tab-2"><i class="material-icons">text_format</i></li>
-                <li class="tab" data-toggle="tab-3"><i class="material-icons">loyalty</i></li>
-            </ul>
-            <div class="tab-content">
-                <div id="tab-1" class="active">
-                    <input type="file" id="topicPic"/>
-                    <label for="topicPic" class="choose-pic">﹢</label>
-                    <div id="preview-container" class="preview-container"></div>
-                </div>
-                <div id="tab-2">
-                    <p>给你的图片配点美妙的文字吧</p>
-                    <textarea class="topic_content" id="topicContent"></textarea>
-                </div>
-                <div id="tab-3">
-                    <ul class="tag-container">
-                        <li th:each="tag:${tags}">
-                            <input type="checkbox" readonly="readonly" th:id="${'bq-'+tag.id}" name="tags"
-                                   th:value="${tag.tagName}"/>
-                            <label th:for="${'bq-'+tag.id}" th:text="${tag.tagName}"/>
-                        </li>
-                        <li class="custom-container">
-                            <input id="custom-tag" type="text"/>
-                        </li>
-                        <li class="add-custom-tag">＋</li>
-                        <li id="publish-topic" class="publish-topic">分享</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- 用户链接面板 -->
-
-    <section th:if="not ${session.user.registNav eq true}" class="user-section">
-        <ul class="user-link">
-            <li>
-                <i class="material-icons">photo</i>
-                <a href="user/personal">分享</a>
-                <span th:text="${topicNumber eq null ? 0 : topicNumber}"></span>
-            </li>
-            <li>
-                <i class="material-icons">visibility</i>
-                <a href="user/personal">关注</a>
-                <span th:text="${followedNumber eq null ? 0 : followedNumber}"></span>
-            </li>
-            <li>
-                <i class="material-icons">chat</i>
-                <a href="user/personal">私信</a>
-                <span th:text="${notifiedNumber eq null ? 0 : notifiedNumber}"></span>
-            </li>
-            <li>
-                <i class="material-icons">vpn_key</i>
-                <a href="user/forwardModifyPassword">密码管理</a>
-            </li>
-            <li>
-                <i class="material-icons">contact_mail</i>
-                <a href="user/forwardModifyEmail">绑定邮箱</a>
-            </li>
-            <li>
-                <i class="material-icons">account_circle</i>
-                <a th:href="|user/${session.user.id}|">个人信息</a>
-            </li>
-            <li>
-                <i class="material-icons">settings</i>
-                <a href="/settings">系统设置</a>
-            </li>
-        </ul>
-    </section>
-
-    <!-- 用户注册信息完善 -->
-    <section th:if="${session.user.registNav eq true}" class="user-section">
-        <div class="regist_container regist">
-            <form action="/sign_up" class="regist_form">
-                <fieldset class="regist_main is_active">
-                    <h3>完善你的基本信息</h3>
-                    <label for="born">出生年月</label>
-                    <input id="born" type="date" name="born" placeholder="出生年月"/>
-                    <button class="regist_nav_button">下一步</button>
-                </fieldset>
-                <fieldset class="regist_main">
-                    <h3>学习经历</h3>
-                    <input type="text" id="senior" placeholder="曾/在读高中" pattern="\d{3}"
-                           oninvalid="setCustomValidity('please input three numbers')"
-                           oninput="setCustomValidity('')"/>
-                    <input type="text" id="college" placeholder="曾/在读大学"/>
-                    <button class="regist_nav_button">下一步</button>
-                </fieldset>
-                <fieldset class="regist_main">
-                    <h3>就职信息</h3>
-                    <input type="text" id="workstation" placeholder="工作地点"/>
-                    <button class="regist_nav_button">完成</button>
-                </fieldset>
-            </form>
-        </div>
-    </section>
-</div>
-<!-- 未登录用户容器 -->
-<div th:if="${session.user eq null or session.user.id lt 1}" class="user-container tab-container horizontal"
-     id="user-login-regist">
-    <ul class="tab-title">
-        <li class="tab active" data-toggle="tab-user-login">登录</li>
-        <li class="tab" data-toggle="tab-user-regist">注册</li>
-    </ul>
-    <div class="tab-content regist">
-        <div class="user-login active material-form" id="tab-user-login">
-            <form action="/login" method="post" id="_signInForm">
-                <div>
-                    <input type="text" name="username" class="username" id="username"/>
-                    <label for="username">用户名</label>
-                </div>
-                <div>
-                    <input type="password" name="password" id="password" class="password"/>
-                    <label for="password">密码</label>
-                </div>
-                <div>
-                    <input type="reset" class="reset" value="清空"/>
-                    <input type="submit" class="submit" value="登录" id="signInBtn"/>
-                </div>
-            </form>
-        </div>
-        <div class="user-regist material-form" id="tab-user-regist">
-            <form action="/sign_up" method="post" id="_signUpForm">
-                <div>
-                    <input type="text" name="username" class="username" id="username"/>
-                    <label for="username">用户名</label>
-                </div>
-                <div>
-                    <input type="password" name="password" id="password" class="password"/>
-                    <label for="password">密码</label>
-                </div>
-                <div>
-                    <input type="text" name="email" id="email" class="email"/>
-                    <label for="email">邮箱</label>
-                </div>
-                <div>
-                    <input type="reset" class="reset" value="清空"/>
-                    <input type="submit" class="submit" value="注册" id="signUpBtn"/>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<div class="user-container"></div>
 <!-- 上一页 -->
 <div class="last_page" th:if="${session.scrollInPage eq false}">
     <a th:href="|?pageNum=${topics.number + 1 - 1}|" id="lastPage">

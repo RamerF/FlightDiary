@@ -47,12 +47,12 @@ public class Pagination<T> {
     //  用于存放满足条件的用户信息
     private List<T> content;
 
-    public Pagination(List<T> ts, int page, int size, int count) {
+    public Pagination(List<T> content, int page, int size, int count) {
         setTotalNumber(count);
         setPageSize(size);
         setTotalPages();
         setNumber(page);
-        setContent(ts);
+        setContent(content);
     }
 
     public List<T> getContent() {
@@ -99,23 +99,15 @@ public class Pagination<T> {
      * 设置总页数
      */
     public void setTotalPages() {
-        double d = Math.ceil(totalNumber * 1.0 / pageSize);
-        this.totalPages = (int) d;
+        this.totalPages = (int) Math.ceil(totalNumber * 1.0 / pageSize);
     }
 
     public int getNextPage() {
-
-        if (number >= totalPages) {
-            return totalPages;
-        }
-        return totalPages + 1;
+        return number >= totalPages ? totalPages : number + 1;
     }
 
     public int getLastPage() {
-        if (number <= 0) {
-            return 0;
-        }
-        return totalPages - 1;
+        return number <= 0 ? 0 : number - 1;
     }
 
     public boolean getHasNext() {

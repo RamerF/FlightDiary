@@ -32,7 +32,7 @@
 <div class="user_panel">
     <div class="head">
         <a id="showProfile">
-            <img alt="error" th:src="${session.user.head }" class="user_head"
+            <img alt="error" th:src="${session.user.head}" class="user_head"
                  onerror="javascript:this.src='/pictures/userHead.jpg'"/>
             <br/>
             <span>更换头像</span>
@@ -199,19 +199,43 @@
         </div>
         <div class="main">
             <div class="content">
-                <th:block th:if="not ${#strings.isEmpty(topic.picture)}">
-                    <div class="img">
-                        <img alt="error" th:src="${topic.picture}" class="topic_pic"/>
+                <th:block th:if="not ${#lists.isEmpty(topic.albums)}">
+                    <div class="topic-picture">
+                        <th:block th:each="album,aStat:${topic.albums}">
+                            <th:block th:if="${aStat.even eq true}">
+                                <th:block th:if="${aStat.count ne aStat.size}">
+                                    <div th:if="${aStat.even eq true}" class="skew_left_container">
+                                        <img th:src="${album.url}" alt="error" class="skew_left_content"/>
+                                    </div>
+                                    <div th:if="${aStat.odd eq true}" class="skew_right_container">
+                                        <img th:src="${album.url}" alt="error" class="skew_right_content"/>
+                                    </div>
+                                </th:block>
+                                <th:block th:if="${aStat.count eq aStat.size}">
+                                    <div>
+                                        <img th:src="${album.url}" alt="error" class=""/>
+                                    </div>
+                                </th:block>
+                            </th:block>
+                            <th:block th:if="${aStat.odd eq true}">
+                                <div th:if="${aStat.even eq true}" class="skew_left_container">
+                                    <img th:src="${album.url}" alt="error" class="skew_left_content"/>
+                                </div>
+                                <div th:if="${aStat.odd eq true}" class="skew_right_container">
+                                    <img th:src="${album.url}" alt="error" class="skew_right_content"/>
+                                </div>
+                            </th:block>
+                        </th:block>
                     </div>
                     <p class="desc"></p>
                 </th:block>
-                <th:block th:if="${#strings.isEmpty(topic.picture)}">
+                <th:block th:if="${#lists.isEmpty(topic.albums)}">
                     <p class="desc" style="height: 35px;"></p>
                 </th:block>
                 <div class="text" th:text="${topic.content}"></div>
                 <!-- 标签面板 -->
                 <div class="tags_panel">
-                    <th:block th:each="tag:${topic.tags}">
+                    <th:block th:each="tag:${topic.tagses}">
                         <i class="icon-tags"></i>
                         <span class="tags" th:text="${tag}"></span>
                     </th:block>
@@ -306,18 +330,18 @@
 <!-- 存储当前页号 -->
 <input id="number" type="hidden" th:value="${topicsPage.number}"/>
 <!-- 分页 -->
-<ul class="page_panel">
-    <li class="lastPage">
-        <a th:href="|?pageNum=${topicsPage.number + 1 - 1}|" id="lastPage">
-            <img alt="error" src="/pictures/previous.png"/>
-        </a>
-    </li>
-    <li class="nextPage">
-        <a th:href="|?pageNum=${topicsPage.number + 1 + 1}|" id="nextPage">
-            <img alt="error" src="/pictures/next.png"/>
-        </a>
-    </li>
-</ul>
+<!--<ul class="page_panel">-->
+    <!--<li class="lastPage">-->
+        <!--<a th:href="|?pageNum=${topicsPage.number + 1 - 1}|" id="lastPage">-->
+            <!--<img alt="error" src="/pictures/previous.png"/>-->
+        <!--</a>-->
+    <!--</li>-->
+    <!--<li class="nextPage">-->
+        <!--<a th:href="|?pageNum=${topicsPage.number + 1 + 1}|" id="nextPage">-->
+            <!--<img alt="error" src="/pictures/next.png"/>-->
+        <!--</a>-->
+    <!--</li>-->
+<!--</ul>-->
 
 <input type="hidden" id="positionVal"/>
 </body>

@@ -57,7 +57,7 @@ logging:
 server:
   session:
     tracking-modes: COOKIE
-  port: 80
+  port: 8080
 diary:
   encrypt.strength: 10
   topic:

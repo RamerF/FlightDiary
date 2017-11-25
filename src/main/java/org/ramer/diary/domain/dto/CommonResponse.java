@@ -1,5 +1,6 @@
 package org.ramer.diary.domain.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,7 +10,9 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class CommonResponse {
+public class CommonResponse{
+    @ApiModelProperty(notes = "返回结果", required = true)
     private boolean result;
+    @ApiModelProperty(notes = "返回消息", required = true)
     private String message;
 }
