@@ -330,18 +330,18 @@
 <!-- 存储当前页号 -->
 <input id="number" type="hidden" th:value="${topicsPage.number}"/>
 <!-- 分页 -->
-<ul class="page_panel">
-    <li class="lastPage">
-        <a th:href="|?pageNum=${topicsPage.number + 1 - 1}|" id="lastPage">
-            <img alt="error" src="/pictures/previous.png"/>
-        </a>
-    </li>
-    <li class="nextPage">
-        <a th:href="|?pageNum=${topicsPage.number + 1 + 1}|" id="nextPage">
-            <img alt="error" src="/pictures/next.png"/>
-        </a>
-    </li>
-</ul>
+<!--<ul class="page_panel">-->
+    <!--<li class="lastPage">-->
+        <!--<a th:href="|?pageNum=${topicsPage.number + 1 - 1}|" id="lastPage">-->
+            <!--<img alt="error" src="/pictures/previous.png"/>-->
+        <!--</a>-->
+    <!--</li>-->
+    <!--<li class="nextPage">-->
+        <!--<a th:href="|?pageNum=${topicsPage.number + 1 + 1}|" id="nextPage">-->
+            <!--<img alt="error" src="/pictures/next.png"/>-->
+        <!--</a>-->
+    <!--</li>-->
+<!--</ul>-->
 
 <input type="hidden" id="positionVal"/>
 </body>

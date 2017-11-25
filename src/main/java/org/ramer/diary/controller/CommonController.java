@@ -1,5 +1,6 @@
 package org.ramer.diary.controller;
 
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.ramer.diary.constant.MessageConstant;
 import org.ramer.diary.constant.PageConstant;
@@ -34,6 +35,7 @@ import java.util.*;
 @Slf4j
 @SessionAttributes(value = { "user", "topics", "topicCount", "scrollInPage" }, types = { User.class, Topic.class })
 @Controller
+@Api(value = "Ambition", description = "匿名用户通用控制器 API", tags = "Ambition API")
 public class CommonController{
     @Resource
     private UserService userService;
@@ -89,6 +91,10 @@ public class CommonController{
      * @return 引导到主页 string
      */
     @GetMapping("/home")
+    @ApiOperation(value = "跳转到主页", response = String.class)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 401, message = "You are not authorized access the resource"),
+            @ApiResponse(code = 404, message = "The resource not found") })
     public String home(@SessionAttribute(value = "user", required = false) User user,
             @RequestParam(value = "pageNum", required = false, defaultValue = "1") String pageNum,
             Map<String, Object> map, @SessionAttribute(name = "scrollInPage", required = false) String scrollInPage) {
