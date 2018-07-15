@@ -36,13 +36,6 @@
             </activation>
         </profile>
     </profiles>
-    <repositories>
-        <repository>
-            <id>diary</id>
-            <name>publish repository</name>
-            <url>http://nexus.ramerf.cn:8081/nexus/content/groups/public</url>
-        </repository>
-    </repositories>
     <properties>
         <docker.image.prefix>ramer</docker.image.prefix>
     </properties>
@@ -182,15 +175,6 @@
             <version>2.7.0</version>
         </dependency>
     </dependencies>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.9</version>
-            </plugin>
-        </plugins>
-    </reporting>
     <build>
         <plugins>
             <plugin>
